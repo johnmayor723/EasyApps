@@ -29,7 +29,7 @@ transporter.verify((error, success) => {
   }
 });*/
 
-
+const API_BASE_URL = 'http://easyhostnet.localhost:3000/api/'
 
 
 const transport = nodemailer.createTransport({
@@ -145,9 +145,17 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
       return res.status(404).render("errors/404");
     }
 
-    // Optional but recommended
-    if (tenant.slug !== slug) {
-      return res.status(404).render("errors/404");
+    // ✅ Normalize slugs (NO CRASH, NO FALSE 404)
+    const dbSlug = (tenant.slug || "").toLowerCase().trim();
+    const urlSlug = (slug || "").toLowerCase().trim();
+
+    if (!dbSlug) {
+      return res.status(404).send("Store slug not configured");
+    }
+
+    // 🔁 Redirect to canonical URL instead of 404
+    if (dbSlug !== urlSlug) {
+      return res.status(404).send("Store not found");
     }
 
     /* -------------------------
