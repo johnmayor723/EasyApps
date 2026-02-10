@@ -184,7 +184,7 @@ exports.completeSignup = async (req, res) => {
     process.env.APP_BASE_URL ||
     `${req.protocol}://${req.get('host')}`;
 
-    const appUrl = `${baseUrl}/multitenant/${tenantId}/${slug}`;
+    const appUrl = `https://easyhostnet.com/multitenant/${tenantId}/${slug}`;
 
     console.log("🌍 Generated app URL:", appUrl);
 
