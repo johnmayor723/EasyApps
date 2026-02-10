@@ -172,6 +172,13 @@ app.use("/restaurants", clientRestaurantRouter);
 app.use("/paystack", paystackRoutes);
 
 /* =======================
+   Health Check
+======================= */
+app.get("/health", (req, res) => {
+  res.send("🚀 Multitenant Server running successfully!");
+});
+
+/* =======================
    API Routes
 ======================= */
 app.use("/api/auth", authRoutes);
@@ -186,12 +193,6 @@ app.use("/api/menus", tenantResolver, menuRoutes);
 app.use("/api/reservations", tenantResolver, reservationRoutes);
 app.use("/api/domain", domainRoutes);
 
-/* =======================
-   Health Check
-======================= */
-app.get("/", (req, res) => {
-  res.send("🚀 Multitenant Server running successfully!");
-});
 
 /* =======================
    Favicon Safety
