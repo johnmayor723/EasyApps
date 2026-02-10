@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= tenant.name %> Store</title>
+  <link rel="stylesheet" href="/multitenant/css/store.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+  <div class="logo">
+    <% if (tenant.logo && tenant.logo.trim() !== '') { %>
+      <img src="<%= tenant.logo %>" alt="<%= tenant.name %> Logo" style="height: 40px; border-radius: 8px;">
+    <% } else { %>
+      <%= tenant.name %>
+    <% } %>
+  </div>
+
+  <nav class="nav-links" id="nav-links">
+    <a href="/store/<%= tenant.slug || tenant.name %>">Home</a>
+    <a href="#">Products</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <!-- 🛒 CART BUTTON -->
+  <div class="cart-container">
+    <a href="/store/<%= tenant.slug || tenant.name %>/cart" class="cart-btn" 
+       title="Cart — <%= cart ? ('$' + cart.totalPrice.toFixed(2)) : '$0.00' %>">
+      <i class="fas fa-shopping-cart"></i>
+      <% if (cart && cart.totalQty > 0) { %>
+        <span id="cart-count"><%= cart.totalQty %></span>
+      <% } else { %>
+        <span id="cart-count">0</span>
+      <% } %>
+    </a>
+  </div>
+
+  <button class="start-btn">Start Now</button>
+  <button style="color: #475569;" class="menu-btn" id="menu-btn">☰</button>
+</header>
+
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="filter-group">
+        <label for="sort">SORT BY</label>
+        <select id="sort">
+          <option>Featured</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <p class="filter-title">CATEGORY</p>
+        <label><input type="radio" name="category" checked> All Products</label>
+        <% const categories = [...new Set(products.map(p => p.category).filter(Boolean))]; %>
+        <% categories.forEach(cat => { %>
+          <label><input type="radio" name="category"> <%= cat %></label>
+        <% }) %>
+      </div>
+
+      <div class="filter-group">
+        <p class="filter-title">PRICE RANGE</p>
+        <input type="range" min="0" max="1000" value="500" />
+        <div class="price-labels">
+          <span>$0</span>
+          <span>$1000</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <% if (products.length === 0) { %>
+        <p style="grid-column: 1 / -1; text-align:center;">No products available.</p>
+      <% } else { %>
+        <% products.forEach(product => { %>
+          <a href="/store/<%= tenant.name %>/product/<%= product._id %>">
+            <div class="product-card">
+              <% if (product.salePrice) { %>
+                <span class="sale">SALE</span>
+              <% } %>
+
+              <% if (product.images && product.images.length > 0) { %>
+                <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="image-placeholder" style="object-fit: cover; height:250px; border-radius:6px;">
+              <% } else { %>
+                <div class="image-placeholder">No Image</div>
+              <% } %>
+
+              <p class="name"><%= product.name %></p>
+              <p class="price">
+                $<%= product.price.toFixed(2) %>
+                <% if (product.oldPrice) { %>
+                  <span class="old-price">$<%= product.oldPrice.toFixed(2) %></span>
+                <% } %>
+              </p>
+            </div>
+          </a>
+        <% }) %>
+      <% } %>
+    </main>
+  </div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <% if (tenant.logo) { %>
+          <img src="<%= tenant.logo %>" alt="<%= tenant.name %>" height="40">
+        <% } %>
+        <h2><%= tenant.name %></h2>
+        <p>
+          Welcome to <%= tenant.name %> — explore our exclusive products.
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-discord"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Partners</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 <%= tenant.name %>. All rights reserved.
+    </div>
+  </footer>
+
+  <nav class="mobile-nav">
+    <a href="#" class="active"><i class="fas fa-home"></i> Home</a>
+    <a href="#"><i class="fas fa-box"></i> Products</a>
+    <a href="#"><i class="fas fa-dollar-sign"></i> Pricing</a>
+    <a href="#"><i class="fas fa-user"></i> Account</a>
+  </nav>
+
+  <script>
+    const menuBtn1 = document.getElementById('menu-btn1');
+    const sidebar = document.getElementById('sidebar');
+    menuBtn1.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+    const menuBtn = document.getElementById("menu-btn");
+    const navLinks = document.getElementById("nav-links");
+    menuBtn.addEventListener("click", () => navLinks.classList.toggle("active"));
+  </script>
+</body>
+</html>

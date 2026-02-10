@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build AI Apps - Graybase</title>
+  <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <style>
+
+    body {
+  background: #f9f8f8;
+  
+}
+  .cart-section {
+  padding: 2rem 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.cart-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.cart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* Left: Items */
+.cart-items {
+  flex: 1 1 60%;
+  min-width: 280px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fff;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+.item-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.item-details {
+  flex: 1;
+  min-width: 100px;
+}
+
+.item-name {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.item-price {
+  font-weight: bold;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #444;
+}
+
+/* Right: Summary */
+.order-summary {
+  flex: 1 1 300px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background: #fafafa;
+  height: fit-content;
+}
+
+.order-summary h3 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.summary-row,
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.summary-total {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.free-shipping-note {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 0.6rem;
+  transition: 0.3s;
+}
+
+.btn.primary {
+  background: #000;
+  color: #fff;
+  border: none;
+}
+
+.btn.primary:hover {
+  opacity: 0.9;
+}
+
+.btn.secondary {
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 768px) {
+  .cart-container {
+    flex-direction: column;
+  }
+
+  .order-summary {
+    width: 100%;
+  }
+
+  .cart-item {
+    flex-direction: row; /* ✅ Keep horizontal layout */
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .item-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .item-name {
+    font-size: 1rem;
+  }
+
+  .item-actions {
+    gap: 0.3rem;
+  }
+
+  .qty-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+
+/* 📱 Mobile Responsive */
+@media (max-width: 768px) {
+  .cart-container {
+    flex-direction: column;
+  }
+
+  .order-summary {
+    width: 100%;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .item-actions {
+    align-self: flex-end;
+  }
+}
+
+ </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">Graybase</div>
+    <nav class="nav-links" id="nav-links">
+      <a href="#">Product</a>
+      <a href="#">Resources</a>
+      <a href="#">Pricing</a>
+      <a href="#">Enterprise</a>
+    </nav>
+    <button class="start-btn">Start Now</button>
+    <button style="color: #666" class="menu-btn" id="menu-btn">☰</button>
+  </header>
+
+
+ <section class="cart-section">
+  <h2 class="cart-title">Shopping Cart</h2>
+
+  <div class="cart-container">
+    <!-- Left: Cart Items -->
+    <div class="cart-items">
+      <div class="cart-item">
+        <div class="item-image">No Image</div>
+        <div class="item-details">
+          <h3 class="item-name">www</h3>
+          <p class="item-price">$23</p>
+        </div>
+        <div class="item-actions">
+          <button class="qty-btn">-</button>
+          <span class="item-qty">1</span>
+          <button class="qty-btn">+</button>
+          <button class="delete-btn" title="Remove">&#128465;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Summary -->
+    <aside class="order-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>$23.00</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span>$10.00</span>
+      </div>
+      <div class="summary-row">
+        <span>Tax</span>
+        <span>$1.84</span>
+      </div>
+      <hr>
+      <div class="summary-total">
+        <span>Total</span>
+        <span>$34.84</span>
+      </div>
+      <p class="free-shipping-note">Add $77.00 more for free shipping</p>
+
+      <button class="btn primary">Proceed to Checkout</button>
+      <button style="color: #666;" class="btn secondary">Continue Shopping</button>
+    </aside>
+  </div>
+</section>
+
+ <footer>
+    <div class="footer-container">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+        
+          <h2>EasyApps</h2>
+        </div>
+        <p>
+          EasyApps is the AI-powered platform that lets you build, launch, and scale apps in minutes.
+          From dashboards to customer portals, EasyApps makes it simple — no coding required.
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-discord"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Partners</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+
+      <!-- Product -->
+      <div class="footer-col">
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Templates</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Roadmap</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+
+     
+
+      <!-- Legal -->
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Responsible Use</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 EasyApps Inc. All rights reserved.
+    </div>
+  </footer>
+  <!-- Mobile Bottom Navigation -->
+  <!-- ===== Mobile Bottom Tab ===== -->
+  <nav class="mobile-nav">
+    <a href="#" class="active">
+      <i class="fas fa-home"></i>
+      Home
+    </a>
+    <a href="#">
+      <i class="fas fa-box"></i>
+      Products
+    </a>
+    <a href="#">
+      <i class="fas fa-dollar-sign"></i>
+      Pricing
+    </a>
+    <a href="#">
+      <i class="fas fa-user"></i>
+      Account
+    </a>
+  </nav>
+<!-- Font Awesome (for icons) -->
+<script src="https://kit.fontawesome.com/a2e0e6b06f.js" crossorigin="anonymous"></script>
+
+
+
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const navLinks = document.getElementById("nav-links");
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+    });
+  </script>
+</body>
+</html>

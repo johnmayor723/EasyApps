@@ -1,0 +1,23 @@
+import crypto from "crypto";
+
+/**
+ * Generate API token
+ * @param {string} username - reseller email
+ * @param {string} apiSecret - API key
+ * @returns {string} base64 encoded token
+ */
+export function generateToken(username, apiSecret) {
+  const date = new Date();
+  const gmtDate = new Date(date.toISOString());
+  const formattedDate = gmtDate.toISOString().slice(2, 13).replace("T", " ");
+
+  const key = `${username}:${formattedDate}`;
+  const message = apiSecret;
+
+  const hmacHex = crypto
+    .createHmac("sha256", key)
+    .update(message)
+    .digest("hex");
+
+  return Buffer.from(hmacHex).toString("base64");
+}

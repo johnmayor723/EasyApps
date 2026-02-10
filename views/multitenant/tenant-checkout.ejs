@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f8fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .checkout-container {
+      display: flex;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 900px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* Left section */
+    .summary {
+      background: #1c2431;
+      color: white;
+      flex: 1;
+      padding: 30px;
+    }
+
+    .summary h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      font-weight: normal;
+    }
+
+    .summary .price {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .summary .details {
+      margin: 20px 0;
+    }
+
+    .summary .details p {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .summary .total {
+      border-top: 1px solid rgba(255,255,255,0.3);
+      margin-top: 15px;
+      padding-top: 15px;
+      font-weight: bold;
+    }
+
+    /* Right section */
+    .payment {
+      flex: 1.2;
+      padding: 30px;
+    }
+
+    .pay-btn {
+      width: 100%;
+      padding: 12px;
+      background: #00b74a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 15px 0;
+      color: #888;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .card-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .card-row input {
+      flex: 1;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <!-- Left: Summary -->
+    <div class="summary">
+      <h2>Subscribe to Business plan</h2>
+      <div class="price">$1.00</div>
+      <p>Then $50.00 per month starting next month</p>
+
+      <div class="details">
+        <p><span>Business plan</span> <span>$50.00</span></p>
+        <p><span>Subtotal</span> <span>$50.00</span></p>
+        <p><span>FIRST_MONTH_49</span> <span>-$49.00</span></p>
+      </div>
+
+      <div class="total">
+        <p><span>Total due today</span> <span>$1.00</span></p>
+      </div>
+    </div>
+
+    <!-- Right: Payment -->
+    <div class="payment">
+      <button class="pay-btn">Pay with Link</button>
+      <div class="divider">Or</div>
+
+      <form>
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com">
+
+        <label>Payment method</label>
+        <input type="radio" checked> Card
+        <br><br>
+
+        <input type="text" placeholder="1234 1234 1234 1234">
+        
+        <div class="card-row">
+          <input type="text" placeholder="MM/YY">
+          <input type="text" placeholder="CVC">
+        </div>
+
+        <input type="text" placeholder="Cardholder name">
+        
+        <label>Country or region</label>
+        <select>
+          <option value="Nigeria">Nigeria</option>
+          <option value="United States">United States</option>
+          <option value="UK">United Kingdom</option>
+        </select>
+
+        <input type="text" placeholder="Google Pay">
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+</head>
+<body>
+<% if (typeof user === 'undefined') { var user = locals.user; } %>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <ul class="menu">
+ <% const appType = session?.type; %>. 
+  <!-- Common items (both ecommerce & restaurant) -->
+    <li><a data-page="dashboard">Overview</a></li>
+  <% if (appType === 'ecommerce') { %>
+    <li><a data-page="products">Products</a></li>
+    <li><a data-page="orders">Orders</a></li>     
+    <li><a data-page="inventory">Inventory</a></li>
+  <% } %>
+  
+
+  <!-- Restaurant-only items -->
+  <% if (appType === 'restaurant') { %>
+    <li><a data-page="menu">Menu</a></li>
+   
+  <% } %>
+  <li><a data-page="customers">Customers</a></li>
+   <li><a data-page="chats">Chats</a></li>
+  <li><a data-page="design">Design</a></li>
+  <li><a data-page="settings">Settings</a></li>
+  <li><a data-page="marketing">Marketing</a></li>
+
+</ul>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Left Column -->
+    <div class="left-col" id="dynamic-content">
+   
+
+
+    </div>
+
+    
+  </div>
+  
+
+  <script src="/multitenant/js/dashboard.js"></script>
+  <script>
+  function openMenuModal() {
+    const menu = document.getElementById("menuModal");
+
+    if (!menu) {
+      console.error("menuModal not found");
+      return;
+    }
+
+    menu.style.display =
+      menu.style.display === "block" ? "none" : "block";
+  }
+</script>
+
+  
+</body>
+</html>

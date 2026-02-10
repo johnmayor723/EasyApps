@@ -1,0 +1,32 @@
+import { createAxiosClient } from "../config/axiosClient.js";
+import { generateToken } from "../utils/generateToken.js";
+import { formatError } from "../errors/handleError.js";
+
+/**
+ * Get domain nameservers
+ * @param {object} config - { endpoint, username, apiSecret }
+ * @param {object} data - query parameters (usually { domain })
+ * @param {string} domain - the domain name
+ * @returns {Promise<object>} - API response
+ */
+export async function getDomainNameservers(config, data, domain) {
+  const { endpoint, username, apiSecret } = config;
+  const token = generateToken(username, apiSecret);
+
+  const client = createAxiosClient(endpoint);  // dynamic client
+
+
+  try {
+    const response = await client.get(`/domains/${domain}/nameservers`, {
+      params: data,
+      headers: {
+        username,
+        token,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    return formatError(error, "getDomainNameservers");
+  }
+}

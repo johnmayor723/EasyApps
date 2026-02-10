@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build AI Apps - Graybase</title>
+  <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <style>
+
+    body {
+  background: #f9f8f8;
+  
+}
+ .checkout-section {
+  padding: 2rem 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.checkout-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.checkout-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* LEFT SIDE */
+.shipping-form {
+  flex: 1 1 60%;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 2rem;
+  background: #fff;
+}
+
+.shipping-form h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* RIGHT SIDE */
+.order-summary {
+  flex: 1 1 300px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background: #fafafa;
+  height: fit-content;
+}
+
+.order-summary h3 {
+  margin-bottom: 1.2rem;
+  font-size: 1.2rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.item-image {
+  width: 60px;
+  height: 60px;
+  background: #f3f3f3;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.item-name {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.item-qty {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.item-price {
+  font-weight: 500;
+}
+
+.summary-row,
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin: 0.4rem 0;
+}
+
+.summary-total {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 0.8rem;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: 0.3s;
+}
+
+.btn.primary {
+  background: #000;
+  color: #fff;
+  border: none;
+}
+
+.btn.primary:hover {
+  opacity: 0.9;
+}
+
+.terms-note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.8rem;
+  text-align: center;
+}
+
+.terms-note a {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 768px) {
+  .checkout-container {
+    flex-direction: column;
+  }
+
+  .shipping-form,
+  .order-summary {
+    width: 100%;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+
+ </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">Graybase</div>
+    <nav class="nav-links" id="nav-links">
+      <a href="#">Product</a>
+      <a href="#">Resources</a>
+      <a href="#">Pricing</a>
+      <a href="#">Enterprise</a>
+    </nav>
+    <button class="start-btn">Start Now</button>
+    <button style="color: #666" class="menu-btn" id="menu-btn">☰</button>
+  </header>
+
+
+ <section class="checkout-section">
+  <a href="#" class="back-link">← Back to Cart</a>
+  <h2 class="checkout-title">Checkout</h2>
+
+  <div class="checkout-container">
+    <!-- LEFT: Shipping Information -->
+    <form class="shipping-form">
+      <h3>Shipping Information</h3>
+
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" placeholder="Enter full name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Address Line 1 *</label>
+        <input type="text" placeholder="Street address" required>
+      </div>
+
+      <div class="form-group">
+        <label>Address Line 2</label>
+        <input type="text" placeholder="Apartment, suite, etc.">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" required>
+        </div>
+        <div class="form-group">
+          <label>State *</label>
+          <input type="text" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ZIP Code *</label>
+          <input type="text" required>
+        </div>
+        <div class="form-group">
+          <label>Phone *</label>
+          <input type="tel" required>
+        </div>
+      </div>
+    </form>
+
+    <!-- RIGHT: Order Summary -->
+    <aside class="order-summary">
+      <h3>Order Summary</h3>
+
+      <div class="summary-item">
+        <div class="item-left">
+          <div class="item-image">No Image</div>
+          <div>
+            <p class="item-name">www</p>
+            <p class="item-qty">Qty: 1</p>
+          </div>
+        </div>
+        <p class="item-price">$23.00</p>
+      </div>
+
+      <hr>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>$23.00</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span>$10.00</span>
+      </div>
+      <div class="summary-row">
+        <span>Tax</span>
+        <span>$1.84</span>
+      </div>
+
+      <hr>
+
+      <div class="summary-total">
+        <span>Total</span>
+        <span>$34.84</span>
+      </div>
+
+      <button class="btn primary">Place Order</button>
+
+      <p class="terms-note">
+        By placing your order, you agree to our
+        <a href="#">terms and conditions</a>.
+      </p>
+    </aside>
+  </div>
+</section>
+
+
+ <footer>
+    <div class="footer-container">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+        
+          <h2>EasyApps</h2>
+        </div>
+        <p>
+          EasyApps is the AI-powered platform that lets you build, launch, and scale apps in minutes.
+          From dashboards to customer portals, EasyApps makes it simple — no coding required.
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-discord"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Partners</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+
+      <!-- Product -->
+      <div class="footer-col">
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Templates</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Roadmap</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+
+     
+
+      <!-- Legal -->
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Responsible Use</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 EasyApps Inc. All rights reserved.
+    </div>
+  </footer>
+  <!-- Mobile Bottom Navigation -->
+  <!-- ===== Mobile Bottom Tab ===== -->
+  <nav class="mobile-nav">
+    <a href="#" class="active">
+      <i class="fas fa-home"></i>
+      Home
+    </a>
+    <a href="#">
+      <i class="fas fa-box"></i>
+      Products
+    </a>
+    <a href="#">
+      <i class="fas fa-dollar-sign"></i>
+      Pricing
+    </a>
+    <a href="#">
+      <i class="fas fa-user"></i>
+      Account
+    </a>
+  </nav>
+<!-- Font Awesome (for icons) -->
+<script src="https://kit.fontawesome.com/a2e0e6b06f.js" crossorigin="anonymous"></script>
+
+
+
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const navLinks = document.getElementById("nav-links");
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+    });
+  </script>
+</body>
+</html>

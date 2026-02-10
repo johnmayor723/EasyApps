@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+  <link rel="stylesheet" href="/multitenant/css/product-form.css">
+</head>
+<body>
+<% if (typeof user === 'undefined') { var user = locals.user; } %>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <ul class="menu">
+      <li><a style="color: #eef2ff;background-color: #2a2b2c" class="btn btn-dark" href="/multitenant/dashboard">Back To Dashboard</a></li>
+     
+    </ul>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Left Column -->
+    
+   
+
+<form class="product-card" action="/multitenant/add-products" method="POST" enctype="multipart/form-data" novalidate>
+    <div class="product-header">
+        <div>
+            <div class="product-title">Create Product.</div>
+            <div class="product-sub">Add product details and upload an image</div>
+        </div>
+        <div class="product-actions">
+            <button type="reset" class="btn btn-ghost" title="Reset form">Reset</button>
+            <button type="submit" class="btn btn-primary">Save product</button>
+        </div>
+    </div>
+
+    <div class="product-form">
+        <div class="fields">
+            <label class="field">
+                <span>Product name</span>
+                <input name="name" type="text" placeholder="e.g. Organic Dark Roast Coffee" required />
+                <small class="help">Keep it short and descriptive.</small>
+            </label>
+
+            <label class="field">
+                <span>Description</span>
+                <textarea name="description" placeholder="Describe the product..."></textarea>
+            </label>
+
+            <div class="row">
+                <label class="field">
+                    <span>Price (USD)</span>
+                    <input name="price" type="number" min="0" step="0.01" placeholder="0.00" required />
+                </label>
+
+                <label class="field">
+                    <span>Quantity</span>
+                    <input name="quantity" type="number" min="0" step="1" placeholder="0" />
+                </label>
+            </div>
+
+            <div class="row">
+                <label class="field">
+                    <span>Category</span>
+                    <select name="category">
+                        <option value="">Select category</option>
+                        <option>Food & Beverage</option>
+                        <option>Home</option>
+                        <option>Electronics</option>
+                        <option>Fashion</option>
+                    </select>
+                </label>
+
+                <label class="field">
+                    <span>SKU (optional)</span>
+                    <input name="sku" type="text" placeholder="SKU-1234" />
+                </label>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;">
+                <small class="help">You can add more fields later.</small>
+            </div>
+        </div>
+
+        <aside class="image-panel">
+            <div id="uploadArea" class="upload-area" aria-label="Image upload area">
+                <div class="preview" id="previewBox">
+                    <p class="help" id="previewText">Drop an image here or click to choose</p>
+                </div>
+
+                <input id="fileInput" name="image" type="file" accept="image/*" style="display:none" />
+
+                <div class="meta">
+                    <div class="small">PNG, JPG up to 5MB</div>
+                    <div>
+                        <button type="button" id="chooseBtn" class="btn btn-ghost">Choose file</button>
+                        <button type="button" id="removeBtn" class="btn" style="display:none">Remove</button>
+                    </div>
+                </div>
+
+                <div id="imgError" class="error" style="display:none"></div>
+            </div>
+
+            <div class="form-actions" style="margin-top:12px">
+                <button type="button" id="clearBtn" class="btn btn-ghost">Clear image</button>
+                <button type="submit" class="btn btn-primary">Save product</button>
+            </div>
+        </aside>
+    </div>
+</form>
+
+<script src="/multitenant/js/product-form.js"></script>
+
+   
+
+  <script src="/multitenant/js/dashboard.js"></script>
+  
+</body>
+</html>

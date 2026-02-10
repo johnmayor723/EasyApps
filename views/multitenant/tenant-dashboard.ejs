@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+   <link rel="stylesheet" href="/multitenant/css/overview-content.css">
+</head>
+<body>
+<% if (typeof user === 'undefined') { var user = locals.user; } %>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <ul class="menu">
+ <% const appType = session?.type; %>
+  <!-- Common items (both ecommerce & restaurant) -->
+    <li><a data-page="dashboard">Overview</a></li>
+  <% if (appType === 'ecommerce') { %>
+    <li><a data-page="products">Products</a></li>
+    <li><a data-page="orders">Orders</a></li>     
+    <li><a data-page="inventory">Inventory</a></li>
+  <% } %>
+  
+
+  <!-- Restaurant-only items -->
+  <% if (appType === 'restaurant') { %>
+    <li><a data-page="menu">Menu</a></li>
+    <li><a data-page="tables">Tables</a></li>
+    <li><a data-page="reservations">Reservations</a></li>
+    <li><a data-page="kitchen">Kitchen</a></li>
+  <% } %>
+  <li><a data-page="customers">Customers</a></li>
+   <li><a data-page="chats">Chats</a></li>
+  <li><a data-page="design">Design</a></li>
+  <li><a data-page="settings">Settings</a></li>
+  <li><a data-page="marketing">Marketing</a></li>
+
+</ul>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Left Column -->
+    <div class="left-col" id="dynamic-content">
+   
+
+
+    </div>
+
+    
+  </div>
+    <a
+  href="https://wa.me/2349123907060"
+  target="_blank"
+  class="whatsapp-float"
+  aria-label="Chat with us on WhatsApp"
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+<style>
+ .whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+  </style>
+
+  <script src="/multitenant/js/dashboard.js"></script>
+  <script>
+    function sanitizeDomainInput(input) {
+      // Remove spaces
+      input.value = input.value.replace(/\s+/g, '');
+
+      // Block dots (.)
+      if (input.value.includes('.')) {
+        input.value = input.value.split('.')[0];
+      }
+
+      // Allow only letters, numbers, hyphen
+      input.value = input.value.replace(/[^a-zA-Z0-9-]/g, '');
+    }
+    async function searchDomain() {
+  const input = document.getElementById('domainInput');
+  const resultsBox = document.getElementById('domainResults');
+
+  const name = input.value.trim().toLowerCase();
+  if (!name) return;
+
+  const domain = `${name}.com.ng`;
+
+  resultsBox.innerHTML = `
+    <div class="muted">Checking availability for <strong>${domain}</strong>…</div>
+  `;
+
+  try {
+   const res = await fetch('http://easyhostnet.localhost:3060/api/domain/check-domain', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ domain }) // send domain in request body
+    });
+    const data = await res.json();
+
+    if (data.available === true) {
+      resultsBox.innerHTML = `
+        <div class="domain-row available">
+          <strong>${domain}</strong>
+          <span style='padding:0 10px' class="badge success">Available</span>
+          <button class="btn primary" style="margin-left:auto; font-size:15px;padding:8px 10px" 
+          onclick="reserveDomain('${domain}')">
+            Claim Domain
+          </button>
+        </div>
+      `;
+    } else if (data.available === false) {
+      resultsBox.innerHTML = `
+        <div class="domain-row unavailable">
+          <strong>${domain}</strong>
+          <span class="badge danger">Not Available</span>
+        </div>
+      `;
+    } else {
+      resultsBox.innerHTML = `
+        <div class="domain-row error">
+          Unable to check domain right now.
+        </div>
+      `;
+    }
+
+  } catch (err) {
+    console.error(err);
+    resultsBox.innerHTML = `
+      <div class="domain-row error">
+        Network error. Please try again.
+      </div>
+    `;
+  }
+}
+async function reserveDomain(domain) {
+  const resultsBox = document.getElementById('domainResults');
+
+  resultsBox.innerHTML = `
+    <div class="muted">Reserving <strong>${domain}</strong>…</div>
+  `;
+
+  try {
+    const res = await fetch(`http://easyhostnet.localhost:3060/api/domain/get-domain`, {
+      method: 'POST', // assuming POST for reservation
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain })
+    });
+
+    if (res.ok) {
+      // Redirect to dashboard if status is 200
+      window.location.href = 'http://easyhostnet.localhost:3060/multitenant/dashboard';
+      return; // stop further execution
+    }
+
+    // If response is not 200, show error
+    const data = await res.json();
+    resultsBox.innerHTML = `
+      <div class="domain-row error">
+        Failed to reserve domain: ${data.message || 'Unknown error'}
+      </div>
+    `;
+
+  } catch (err) {
+    console.error(err);
+    resultsBox.innerHTML = `
+      <div class="domain-row error">
+        Network error. Please try again.
+      </div>
+    `;
+  }
+}
+
+
+
+</script>
+
+
+  <script>
+async function manualReserveDomain(domain) {
+  const resultsBox = document.getElementById('domainResults');
+
+  // Simulate processing
+  resultsBox.innerHTML = `
+    <div class="muted">
+      Reserving <strong>${domain}</strong>…
+    </div>
+  `;
+
+  // Fake delay for realism
+  setTimeout(() => {
+    alert(
+      `🎉 Domain Reserved Successfully!\n\n` +
+      `Domain: ${domain}\n\n` +
+      `DNS setup is in progress and will be completed within 24 hours.\n\n` +
+      `You can access your domain here:\nhttps://${domain}`
+    );
+
+    resultsBox.innerHTML = `
+      <div class="domain-row available">
+        <strong>${domain}</strong>
+        <span class="badge success">Reserved</span>
+        <a 
+          href="https://${domain}" 
+          target="_blank"
+          style="margin-left:auto; text-decoration:none; font-size:14px"
+        >
+          Visit Domain ↗
+        </a>
+      </div>
+    `;
+  }, 1200);
+}
+</script>
+
+</body>
+</html>

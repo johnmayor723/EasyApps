@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f5f5;
+      color: #111;
+    }
+
+    header {
+      background: #fff;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      font-size: 14px;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 520px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    form {
+      background: #fff;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #111;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header: ONLY back button -->
+  <header>
+    <a href="javascript:history.back()" class="back-btn">← Back</a>
+  </header>
+
+  <!-- Main content: EDIT MENU ONLY -->
+  <main>
+    <h1>Edit Menu Item</h1>
+
+    <form
+      method="POST"
+      action="/restaurant-management/menu/<%= menu._id %>/edit"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label>Menu Name</label>
+        <input
+          type="text"
+          name="name"
+          value="<%= menu.name %>"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          name="description"
+          rows="3"
+          required
+        ><%= menu.description %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <input
+          type="text"
+          name="category"
+          value="<%= menu.category %>"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Price</label>
+        <input
+          type="number"
+          name="price"
+          step="0.01"
+          value="<%= menu.price %>"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select name="available">
+          <option value="true" <%= menu.available ? 'selected' : '' %>>
+            Available
+          </option>
+          <option value="false" <%= !menu.available ? 'selected' : '' %>>
+            Unavailable
+          </option>
+        </select>
+      </div>
+
+      <% if (menu.image) { %>
+        <div class="form-group">
+          <label>Current Image</label>
+          <img src="<%= menu.image %>" alt="Menu image" />
+        </div>
+      <% } %>
+
+      <div class="form-group">
+        <label>Change Image</label>
+        <input type="file" name="image" accept="image/*" />
+      </div>
+
+      <button type="submit">Update Menu</button>
+    </form>
+  </main>
+
+</body>
+</html>

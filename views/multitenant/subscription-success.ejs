@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Subscription Successful</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f6f7f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #111827;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 32px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #6b7280;
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    .plan {
+      background: #ecfeff;
+      color: #0369a1;
+      padding: 8px 14px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #111827;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="icon">✅</div>
+    <h2>Payment Successful</h2>
+
+    <p>Your subscription has been activated successfully.</p>
+
+    <div class="plan">
+      You are now on the <strong>Pro Plan</strong>
+    </div>
+
+    <br />
+
+    <a href="/multitenant/dashboard" class="btn">
+      Go to Dashboard
+    </a>
+  </div>
+</body>
+</html>

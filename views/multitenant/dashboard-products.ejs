@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <title>Products Dashboard</title>
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+  <link rel="stylesheet" href="/multitenant/css/product-form.css">
+  <link rel="stylesheet" href="/multitenant/css/products.css"> <!-- NEW -->
+  <style>
+    /* Layout grid for dashboard */
+.product-dashboard {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 2rem;              /* space between table and form */
+  margin-top: 1.5rem;
+}
+
+
+@media (max-width: 900px) {
+  .product-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Product Table Styles --- */
+.product-table {
+  width: 100%;
+  border-collapse: collapse; /* enables visible cell borders */
+  margin-top: 1rem;
+  background: #fff;
+  border: 1px solid #d1d5db; /* outer border */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-table thead {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  text-align: left;
+}
+
+.product-table th,
+.product-table td {
+  padding: 0.9rem 1rem;
+  border: 1px solid #e2e8f0; /* ✅ lines between rows and columns */
+  vertical-align: middle;
+  text-align: left;
+}
+
+.product-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.product-table td {
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.product-table tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background 0.2s ease;
+}
+
+/* Thumbnail images */
+.product-thumb img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+.product-thumb span {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* Actions column */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.inline-form {
+  display: inline;
+  margin: 0;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.75rem;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.btn-small {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.6rem;
+}
+
+.btn-edit {
+  background-color: #3b82f6;
+}
+
+.btn-edit:hover {
+  background-color: #2563eb;
+}
+
+.btn-delete {
+  background-color: #ef4444;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
+}
+
+/* Card styling */
+.card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+  </style>
+</head>
+<body>
+  <% if (typeof user === 'undefined') { var user = locals.user; } %>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <ul class="menu">
+      <li><a class="btn btn-dark active" href="/multitenant/dashboard">Back To Dashboard</a></li>
+      <li><a class="btn btn-dark active" href="#"> All Products</a></li>
+    </ul>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+   
+
+    <div class="product-dashboard">
+      <!-- PRODUCTS TABLE -->
+    <section class="product-table-section">
+    <div class="card">
+    <h2>All Products</h2>
+    <% if (products && products.length > 0) { %>
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>SKU</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(product => { %>
+            <tr>
+               <td class="product-thumb">
+                <% if (product.images && product.images.length > 0) { %>
+                  <img src="<%= product.images[0] %>" alt="<%= product.name %>" height="50">
+                <% } else { %>
+                  <span>No Image</span>
+                <% } %>
+              </td>
+
+              <td><%= product.name %></td>
+              <td><%= product.category || '—' %></td>
+              <td>$<%= product.price.toFixed(2) %></td>
+              <td><%= product.quantity %></td>
+              <td><%= product.sku || '—' %></td>
+              <td><%= new Date(product.createdAt).toLocaleDateString() %></td>
+              <td class="actions">
+                <a href="/multitenant/edit-product/<%= product._id %>" class="btn btn-small btn-edit">Edit</a>
+                <form action="/multitenant/delete-product/<%= product._id %>" method="POST" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                  <button type="submit" class="btn btn-small btn-delete">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p style="margin-top:1em;">No products yet. Use the form below to create one!</p>
+    <% } %>
+  </div>
+</section>
+
+
+      <!-- CREATE PRODUCT FORM -->
+      <section class="create-product-section">
+        <form class="product-card" action="/multitenant/add-products" method="POST" enctype="multipart/form-data" novalidate>
+          <div class="product-header">
+            <div>
+              <div class="product-title">Create Product</div>
+              <div class="product-sub">Add product details and upload an image</div>
+            </div>
+            <div class="product-actions">
+              <button type="reset" class="btn btn-ghost">Reset</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+
+          <div class="product-form">
+            <!-- Fields -->
+            <div class="fields">
+              <label class="field">
+                <span>Product name</span>
+                <input name="name" type="text" placeholder="e.g. Organic Coffee" required />
+              </label>
+
+              <label class="field">
+                <span>Description</span>
+                <textarea name="description" placeholder="Describe the product..."></textarea>
+              </label>
+
+              <div class="row">
+                <label class="field">
+                  <span>Price (USD)</span>
+                  <input name="price" type="number" min="0" step="0.01" placeholder="0.00" required />
+                </label>
+                <label class="field">
+                  <span>Quantity</span>
+                  <input name="quantity" type="number" min="0" step="1" placeholder="0" />
+                </label>
+              </div>
+
+              <div class="row">
+                <label class="field">
+                  <span>Category</span>
+                  <select name="category">
+                    <option value="">Select category</option>
+                    <option>Food & Beverage</option>
+                    <option>Home</option>
+                    <option>Electronics</option>
+                    <option>Fashion</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>SKU (optional)</span>
+                  <input name="sku" type="text" placeholder="SKU-1234" />
+                </label>
+              </div>
+            </div>
+
+            <!-- Image upload -->
+           <aside class="image-panel">
+            <div id="uploadArea" class="upload-area" aria-label="Image upload area">
+                <div class="preview" id="previewBox">
+                    <p class="help" id="previewText">Drop an image here or click to choose</p>
+                </div>
+
+                <input id="fileInput" name="image" type="file" accept="image/*" style="display:none" />
+
+                <div class="meta">
+                    <div class="small">PNG, JPG up to 5MB</div>
+                    <div>
+                        <button style="color:#1e293b" type="button" id="chooseBtn" class="btn btn-ghost">Choose file</button>
+                        <button type="button" id="removeBtn" class="btn" style="display:none">Remove</button>
+                    </div>
+                </div>
+
+                <div id="imgError" class="error" style="display:none"></div>
+            </div>
+
+            <div class="form-actions" style="margin-top:12px">
+                <button type="button" id="clearBtn" class="btn btn-ghost">Clear image</button>
+                <button type="submit" class="btn btn-primary">Save product</button>
+            </div>
+        </aside>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <script src="/multitenant/js/product-form.js"></script>
+  <script src="/multitenant/js/dashboard.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,319 @@
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h2>MenuItem</h2>
+    <div class="actions">
+      <button class="icon-btn">•••</button>
+     <button class="add-btn" onclick="openMenuModal()">+ Add</button>
+
+
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+<% const menu = (typeof session !== 'undefined' && session.menu !== undefined)
+  ? session.menu
+  : null;
+%>
+<% const tenant = session.tenant ; %>
+<% const menuData = session.menuData ; %>
+   <% if (!menu || menu.length === 0) { %>
+      <!-- EMPTY STATE -->
+      <div class="menu-empty">
+        <h3>No menu created yet</h3>
+        <p>Your restaurant doesn’t have any menu items.</p>
+       <button class="add-btn" onclick="alert('clicked')">+ Add</button>
+
+      </div>
+    <% } else { %>
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search">
+          🔍
+          <input type="text" placeholder="Search by name, description, image_url" />
+          <span class="info">ⓘ</span>
+        </div>
+
+        <button class="filter-btn">⏷ Filters</button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>description</th>
+              <th>price</th>
+              <th>category</th>
+              <th>image_url</th>
+              <th>is_vegetarian</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- STATIC CONTENT -->
+             <% menuData.forEach(item => { %>
+              <tr>
+                <td><%= item.name %></td>
+                <td><%= item.description %></td>
+                <td><%= item.price %></td>
+                <td><%= item.category %></td>
+                <td>
+                  <% if (item.image) { %>
+                    <img 
+                      src="<%= item.image %>" 
+                      alt="<%= item.name %>" 
+                      style="width:50px;height:50px;object-fit:cover;border-radius:6px;"
+                    />
+                  <% } else { %>
+                    —
+                  <% } %>
+                </td>
+                <td><%= item.available ? 'true' : 'false' %></td>
+                <td class="actions">
+                  <a href="/restaurant-management/menu/<%= item._id %>/edit" class="btn btn-edit">Edit</a>
+                  <a href="/restaurant-management/menu/<%= item._id %>/delete" class="btn btn-delete">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+                      
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+  </div>
+</div>
+<!-- Create Menu Section (TEMP TEST MODE) -->
+<div class="menu-modal test-mode">
+  <div class="modal-header">
+    <h3>Create Menu Item</h3>
+  </div>
+
+  <form method="POST" action="/restaurant-management/create-menu" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+  <label>Category</label>
+  <select name="category" required>
+    <option value="" disabled selected>Select category</option>
+    <option value="appetizers">Appetizers</option>
+    <option value="soups">Soups</option>
+    <option value="salads">Salads</option>
+    <option value="main_courses">Main Courses</option>
+    <option value="grills_bbq">Grills / BBQ</option>
+    <option value="sides">Sides</option>
+    <option value="pasta_noodles">Pasta & Noodles</option>
+    <option value="rice_dishes">Rice Dishes</option>
+    <option value="seafood">Seafood</option>
+    <option value="vegetarian">Vegetarian</option>
+    <option value="desserts">Desserts</option>
+    <option value="beverages">Beverages</option>
+    <option value="breakfast">Breakfast</option>
+    <option value="kids_menu">Kids Menu</option>
+  </select>
+</div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" name="price" step="0.01" required />
+    </div>
+
+    <div class="form-group">
+      <label>Available</label>
+      <select name="available">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Image</label>
+      <input type="file" name="image" accept="image/*" />
+    </div>
+
+    <input type="hidden" name="tenantId" value="<%= tenant.tenantId %>" />
+
+    <button type="submit" class="add-btn">Save Menu</button>
+  </form>
+</div>
+
+<!-- Right Slide-in Modal -->
+ <!--
+<div id="menuModal" class="menu-modal">
+  <div class="modal-header">
+    <h3>Create Menu Item</h3>
+    <span class="close-btn" onclick="closeMenuModal()">✕</span>
+  </div>
+  <form method="POST" action="/restaurant-management/create-menu" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="name" required />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <input type="text" name="category" required />
+    </div>
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" name="price" step="0.01" required />
+    </div>
+    <div class="form-group">
+      <label>Available</label>
+      <select name="available">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Image</label>
+      <input type="file" name="image" accept="image/*" />
+    </div>
+
+    <input type="hidden" name="tenantId" value="<%= tenant.tenantId %>" />
+
+    <button type="submit" class="add-btn">Save Menu</button>
+  </form>
+</div>  -->
+
+<style>
+  .btn-edit {
+    background-color: #3b82f6; /* Blue */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+  } 
+  .btn-delete {
+    background-color: #ef4444; /* Red */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  .menu-modal.test-mode {
+  position: static;        /* NORMAL FLOW */
+  margin-top: 24px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* REMOVE these for now */
+.menu-modal {
+  transform: none !important;
+}
+
+.menu-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 350px;
+  max-width: 100%;
+  background: #fff;
+  z-index: 9999;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+
+  transform: translateX(100%); /* hidden by default */
+  transition: transform 0.3s ease;
+}
+
+.menu-modal.open {
+  transform: translateX(0); /* slide in */
+}
+
+
+
+
+.menu-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.menu-modal .close-btn {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.menu-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.menu-modal input,
+.menu-modal textarea,
+.menu-modal select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.menu-modal button.add-btn {
+  width: 100%;
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse; /* IMPORTANT */
+  background: #fff;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  border: 1px solid #e5e7eb; /* light gray lines */
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.table-wrapper thead th {
+  background: #f9fafb;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Optional: zebra rows (nice UX) */
+.table-wrapper tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Hover effect (optional but clean) */
+.table-wrapper tbody tr:hover {
+  background: #eef2ff;
+}
+
+
+@media (max-width: 768px) {
+  .menu-modal {
+    width: 100%;
+  }
+}
+</style>
+
+

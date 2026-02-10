@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png" />
+  <title>Complete signup</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      display: flex;
+      background: white;
+      width: 80%;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* Left Section */
+    .form-section {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .form-section h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .btn {
+      background-color: #1a202c;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #2d3748;
+    }
+    .alert {
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+
+    .alert-success {
+      background: #e6fffa;
+      color: #065f46;
+    }
+
+    .alert-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Right Section */
+    .preview-section {
+      flex: 1;
+      background-color: #f4f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .preview {
+      width: 250px;
+      height: 480px;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .preview .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .preview h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .preview nav {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      font-size: 0.9rem;
+      margin-top: auto;
+      padding: 0.5rem 0;
+      border-top: 1px solid #ddd;
+    }
+    
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .preview-section {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- LEFT SECTION -->
+    <div class="form-section">
+      <form action="/multitenant/complete-signup" method="POST">
+       <% if (success_msg && success_msg.length) { %>
+          <div class="alert alert-success"><%= success_msg[0] %></div>
+        <% } %>
+
+        <% if (error_msg && error_msg.length) { %>
+          <div class="alert alert-danger"><%= error_msg[0] %></div>
+        <% } %>
+        <!-- Email (from render) -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value="<%= email %>"
+            readonly
+          />
+        </div>
+
+        <!-- Hidden email field -->
+        <input type="hidden" name="email" value="<%= email %>" />
+
+        <div class="form-group">
+          <label for="password">Password *</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Create a password"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="domain">Domain (Optional)</label>
+          <input
+            type="text"
+            id="domain"
+            name="domain"
+            placeholder="yourstore.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="store-name">Storebbb name *</label>
+          <input
+            type="text"
+            id="store-name"
+            name="slug"
+            placeholder="Enter store name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone *</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="+234 Phone number"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn">Create</button>
+      </form>
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="preview-section">
+      <div class="preview">
+        <div class="icon">🛒</div>
+        <h3>EasyApps</h3>
+        <div style="flex: 1;"></div>
+        <nav>
+          <span>Home</span>
+          <span>Search</span>
+        </nav>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

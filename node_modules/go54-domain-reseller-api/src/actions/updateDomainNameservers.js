@@ -1,0 +1,24 @@
+import { createAxiosClient } from "../config/axiosClient.js";
+import { generateToken } from "../utils/generateToken.js";
+import { formatError } from "../errors/handleError.js";
+import qs from "qs";
+
+export async function updateDomainNameservers(config, nameservers, domain) {
+  const { endpoint, username, apiSecret } = config;
+  const token = generateToken(username, apiSecret);
+    const client = createAxiosClient(endpoint); 
+    try {
+    const response = await client.post(`/domains/${domain}/nameservers`,
+       qs.stringify(nameservers), {
+        headers: {
+            username,
+            token,  
+        },
+    });
+    return response.data;
+  }
+  catch (error) {
+    return formatError(error, "updateDomainNameservers");
+  }
+}
+

@@ -1,0 +1,13 @@
+export function formatError(error, actionName) {
+  return {
+    success: false,
+    action: actionName,
+    status: error.response?.status || 500,
+    message:
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      "Request failed",
+    provider: error.response?.data || null,
+  };
+}

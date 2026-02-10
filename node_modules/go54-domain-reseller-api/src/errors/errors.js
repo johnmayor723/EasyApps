@@ -1,0 +1,14 @@
+export class BaseSdkError extends Error {
+  constructor(message, metadata = {}) {
+    super(message);
+    this.name = this.constructor.name;
+
+    Object.assign(this, metadata);
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
+export class ConfigError extends BaseSdkError {}
+export class ValidationError extends BaseSdkError {}
+export class ApiError extends BaseSdkError {}

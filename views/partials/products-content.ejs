@@ -1,0 +1,35 @@
+<div class="products-container">
+  <h2>Products</h2>
+
+  <div class="jumbotrons">
+    <a href="/multitenant/create-product" data-page="orders" class="jumbotron">
+      <h3>📦 View All Products</h3>
+      <p>See all your listed products in one place.</p>
+    </a>
+
+    <a href="/multitenant/create-product" id="addProductBtn" class="jumbotron">
+      <h3>➕ Add Product</h3>
+      <p>Add a new product to your store catalog.</p>
+    </a>
+  </div>
+</div>
+
+<script>
+  // Attach after the partial has been loaded
+  document.addEventListener("DOMContentLoaded", () => {
+    const addProductBtn = document.getElementById("addProductBtn");
+    if (addProductBtn) {
+      addProductBtn.addEventListener("click", () => {
+        alert('The "Create Product" page is coming soon!');
+      });
+    }
+  });
+
+  // Also handle case where DOMContentLoaded already fired
+  const addProductBtn = document.getElementById("addProductBtn");
+  if (addProductBtn) {
+    addProductBtn.addEventListener("click", () => {
+     loadPage('create-product');
+    });
+  }
+</script>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= product.name %> - <%= tenant.name %></title>
+  <link rel="stylesheet" href="/multitenant/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* Paste your CSS here (same as your current file’s style tag) */
+    /* keep everything you had — product-section, responsive styles, etc. */
+  </style>
+</head>
+<body>
+  <!-- ===== Navbar ===== -->
+  <header class="navbar">
+  <div class="logo">
+    <% if (tenant.logo && tenant.logo.trim() !== '') { %>
+      <img src="<%= tenant.logo %>" alt="<%= tenant.name %> Logo" style="height: 40px; border-radius: 8px;">
+    <% } else { %>
+      <%= tenant.name %>
+    <% } %>
+  </div>
+
+  <nav class="nav-links" id="nav-links">
+    <a href="/store/<%= tenant.slug || tenant.name %>">Home</a>
+    <a href="#">Products</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <!-- 🛒 CART BUTTON -->
+  <div class="cart-container">
+    <a href="/store/<%= tenant.slug || tenant.name %>/cart" class="cart-btn" 
+       title="Cart — <%= cart ? ('$' + cart.totalPrice.toFixed(2)) : '$0.00' %>">
+      <i class="fas fa-shopping-cart"></i>
+      <% if (cart && cart.totalQty > 0) { %>
+        <span id="cart-count"><%= cart.totalQty %></span>
+      <% } else { %>
+        <span id="cart-count">0</span>
+      <% } %>
+    </a>
+  </div>
+
+  <button class="start-btn">Start Now</button>
+  <button style="color: #475569;" class="menu-btn" id="menu-btn">☰</button>
+</header>
+
+
+  <!-- ====== PRODUCT SECTION ====== -->
+  <section class="product-section">
+    <div class="product-inner">
+      <!-- IMAGE -->
+      <figure class="product-image">
+        <% if (product.images && product.images.length > 0) { %>
+          <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+        <% } else { %>
+          <img src="/multitenant/img/placeholder.png" alt="No Image">
+        <% } %>
+      </figure>
+
+      <!-- DETAILS -->
+      <div class="product-info">
+        <h1 class="p-title"><%= product.name %></h1>
+
+        <div class="p-price-row">
+          <span class="p-price">$<%= product.price %></span>
+          <% if (product.oldPrice && product.oldPrice > product.price) { %>
+            <span class="p-old">$<%= product.oldPrice %></span>
+            <span class="p-discount">
+              <%= Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) %>% OFF
+            </span>
+          <% } %>
+        </div>
+
+        <% if (product.description) { %>
+          <p class="p-sub"><%= product.description %></p>
+        <% } %>
+
+        <% if (product.material) { %>
+          <p class="p-meta"><strong>Material:</strong> <%= product.material %></p>
+        <% } %>
+
+        <div class="p-quantity">
+          <label>Quantity</label>
+          <div class="qty-controls">
+            <button class="qty-btn" id="decrease">−</button>
+            <input id="qty" class="qty-input" value="1" readonly>
+            <button class="qty-btn" id="increase">+</button>
+          </div>
+        </div>
+
+        <div class="p-actions">
+          <button id="addToCart" class="btn-add" data-id="<%= product._id %>">🛒 Add to Cart</button>
+          <button class="btn-heart" aria-label="wishlist">♡</button>
+        </div>
+
+        <div class="p-info-list">
+          <div class="info-item">🚚 Free shipping on orders over $100</div>
+          <div class="info-item">🔁 Easy returns within 30 days</div>
+          <div class="info-item">🛡️ 2-year warranty included</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h2><%= tenant.name %></h2>
+        <p>
+          Welcome to <%= tenant.name %> — your trusted store for quality and value.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© <%= new Date().getFullYear() %> <%= tenant.name %>. All rights reserved.</div>
+  </footer>
+
+  <!-- ====== Mobile Bottom Nav ====== -->
+  <nav class="mobile-nav">
+    <a href="/store/<%= tenant.slug || tenant.name %>" class="active">
+      <i class="fas fa-home"></i> Home
+    </a>
+    <a href="#">
+      <i class="fas fa-box"></i> Products
+    </a>
+    <a href="#">
+      <i class="fas fa-cart-shopping"></i> Cart
+    </a>
+    <a href="#">
+      <i class="fas fa-user"></i> Account
+    </a>
+  </nav>
+
+  <script>
+    // ===== Quantity Controls =====
+    const qtyInput = document.getElementById('qty');
+    document.getElementById('increase').addEventListener('click', () => {
+      qtyInput.value = parseInt(qtyInput.value) + 1;
+    });
+    document.getElementById('decrease').addEventListener('click', () => {
+      if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+    });
+
+    // ===== Add to Cart =====
+    document.getElementById('addToCart').addEventListener('click', async () => {
+      const productId = '<%= product._id %>';
+      const quantity = parseInt(qtyInput.value);
+      try {
+        const res = await fetch('/cart/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, quantity })
+        });
+        const data = await res.json();
+        alert(data.message || 'Added to cart');
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // ===== Mobile Nav Toggle =====
+    document.getElementById("menu-btn").addEventListener("click", () => {
+      document.getElementById("nav-links").classList.toggle("active");
+    });
+  </script>
+</body>
+</html>

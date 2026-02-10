@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservations – <%=tenant.name%></title>
+
+  <style>
+    :root {
+      --gold: #d4af37;
+      --text-dark: #111;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #faf9f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-dark);
+    }
+
+    /* ================= NAV ================= */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .alert {
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 24px;
+      height: 50px;
+    }
+    
+    .alert-success {
+      background-color: #daf5d4;
+      color: #1a7f1a;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }   
+    .alert-danger{
+      background-color: #daf5d4;
+      color: #eb0827;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .brand {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #555;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a.active {
+      color: var(--gold);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 4px;
+    }
+
+    /* ================= LAYOUT ================= */
+    .container {
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 60px;
+    }
+
+    /* ================= LEFT ================= */
+    .visit h2 {
+      font-size: 28px;
+      margin-bottom: 32px;
+    }
+
+    .info-block {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(212, 175, 55, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .info-block h4 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .info-block p {
+      margin: 0;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .dress-code {
+      margin-top: 40px;
+      background: #111;
+      color: #fff;
+      padding: 24px;
+      border-radius: 8px;
+    }
+
+    .dress-code h4 {
+      margin: 0 0 10px;
+      letter-spacing: 1px;
+      font-size: 14px;
+    }
+
+    .dress-code p {
+      margin: 0;
+      font-size: 14px;
+      color: #d1d5db;
+      line-height: 1.6;
+    }
+
+    /* ================= RIGHT ================= */
+    .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #555;
+    }
+
+    input, select, textarea {
+      padding: 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: none;
+      min-height: 100px;
+    }
+
+    .submit-btn {
+      margin-top: 32px;
+      width: 100%;
+      padding: 16px;
+      background: var(--gold);
+      border: none;
+      font-size: 14px;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+    /* ================= FOOTER ================= */
+.footer {
+  background: linear-gradient(to right, #0a0a0a, var(--brand-dark, #000));
+  color: #ccc;
+  padding: 80px 80px 40px;
+}
+
+.footer-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 80px;
+}
+
+.footer-brand h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.footer-brand p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #999;
+  max-width: 420px;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--brand-primary, #d4af37);
+  margin-bottom: 20px;
+}
+
+.footer-links a {
+  display: block;
+  text-decoration: none;
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--brand-primary, #d4af37);
+}
+
+.footer-contact p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #aaa;
+}
+
+.footer-bottom {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 13px;
+  color: #777;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .footer {
+    padding: 60px 30px 30px;
+  }
+}
+
+
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar {
+        padding: 20px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="navbar">
+    <div class="brand"><%=tenant.name%></div>
+    <div class="nav-links">
+      <a href="#">HOME</a>
+      <a href="#">MENU</a>
+      <a href="#" class="active">RESERVATIONS</a>
+      <a href="#">REWARDS</a>
+      <a href="#">TRACK ORDER</a>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="container">
+
+    <!-- LEFT -->
+    <div class="visit">
+      <h2>Visit Us</h2>
+
+      <div class="info-block">
+        <div class="icon">📍</div>
+        <div>
+          <h4>Location</h4>
+          <p>123 Culinary Avenue<br>Downtown District<br>New York, NY 10001</p>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="icon">⏰</div>
+        <div>
+          <h4>Hours</h4>
+          <p>Lunch: 12:00 PM – 3:00 PM<br>Dinner: 6:00 PM – 11:00 PM<br>Closed on Mondays</p>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="icon">📞</div>
+        <div>
+          <h4>Contact</h4>
+          <p>+1 (555) 123-4567<br>reservations@lamaison.com</p>
+        </div>
+      </div>
+
+      <div class="dress-code">
+        <h4>DRESS CODE</h4>
+        <p>
+          Smart casual attire is required. Gentlemen are requested to wear collared shirts.
+          No sportswear or beachwear.
+        </p>
+      </div>
+    </div>
+    
+    <!-- RIGHT -->
+    <div class="card">
+      <h2>Make a Reservation</h2>
+      <% if (success_msg && success_msg.length > 0) { %>
+      <div class="alert alert-success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg && error_msg.length > 0) { %>
+      <div class="alert alert-danger"><%= error_msg %></div>
+    <% } %>
+      <p>Fill in the details below and we'll confirm your booking shortly.</p>
+
+      <form method="POST" action="/multitenant/shop/<%= tenant.tenantId %>/reservations/create">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>FULL NAME *</label>
+            <input type="text" name="full_name" required />
+          </div>
+
+          <div class="form-group">
+            <label>EMAIL *</label>
+            <input type="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label>PHONE *</label>
+            <input type="tel" name="phone" required />
+          </div>
+
+          <div class="form-group">
+            <label>PARTY SIZE *</label>
+            <select name="party_size" required>
+              <option>Select guests</option>
+              <option>1–2</option>
+              <option>3–4</option>
+              <option>5–6</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>DATE *</label>
+            <input type="date" name="date" required />
+          </div>
+          
+          <div class="form-group">
+            <label>TIME *</label>
+            <input type="time" name="time" required />
+          </div>
+
+          <div class="form-group full">
+            <label>SPECIAL REQUESTS</label>
+            <textarea name="special_requests" placeholder="Allergies, dietary restrictions, special occasions..."></textarea>
+          </div>
+        </div>
+
+        <button class="submit-btn">CONFIRM RESERVATION</button>
+      </form>
+    </div>
+
+  </div>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-brand">
+      <h3>L<%=tenant.name%></h3>
+      <p>
+        Where culinary excellence meets timeless elegance.
+        Experience the art of fine dining in an atmosphere of
+        sophisticated comfort.
+      </p>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-links">
+      <h4>QUICK LINKS</h4>
+      <a href="#">Home</a>
+      <a href="#">Menu</a>
+      <a href="#">Reservations</a>
+      <a href="#">Rewards</a>
+      <a href="#">Track Order</a>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-contact">
+      <h4>CONTACT</h4>
+      <p>123 Culinary Avenue</p>
+      <p>New York, NY 10001</p>
+      <p>+1 (555) 123-4567</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 <%=tenant.name%> All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

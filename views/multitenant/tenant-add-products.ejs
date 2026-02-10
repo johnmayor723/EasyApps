@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Products</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      display: flex;
+      background: white;
+      width: 85%;
+      max-width: 950px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* Left Section */
+    .left {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .step {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+
+    .options {
+      margin-bottom: 1.5rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+    }
+
+    .option input {
+      margin-right: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .add-image {
+      display: inline-block;
+      padding: 0.6rem 0.8rem;
+      background-color: #f1f3f5;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .add-product {
+      display: inline-block;
+      background-color: #f8f9fa;
+      border: 1px dashed #ccc;
+      padding: 0.6rem;
+      width: 100%;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: #1a202c;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2d3748;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: #555;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    /* Right Section */
+    .right {
+      flex: 1;
+      background: #f4f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .preview-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 220px;
+      text-align: center;
+    }
+
+    .preview-card h4 {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .preview-card p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .cart-icon {
+      font-size: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Section -->
+    <div class="left">
+      <div class="step">1 / 4</div>
+      <h2>Add products</h2>
+
+      <div class="options">
+        <label class="option">
+          <input type="radio" name="product-option" checked>
+          Enter products
+        </label>
+        <label class="option">
+          <input type="radio" name="product-option">
+          Sample products (Grocery & Supermarket)
+        </label>
+        <label class="option">
+          <input type="radio" name="product-option">
+          Import from your website
+        </label>
+      </div>
+
+      <div class="form-group">
+        <input type="text" placeholder="Product name">
+        <input type="number" placeholder="₦ 0.00">
+      </div>
+
+      <label class="add-image">+ Add image</label>
+
+      <div class="add-product">+ Add product</div>
+
+      <div class="buttons">
+        <button class="btn-secondary">Skip</button>
+        <button class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="right">
+      <div class="preview-card">
+        <h4>Product Name</h4>
+        <p>₦ 0.00</p>
+        <div class="cart-icon">🛒</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+import { createAxiosClient } from "../config/axiosClient.js";
+import { generateToken } from "../utils/generateToken.js";
+import { formatError } from "../errors/handleError.js";
+
+
+export async function getContactDetails(config, domain) {
+  const { endpoint, username, apiSecret } = config;
+  const token = generateToken(username, apiSecret);
+    const client = createAxiosClient(endpoint);
+    try {
+    const response = await client.get(`/domains/${domain}/contact`, {
+        headers: { 
+            username,
+            token,
+        },
+    });
+
+    return response.data;
+  } catch (error) {
+    return formatError(error, "getContactDetails");
+  }
+}

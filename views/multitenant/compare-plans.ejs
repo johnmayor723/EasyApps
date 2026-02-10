@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Compare Plans</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      color: #333;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .plan {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+    }
+
+    .plan:hover {
+      transform: translateY(-5px);
+    }
+
+    .plan h2 {
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .plan .price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #27ae60;
+      margin-bottom: 15px;
+    }
+
+    .plan p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .plan ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+
+    .plan ul li {
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      color: #444;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .plan ul li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #27ae60;
+      font-weight: bold;
+    }
+
+    .plan button {
+      background: #131413;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .plan button:hover {
+      background: #747574;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Compare Plans</h1>
+
+
+  <div class="plans">
+    <!-- Starter -->
+   
+
+    <!-- Pro -->
+    <form action="/multitenant/select-plan" method="post" class="plan">
+      <h2>Pro</h2>
+      <div class="price">₦5,000 / month</div>
+      <p class="quarterly">Min. Annual Payment: ₦60,0000</p>
+      <p>For medium & large businesses</p>
+      <ul>
+        <li>Everything in Starter</li>
+        <li>Free .com.ng domain (yearly plan)</li>
+        <li>200 messaging credits</li>
+        <li>Unlimited invoices & receipts</li>
+        <li>Integrations: Shipbubble, Fez, Google Analytics, Facebook Pixel</li>
+        <li>3 staff accounts</li>
+        <li>Comprehensive business analytics</li>
+      </ul>
+      <input type="hidden" name="plan" value="pro">
+      <input type="hidden" name="price" value="60000">
+      <input type="hidden" name="email" value="<%= email %>">
+      <button type="submit">Select Plan</button>
+    </form>
+
+    <!-- Growth -->
+    <form action="/multitenant/select-plan" method="post" class="plan">
+      <h2>Growth</h2>
+      <div class="price">₦25,000 / month</div>
+      <p class="quarterly">Min. Quarterly Payment: ₦75,000</p>
+      <p>For scaling businesses</p>
+      <ul>
+        <li>Everything in other plans</li>
+        <li>Custom branding and design for your business</li>
+        <li>1000 messaging credits</li>
+        <li>2 store location management</li>
+        <li>Naira + US Dollar (payments & settlement)</li>
+        <li>In-store checkout (Point of Sale)</li>
+        <li>Barcode generator/scanner software</li>
+        <li>Integrations: Shipbubble, Fez, Google Analytics, Facebook Pixel</li>
+        <li>5 staff accounts</li>
+      </ul>
+      <input type="hidden" name="plan" value="growth">
+      <input type="hidden" name="price" value="25000">
+      <input type="hidden" name="email" value="<%= email %>">
+      <button type="button" onclick="alert('Coming Soon!')">Coming Soon</button>
+    </form>
+
+    <!-- Bumpa -->
+    <form action="/multitenant/select-plan" method="post" class="plan">
+      <h2>Bumpa</h2>
+      <div class="price">₦50,000 / month</div>
+      <p class="quarterly">Min. Annual Payment: ₦600,000</p>
+      <p>For enterprises & mobile-focused businesses</p>
+      <ul>
+        <li>Everything in Growth</li>
+        <li>Custom Android & iOS mobile apps</li>
+        <li>Unlimited messaging credits</li>
+        <li>Multi-store management</li>
+        <li>Dedicated account manager</li>
+        <li>Priority customer support</li>
+      </ul>
+      <input type="hidden" name="plan" value="Bumpa">
+      <input type="hidden" name="price" value="50000">
+      <input type="hidden" name="email" value="<%= email %>">
+      <button type="button" onclick="alert('Coming Soon!')">Coming Soon</button>
+    </form>
+  </div>
+</body>
+</html>

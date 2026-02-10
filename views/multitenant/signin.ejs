@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EasyApps || Login</title>
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    .row-full {
+      min-height: 100vh;
+    }
+
+    .col-left, .col-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .col-left {
+      background: #e9ecef;
+    }
+
+    /* ✅ Right side with background image */
+    .col-right {
+      background-image: url('/multitenant/img/signup-bg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+
+    /* Optional overlay for better text contrast (if you add text later) */
+    .col-right::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.25); /* Adjust opacity as needed */
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      z-index: 2; /* ensures it's above overlay if reused */
+    }
+
+    .login-logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 44px;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 767.98px) {
+      .col-left {
+        padding: 1rem;
+        background: #fff;
+      }
+      .login-box {
+        padding: 16px;
+        margin: 0.5rem auto;
+        box-shadow: none;
+      }
+      .col-right {
+        display: none; /* Hide right section on small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row row-full g-0">
+
+      <!-- Left side (Form) -->
+      <div class="col-md-6 col-left">
+        <div class="login-box">
+          <div class="login-logo">EasyApps</div>
+          <h4 class="text-center mb-4">Welcome Back</h4>
+
+          <!-- Success and Error messages -->
+          <% if (typeof success_msg !== "undefined" && success_msg.length > 0) { %>
+            <div class="alert alert-success"><%= success_msg %></div>
+          <% } %>
+          <% if (typeof error_msg !== "undefined" && error_msg.length > 0) { %>
+            <div class="alert alert-danger"><%= error_msg %></div>
+          <% } %>
+
+          <!-- Login Form -->
+          <form action="/multitenant/login" method="POST">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-submit">Login</button>
+          </form>
+          <!-- Social / alternative signups -->
+        <button class="btn btn-google btn-signup" type="button">🔵 Continue with Google</button>
+        <button class="btn btn-apple btn-signup" type="button"> Continue with iPhone</button>
+
+          <p class="text-center mt-3">
+            Don’t have an account? <a href="/multitenant/signup">Sign up</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Right side (Background image) -->
+      <div class="col-md-6 col-right d-none d-md-flex"></div>
+    </div>
+  </div>
+    <a
+  href="https://wa.me/2349123907060"
+  target="_blank"
+  class="whatsapp-float"
+  aria-label="Chat with us on WhatsApp"
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+<style>
+ .whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+  </style>
+</body>
+</html>

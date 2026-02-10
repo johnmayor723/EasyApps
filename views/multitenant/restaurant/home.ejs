@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%=tenant.name%></title>
+  <link rel="stylesheet" href="/multitenant/css/restaurant/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+  :root {
+    --primary-color: <%= tenant?.branding?.primaryColor || '#d4af37' %>;
+    --secondary-color: <%= tenant?.branding?.secondaryColor || '#ffffff' %>;
+    --brand-dark: #000000;
+    --brand-light: #faf9f7;
+  }
+</style>
+
+</head>
+<body>
+ 
+  <!-- NAVIGATION -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo"><%=tenant.name%></div>
+
+      <nav class="nav-links">
+        <a href="/" class="active">HOME</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/">MENU</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/track-order">TRACK ORDER</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <span class="hero-subtitle">FINE DINING EXPERIENCE</span>
+
+      <h1><%=tenant.name%></h1>
+
+      <p>
+        Where culinary artistry meets timeless elegance.
+        Experience flavors that tell a story.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#" class="btn primary">RESERVE A TABLE</a>
+        <a href="#" class="btn secondary">VIEW MENU</a>
+      </div>
+    </div>
+  </section>
+ <section class="featured">
+  <div class="featured-header">
+    <span class="section-subtitle">OUR SIGNATURES</span>
+    <h2>Chef’s Selection</h2>
+  </div>
+
+  <div class="featured-grid">
+    <% if (menu && menu.length) { %>
+      <% menu.slice(0, 3).forEach(menu => { %>
+        <div class="featured-card">
+          <img
+            src="<%= menu.image %>"
+            alt="<%= menu.name || 'Menu item' %>"
+          />
+        </div>
+      <% }) %>
+    <% } else { %>
+      <!-- Fallback to static content -->
+      <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80" alt="Dish 1">
+      </div>
+
+      <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80" alt="Dish 2">
+      </div>
+
+      <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&q=80" alt="Dish 3">
+      </div>
+    <% } %>
+  </div>
+
+  <div class="featured-footer">
+    <a href="/multitenant/shop/<%= tenant.tenantId %>/menu" class="explore-link">
+      EXPLORE FULL MENU
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+
+<!-- OUR STORY SECTION -->
+<section class="story">
+  <div class="story-container">
+
+    <!-- LEFT IMAGE -->
+    <div class="story-image">
+      <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=1200&q=80" alt="Chef cooking">
+
+      <div class="experience-badge">
+        <span class="years">25</span>
+        <span class="text">YEARS OF<br>EXCELLENCE</span>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="story-content">
+      <span class="section-subtitle">OUR STORY</span>
+
+      <h2>A Legacy of Culinary Excellence</h2>
+
+      <p>
+        Founded in 1998, <%=tenant.name%> has been a beacon of fine dining excellence.
+        Our philosophy is simple: source the finest ingredients, respect
+        tradition, and create moments that linger in memory.
+      </p>
+
+      <p>
+        Executive Chef Antoine Dubois brings three decades of experience from the
+        world's most celebrated kitchens. Each dish tells a story of passion,
+        precision, and an unwavering commitment to the craft.
+      </p>
+
+      <div class="story-stats">
+        <div class="stat">
+          <span class="number">3</span>
+          <span class="label">MICHELIN<br>STARS</span>
+        </div>
+
+        <div class="stat">
+          <span class="number">48</span>
+          <span class="label">AWARD<br>WINNING</span>
+        </div>
+
+        <div class="stat">
+          <span class="number">12K</span>
+          <span class="label">HAPPY<br>GUESTS</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-brand">
+      <h3>La Maison</h3>
+      <p>
+        Where culinary excellence meets timeless elegance.
+        Experience the art of fine dining in an atmosphere of
+        sophisticated comfort.
+      </p>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-links">
+      <h4>QUICK LINKS</h4>
+      <a href="#">Home</a>
+      <a href="#">Menu</a>
+      <a href="#">Reservations</a>
+      <a href="#">Rewards</a>
+      <a href="#">Track Order</a>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-contact">
+      <h4>CONTACT</h4>
+      <p>123 Culinary Avenue</p>
+      <p>New York, NY 10001</p>
+      <p>+1 (555) 123-4567</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 <%=tenant.name%>. All rights reserved.
+  </div>
+</footer>
+
+
+</body>
+</html>

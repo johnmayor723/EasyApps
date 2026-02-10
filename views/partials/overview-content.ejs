@@ -1,0 +1,251 @@
+
+<%
+  const appSlug = session?.tenant.slug || 'Your App';
+  const appUrl  = session?.user.url || '#';
+  const tenant  = session?.tenant || {};
+%>
+
+<section class="app-overview">
+
+  <!-- Header -->
+  <div class="app-header">
+    <div class="app-info">
+      <div class="app-logo">
+        <span style="font-weight: bolder;font-size: x-large;"><%=appSlug%></span>
+      </div>
+
+      <div class="app-text">
+       <h2>
+  
+  <span class="edit-icon">✎</span>
+</h2>
+
+<p>
+  Store URL:
+  <a style="color:#1b2026; text-decoration:none;" href="<%= appUrl %>" target="_blank">
+       Your store url
+  </a>
+</p>
+
+<small>Created recently</small>
+
+      </div>
+    </div>
+
+    <div class="app-actions">
+      <a style="color:#f4f6f9; text-decoration:none;" href="<%= appUrl %>" class="btn secondary">Open App</a>
+      <a style="color:#1b1b1c; text-decoration:none;" href="#" class="btn outline">Share App <small>win free credits!</small></a>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="overview-grid">
+
+    <!-- App Visibility -->
+    <div class="card">
+      <h3>App Visibility</h3>
+      <p class="muted">Control who can access your application</p>
+
+      <div class="form-group">
+        <select>
+          <option>Public</option>
+          <option>Private</option>
+        </select>
+      </div>
+
+      <label class="checkbox">
+        <input type="checkbox" checked />
+        Require login to access
+      </label>
+    </div>
+
+ <div class="card">
+  <h3>Invite Users</h3>
+  <p class="muted">Grow your user base by inviting others</p>
+
+  <div class="invite-actions" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+    <button class="btn outline">Copy Link</button>
+    <button class="btn outline">Send Invites</button>
+
+  <% if (tenant.plan === 'free') { %>
+  <a
+    href="/multitenant/new-compare-plans"
+    class="btn primary"
+    style="background-color: #262728;text-decoration: none; color: white;"
+  >
+    Upgrade Plan
+  </a>
+
+<% } else if (tenant.plan === 'pro') { %>
+  <button
+    class="btn primary"
+    style="background-color: #2e2e2f; color: white;"
+    onclick="openModal('getDomainModal')"
+  >
+    Get Your Free .com.ng Domain
+  </button>
+<% } %>
+ 
+  </div>
+</div>
+
+
+<div id="getDomainModal" class="modal-flyout">
+
+  <!-- Header -->
+  <div class="modal-header row">
+    <div class="col-10">
+      <h3>Choose a Domain For Your Brand</h3>
+      
+    </div>
+     <div class="col-2">
+     <button class="close-btn" onclick="closeModal('getDomainModal')">&times;</button>
+    </div>
+    
+  </div>
+ <div style="padding: 10px 20px;">
+   <p>Only <strong>.com.ng</strong> domains are available on this plan.</p>
+ </div>
+  <!-- Search -->
+  <div class="domain-search row">
+  <div class="col-10">
+    <input
+      id="domainInput"
+      type="text"
+      placeholder="mybrand"
+      oninput="sanitizeDomainInput(this)"
+    />
+    <small class="muted">
+      Just enter the name you want (without spaces or .com extensions) and we'll check if it's available!
+    </small>
+  </div>
+  <div class="col-2">
+    <button onclick="searchDomain()">Search</button>
+  </div>
+</div>
+
+
+
+  <!-- Results -->
+  <div style="padding: 10px 5px;color: rgb(5, 195, 131);" class="domain-results" id="domainResults">
+    <!-- JS injects rows here -->
+  </div>
+
+</div>
+
+
+<!-- Manage Domain Modal -->
+<div id="manageDomainModal" class="modal-flyout">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('manageDomainModal')">&times;</span>
+    <h3>Manage Your Domain</h3>
+    <p>Update your DNS settings or switch domains:</p>
+    <div class="form-group">
+      <label>Current Domain:</label>
+      <input type="text" value="<%= tenant.domain %>" readonly>
+    </div>
+    <div class="form-group">
+      <label>Add or Update DNS Records:</label>
+      <textarea placeholder="e.g. A record, CNAME..." rows="6"></textarea>
+    </div>
+    <button class="btn primary">Save DNS</button>
+  </div>
+</div>
+
+
+
+
+
+
+
+  </div>
+<% if (tenant.plan !== 'free' && tenant.plan !== 'pro') { %>
+  <!-- Platform Badge -->
+  <div class="card">
+  <h3>Store Branding & Customization</h3>
+  <p class="muted">
+    Customize how your store looks and how customers recognize your brand.
+  </p>
+
+  <form
+    action="/dashboard/store/customize"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+
+    <!-- Store Logo Upload -->
+    <div class="form-group" style="margin-bottom:16px;">
+      <label><strong>Store Logo</strong></label>
+      <p class="muted" style="margin:4px 0 8px;">
+        Upload your brand logo (PNG, JPG, SVG recommended)
+      </p>
+      <input
+        type="file"
+        name="logo"
+        accept="image/*"
+      />
+    </div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label><strong>Our Story</strong></label>
+      <input
+        type="text"
+        name="ourStory"
+        placeholder="Share a short story or tagline about your brand"
+        style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"
+      />
+      <small class="muted">A brief description customers will see on your store.</small>
+    </div>
+
+    <!-- Contact Address -->
+    <div class="form-group" style="margin-bottom:16px;">
+      <label><strong>Contact Address</strong></label>
+      <input
+        type="text"
+        name="address"
+        placeholder="e.g. 12 Adeola Odeku Street, Victoria Island, Lagos"
+        style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"
+      />
+    </div>
+
+    <!-- Primary Color -->
+    <div class="form-group" style="margin-bottom:16px;">
+      <label><strong>Primary Color</strong></label>
+      <input
+        type="color"
+        name="primaryColor"
+        style="width:100%; height:42px; border-radius:8px; border:1px solid #ddd;"
+      />
+      <small class="muted">
+        Used for main buttons, highlights, links, and important actions.
+      </small>
+    </div>
+
+    <!-- Secondary Color -->
+    <div class="form-group" style="margin-bottom:16px;">
+      <label><strong>Secondary Color</strong></label>
+      <input
+        type="color"
+        name="secondaryColor"
+        style="width:100%; height:42px; border-radius:8px; border:1px solid #ddd;"
+      />
+      <small class="muted">
+        Used for backgrounds, accents, borders, and subtle UI elements.
+      </small>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button type="submit" class="btn primary">
+        Save Customization
+      </button>
+      <button type="reset" class="btn outline">
+        Reset
+      </button>
+    </div>
+
+  </form>
+</div>
+ <% } %>
+
+</section>
+

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+ 
+  <style>
+  .menu-modal.test-mode {
+  position: static;        /* NORMAL FLOW */
+  margin-top: 24px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* REMOVE these for now */
+.menu-modal {
+  transform: none !important;
+}
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background-color: #daf5d4;
+  color: #1a7f1a;
+}
+
+.alert-error {
+  background-color: #fde2e2;
+  color: #b22222;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse; /* IMPORTANT */
+  background: #fff;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  border: 1px solid #e5e7eb; /* light gray lines */
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.table-wrapper thead th {
+  background: #f9fafb;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Optional: zebra rows (nice UX) */
+.table-wrapper tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Hover effect (optional but clean) */
+.table-wrapper tbody tr:hover {
+  background: #eef2ff;
+}
+
+.menu-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 350px;
+  max-width: 100%;
+  background: #fff;
+  z-index: 9999;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+
+  transform: translateX(100%); /* hidden by default */
+  transition: transform 0.3s ease;
+}
+
+.menu-modal.open {
+  transform: translateX(0); /* slide in */
+}
+
+
+
+
+.menu-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.menu-modal .close-btn {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.menu-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.menu-modal input,
+.menu-modal textarea,
+.menu-modal select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.menu-modal button.add-btn {
+  width: 100%;
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu-modal {
+    width: 100%;
+  }
+}
+</style>
+
+</head>
+<body>
+<% if (typeof user === 'undefined') { var user = locals.user; } %>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
+    <ul class="menu">
+ <% const appType = session?.type; %>
+  <!-- Common items (both ecommerce & restaurant) -->
+    <li><a data-page="dashboard">Overview</a></li>
+  <% if (appType === 'ecommerce') { %>
+    <li><a data-page="products">Products</a></li>
+    <li><a data-page="orders">Orders</a></li>     
+    <li><a data-page="inventory">Inventory</a></li>
+  <% } %>
+  
+
+  <!-- Restaurant-only items -->
+  <% if (appType === 'restaurant') { %>
+    <li><a data-page="menu">Menu</a></li>
+    <li><a data-page="tables">Tables</a></li>
+    <li><a data-page="reservations">Reservations</a></li>
+    <li><a data-page="kitchen">Kitchen</a></li>
+  <% } %>
+  <li><a data-page="customers">Customers</a></li>
+   <li><a data-page="chats">Chats</a></li>
+  <li><a data-page="design">Design</a></li>
+  <li><a data-page="settings">Settings</a></li>
+  <li><a data-page="marketing">Marketing</a></li>
+
+</ul>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Left Column -->
+    <div class="left-col">
+   
+   <div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h2>MenuItem</h2>
+    <div class="actions">
+      <button class="icon-btn">•••</button>
+     
+
+
+    </div>
+  </div>
+<% if (success_msg && success_msg.length > 0) { %>
+  <div class="alert alert-success">
+    <%= success_msg[0] %>
+  </div>
+<% } %>
+
+<% if (error_msg && error_msg.length > 0) { %>
+  <div class="alert alert-error">
+    <%= error_msg[0] %>
+  </div>
+<% } %>
+
+
+
+
+
+  <!-- Card -->
+  <div class="card">
+<% const menu = (typeof session !== 'undefined' && session.menu !== undefined)
+  ? session.menu
+  : null;
+%>
+
+<% const tenant = session.tenant ; %>
+<% const menuData = session.menuData ; %>
+
+
+      <!-- EMPTY STATE -->
+      <div class="menu-empty">
+        <h3>No menu created yet</h3>
+        <p>Your restaurant doesn’t have any menu items.</p>
+       <button class="add-btn" onclick="alert('clicked')">+ Add</button>
+
+      </div>
+   
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search">
+          🔍
+          <input type="text" placeholder="Search by name, description, image_url" />
+          <span class="info">ⓘ</span>
+        </div>
+
+        <button class="filter-btn">⏷ Filters</button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>description</th>
+              <th>price</th>
+              <th>category</th>
+              <th>image_url</th>
+              <th>is_vegetarian</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- STATIC CONTENT -->
+           
+  <% menus.forEach(item => { %>
+    <tr>
+      <td><%= item.name %></td>
+      <td><%= item.description %></td>
+      <td><%= item.price %></td>
+      <td><%= item.category %></td>
+      <td>
+        <% if (item.image) { %>
+          <img 
+            src="<%= item.image %>" 
+            alt="<%= item.name %>" 
+            style="width:50px;height:50px;object-fit:cover;border-radius:6px;"
+          />
+        <% } else { %>
+          —
+        <% } %>
+      </td>
+      <td><%= item.available ? 'true' : 'false' %></td>
+      <td class="actions">
+        <a href="/restaurant-management/menu/<%= item._id %>/edit" class="btn btn-edit">Edit</a>
+        <a href="/restaurant-management/menu/<%= item._id %>/delete" class="btn btn-delete">Delete</a>
+      </td>
+    </tr>
+  <% }) %>
+
+
+           
+            
+          </tbody>
+        </table>
+      </div>
+
+
+  </div>
+</div>
+<!-- Create Menu Section (TEMP TEST MODE) -->
+<div class="menu-modal test-mode">
+  <div class="modal-header">
+    <h3>Create Menu Item</h3>
+  </div>
+
+  <form method="POST" action="/restaurant-management/create-menu" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <input type="text" name="category" required />
+    </div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" name="price" step="0.01" required />
+    </div>
+
+    <div class="form-group">
+      <label>Available</label>
+      <select name="available" required>
+        <option value="" disabled selected>Select</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Image</label>
+      <input type="file" name="image" accept="image/*" />
+    </div>
+
+    <input type="hidden" name="tenantId" value="<%= tenant.tenantId %>" />
+
+    <button type="submit" class="add-btn">Save Menu</button>
+  </form>
+</div>
+
+
+
+
+
+
+
+    </div>
+
+    
+  </div>
+  
+
+ 
+    <a
+  href="https://wa.me/2349123907060"
+  target="_blank"
+  class="whatsapp-float"
+  aria-label="Chat with us on WhatsApp"
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+<style>
+ .whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+  </style>
+</body>
+</html>

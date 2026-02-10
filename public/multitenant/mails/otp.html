@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EasyHostNet OTP Verification</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, Helvetica, sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:30px 0;">
+    <tr>
+      <td align="center">
+
+        <!-- Email container -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding:30px 20px 10px;">
+              <img
+                src="https://easyhostnet.com/multitenant/img/easylogo.png"
+                alt="EasyHostNet"
+                width="140"
+                style="display:block;"
+              />
+            </td>
+          </tr>
+
+          <!-- Title -->
+          <tr>
+            <td align="center" style="padding:10px 30px;">
+              <h2 style="margin:0; color:#1f2937;">Verify Your Email Address</h2>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding:20px 30px; color:#374151; font-size:15px; line-height:1.6;">
+              <p style="margin-top:0;">
+                Hi <strong>{{customerName}}</strong>,
+              </p>
+
+              <p>
+                Thank you for signing up on <strong>EasyHostNet</strong>.
+                Please use the One-Time Password (OTP) below to verify your email address.
+              </p>
+
+              <!-- OTP Box -->
+              <div style="margin:30px 0; text-align:center;">
+                <span style="
+                  display:inline-block;
+                  padding:14px 28px;
+                  font-size:26px;
+                  letter-spacing:4px;
+                  font-weight:bold;
+                  color:#ffffff;
+                  background:#2563eb;
+                  border-radius:6px;
+                ">
+                  {{otp}}
+                </span>
+              </div>
+
+              <p>
+                This OTP is valid for <strong>10 minutes</strong>.
+                Do not share this code with anyone.
+              </p>
+
+              <p>
+                If you did not initiate this request, please ignore this email.
+              </p>
+
+              <p style="margin-bottom:0;">
+                Best regards,<br />
+                <strong>The EasyHostNet Team</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 30px;">
+              <hr style="border:none; border-top:1px solid #e5e7eb;" />
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding:20px 30px; font-size:13px; color:#6b7280;">
+              <p style="margin:0;">
+                🌐 <a href="https://easyhostnet.com" style="color:#2563eb; text-decoration:none;">easyhostnet.com</a>
+              </p>
+              <p style="margin:6px 0 0;">
+                📧 Support: 
+                <a href="mailto:support@easyhostnet.com" style="color:#2563eb; text-decoration:none;">
+                  support@easyhostnet.com
+                </a>
+              </p>
+              <p style="margin:10px 0 0; font-size:12px;">
+                © {{year}} EasyHostNet. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

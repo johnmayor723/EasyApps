@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    
+  </style>
+</head>
+<body>
+
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column">
+    <a class="navbar-brand text-black" href="/"><img height="45px" src="/multitenant/img/easylogo.png"></a>
+   <nav class="nav flex-column">
+      <a class="nav-link active" href="#" onclick="showContent('dashboard')">📊 Dashboard</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('orders')">🛒 Orders</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('products')">📦 Products</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('customers')">👥 Customers</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('analytics')">📈 Analytics</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('marketing')">📢 Marketing</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('discounts')">💳 Discounts</a><hr>
+      <a class="nav-link" href="#" onclick="showContent('settings')">⚙️ Settings</a>
+    </nav>
+  </div>
+
+ <!-- Main Content -->
+  <div class="flex-grow-1">
+    <!-- Topbar -->
+    <div class="topbar d-flex justify-content-between align-items-center">
+      <button class="btn btn-outline-secondary d-md-none" onclick="toggleSidebar()">☰</button>
+      <h5 class="mb-0">Hi, KhaySpicy 👋</h5>
+      <div>
+        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-bell"></i></button>
+        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-gear"></i></button>
+      </div>
+    </div>
+
+    <!-- Dynamic Content -->
+    <div id="main-content" class="content">
+      <!-- Dashboard Default -->
+      <div id="dashboard-content">
+        <!-- Stats Row -->
+        <div class="row mb-4">
+          <div class="col-md-3 col-sm-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+              <i class="bi bi-currency-exchange stat-icon"></i>
+              <div>
+                <h6>Total Sales</h6>
+                <h4 class="fw-bold">₦12,420,000</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+              <i class="bi bi-bag-check stat-icon"></i>
+              <div>
+                <h6>Online Orders</h6>
+                <h4 class="fw-bold">₦10,020,000</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+              <i class="bi bi-cash-stack stat-icon"></i>
+              <div>
+                <h6>POS Sales</h6>
+                <h4 class="fw-bold">₦0.00</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+              <i class="bi bi-people stat-icon"></i>
+              <div>
+                <h6>Customers</h6>
+                <h4 class="fw-bold">2,532</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="card p-4">
+          <h6 class="mb-3">Sales Overview</h6>
+          <canvas id="salesChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/multitenant/js/index.js"></script>
+
+</body>
+</html>

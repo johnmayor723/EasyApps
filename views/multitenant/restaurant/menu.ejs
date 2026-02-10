@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Maison</title>
+  <link rel="stylesheet" href="/multitenant/css/restaurant/index.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+  :root {
+    --primary-color: <%= tenant?.branding?.primaryColor || '#d4af37' %>;
+    --secondary-color: <%= tenant?.branding?.secondaryColor || '#ffffff' %>;
+    --brand-dark: #000000;
+    --brand-light: #faf9f7;
+  }
+</style>
+
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">La Maison</div>
+
+      <nav class="nav-links">
+        <a href="#" class="active">HOME</a>
+        <a href="#">MENU</a>
+        <a href="#">RESERVATIONS</a>
+        <a href="#">REWARDS</a>
+        <a href="#">TRACK ORDER</a>
+      </nav>
+    </div>
+  </header>
+
+  
+ 
+<!-- MENU SECTION -->
+<section class="menu-page">
+
+  <div class="menu-hero">
+  <span class="menu-subtitle">EXPLORE OUR</span>
+  <h1>Menu</h1>
+</div>
+
+
+  <!-- CATEGORY FILTER -->
+  <div class="menu-filter">
+    <div class="filters">
+      <button class="active">ALL</button>
+      <button>SPECIALS</button>
+      <button>APPETIZERS</button>
+      <button>MAIN COURSES</button>
+      <button>DESSERTS</button>
+      <button>DRINKS</button>
+    </div>
+
+    <button class="order-btn">
+      🛒 ORDER
+    </button>
+  </div>
+
+  <!-- MENU GRID -->
+  <!-- MENU GRID -->
+<div class="menu-grid">
+  <% if (menus && menus.length) { %>
+    <% menus.forEach(menu => { %>
+      <div class="menu-card <%= menu.category ? menu.category.toLowerCase() : '' %>">
+        <% if(menu.isVegetarian) { %>
+          <span class="badge">Vegetarian</span>
+        <% } %>
+        <img src="<%= menu.image %>" alt="<%= menu.name %>">
+        <div class="menu-info">
+          <h3><%= menu.name %></h3>
+          <span class="price">$<%= menu.price %></span>
+          <p><%= menu.description %></p>
+          <button>+ ADD TO ORDER</button>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <!-- Fallback to static content if no menu items -->
+    <div class="menu-card">
+      <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&q=80">
+      <div class="menu-info">
+        <h3>Wagyu Beef Tartare</h3>
+        <span class="price">$42</span>
+        <p>Hand-cut A5 wagyu beef, quail egg yolk, truffle aioli</p>
+        <button>+ ADD TO ORDER</button>
+      </div>
+    </div>
+
+    <div class="menu-card vegetarian">
+      <span class="badge">Vegetarian</span>
+      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80">
+      <div class="menu-info">
+        <h3>Burrata Caprese</h3>
+        <span class="price">$24</span>
+        <p>Fresh burrata, heirloom tomatoes, aged balsamic</p>
+        <button>+ ADD TO ORDER</button>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&q=80">
+      <div class="menu-info">
+        <h3>Seared Foie Gras</h3>
+        <span class="price">$38</span>
+        <p>Pan-seared foie gras, brioche, fig compote</p>
+        <button>+ ADD TO ORDER</button>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-brand">
+      <h3>La Maison</h3>
+      <p>
+        Where culinary excellence meets timeless elegance.
+        Experience the art of fine dining in an atmosphere of
+        sophisticated comfort.
+      </p>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-links">
+      <h4>QUICK LINKS</h4>
+      <a href="#">Home</a>
+      <a href="#">Menu</a>
+      <a href="#">Reservations</a>
+      <a href="#">Rewards</a>
+      <a href="#">Track Order</a>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-contact">
+      <h4>CONTACT</h4>
+      <p>123 Culinary Avenue</p>
+      <p>New York, NY 10001</p>
+      <p>+1 (555) 123-4567</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 La Maison. All rights reserved.
+  </div>
+</footer>
+
+
+</body>
+</html>

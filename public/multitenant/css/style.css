@@ -1,0 +1,336 @@
+/* Custom styles for multitenant application */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    margin: 0;
+    padding: 0;
+ }
+    /* Make sign-up button full width on small screens */
+    @media (max-width: 991px) {
+      .mobile-divider {
+        border-top: 1px solid #ddd;
+        margin: 0.5rem 0;
+      }
+      .signup-btn {
+        width: 100%;
+        margin-top: 15px;
+      }
+      .btn-login{
+        width: 100%;
+        margin-top: 15px;
+      }
+    }
+  .navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 7px 25px; 
+    top: 0;
+    position: fixed;
+   }
+   .navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+   }
+   .nav-link {
+    margin-right: 15px;
+    font-size: 1rem;
+    }
+    .nav-link.btn {
+      
+      border-radius: 10px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .nav-link.btn:hover {
+    background-color: #f9f9f9; /* light grey background */
+    color: white; 
+    border: 1px solid rgb(71, 70, 70); 
+    font-family: bold;            /* optional: make text black */
+    }
+    .btn-login:hover{
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: 1rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-signup:hover {
+        background-color: #9b9898; /* light grey background */
+        color:black 
+        border: 1px solid rgb(71, 70, 70); 
+        font-family: bold;            /* optional: make text black */
+    } 
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Animated Hero Section</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #000;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+       .hero h1 span {
+      display: inline-block;
+      color: #000;
+      animation: fadeGrey 3s infinite;
+    }
+
+    @keyframes fadeGrey {
+      0%   { color: #000; }
+      30%  { color: #aaa; } /* lighter grey */
+      60%  { color: #000; }
+      100% { color: #000; }
+    }
+
+
+    /* Delay animation per word */
+    .hero h1 span:nth-child(1) { animation-delay: 0s; }
+    .hero h1 span:nth-child(2) { animation-delay: 0.3s; }
+    .hero h1 span:nth-child(3) { animation-delay: 0.6s; }
+    .hero h1 span:nth-child(4) { animation-delay: 0.9s; }
+    .hero h1 span:nth-child(5) { animation-delay: 1.2s; }
+    .hero h1 span:nth-child(6) { animation-delay: 1.5s; }
+    .hero h1 span:nth-child(7) { animation-delay: 1.8s; }
+    .hero h1 span:nth-child(8) { animation-delay: 2.1s; }
+    .hero h1 span:nth-child(9) { animation-delay: 2.4s; }
+    .hero h1 span:nth-child(10) { animation-delay: 2.7s; }
+ /* Paragraph cycling container */
+    .hero-paragraphs {
+      position: relative;
+      height: 50px; /* fixed height to avoid shifting */
+      overflow: hidden;
+    }
+
+    .hero-paragraphs p {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      transform: translateX(-100%);
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin: 0;
+      animation: slideCycle 16s infinite;
+    }
+
+    @keyframes slideCycle {
+      0% { opacity: 0; transform: translateX(-100%); }
+      5% { opacity: 1; transform: translateX(0); }
+      20% { opacity: 1; transform: translateX(0); }
+      25% { opacity: 0; transform: translateX(100%); }
+      100% { opacity: 0; transform: translateX(100%); }
+    }
+
+    /* Stagger each paragraph */
+    .hero-paragraphs p:nth-child(1) { animation-delay: 0s; }
+    .hero-paragraphs p:nth-child(2) { animation-delay: 4s; }
+    .hero-paragraphs p:nth-child(3) { animation-delay: 8s; }
+    .hero-paragraphs p:nth-child(4) { animation-delay: 12s; }
+
+     .btn-hero {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 28px;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-hero:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 50px 15px;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+        .btn-hero {
+        padding: 10px 22px;
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 30px 10px;
+      }
+
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+    }
+        /* --- Mobile Footer --- */
+    .mobile-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+
+    .mobile-footer a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #000;
+      font-size: 0.85rem;
+    }
+
+    .mobile-footer i {
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+   /* --- Desktop Footer --- */
+    .desktop-footer {
+      background: #000;
+      color: #fff;
+      padding: 50px 20px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .footer-col h5 {
+      margin-bottom: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      transition: color 0.2s ease-in-out;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #444;
+      padding-top: 15px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+    /* Responsive Visibility */
+    @media (max-width: 768px) {
+      .desktop-footer { display: none; }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-footer { display: none; }
+    }
+    .signup-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .signup-logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+    .btn-signup {
+      margin-bottom: 10px;
+      width: 100%;
+      font-weight: 500;
+      height: 45px;
+      border-radius: 8px;
+    }
+    .btn-apple {
+      background-color: #000;
+      color: #fff;
+    }
+    .signin-link {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+   

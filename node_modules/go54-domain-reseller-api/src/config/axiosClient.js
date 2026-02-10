@@ -1,0 +1,16 @@
+import axios from "axios";
+
+/**
+ * Create a new Axios client with a dynamic baseURL
+ * @param {string} baseURL
+ * @returns {AxiosInstance}
+ */
+export function createAxiosClient(baseURL) {
+  return axios.create({
+    baseURL,
+    timeout: 30000,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+}
