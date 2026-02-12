@@ -534,7 +534,22 @@ router.get("/complete-signup", (req, res) => {
 // Handle complete signup form
 router.post("/complete-signup", async (req, res) => {
   try {
-    const { name, password, slug, domain, plan, type } = req.body;
+    const { name, password, slug, domain, plan, type , address,
+      city,
+      state,
+      country,
+      zip
+    } = req.body;
+
+    // ✅ Create contact object from address fields
+    const contact = {
+      phone: phone || "",
+      address: address || "",
+      city: city || "",
+      state: state || "",
+      country: country || "",
+      zip: zip || ""
+    };
 
     const response = await axios.post(
       "http://easyhostnet.localhost:3000/api/tenant-auth/complete-signup",
@@ -544,6 +559,7 @@ router.post("/complete-signup", async (req, res) => {
         password,
         slug,
         type,
+        contact,
         domain: domain || "",
         plan: plan || "free"
       }

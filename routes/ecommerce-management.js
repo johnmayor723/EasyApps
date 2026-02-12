@@ -55,5 +55,40 @@ router.get("/:id", loadTenant, async (req, res) => {
     });
   }
 });
+// -------------------- Product Routes --------------------
+// Create, read, edit, delete products (all remain same)
+router.post('/add-products', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.session.user) return res.status(401).send('Unauthorized: Please log in.');
+
+    const tenantId = req.session.user.tenantId;
+    const { name, description, price, quantity, category, sku } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const product = new Product({
+      tenantId,
+      name,
+      description,
+      price: parseFloat(price),
+      quantity: parseInt(quantity) || 0,
+      category,
+      sku,
+      images: imagePath ? [imagePath] : []
+    });
+
+    await product.save();
+    const allProducts = await Product.find({ tenantId });
+
+    res.render('multitenant/dashboard-products', { message: 'Product created successfully!', user: req.session.user, products: allProducts });
+  } catch (err) {
+    console.error('❌ Error creating product:', err);
+    res.status(500).send('Failed to create product.');
+  }
+});
+
+// -------------------- Other Routes --------------------
+// All axios calls replaced with `${API_BASE}/...`
+// ... keep all your other routes as in your original code
+// For example: /cart, /menu, /reservations, /tenant-auth calls
 
 module.exports = router;

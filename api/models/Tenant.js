@@ -57,7 +57,7 @@ const TenantSchema = new Schema({
   },
 
   // 👤 Registrant / domain contact (optional)
-  contact: {
+  domainContact: {
     firstName: { type: String, trim: true },
     lastName: { type: String, trim: true },
     email: { type: String, trim: true },
@@ -68,7 +68,12 @@ const TenantSchema = new Schema({
     postcode: { type: String, trim: true },
     country: { type: String, trim: true, default: 'NG' },
   },
-
+  contact: [
+    {
+      type: String,
+      trim: true,
+    },
+  ],
   owner: {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },

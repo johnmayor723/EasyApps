@@ -50,8 +50,8 @@ async function registerDomainService({ domain, registrant }) {
     domain,
     regperiod: 1,
     nameservers: {
-      ns1: process.env.CLOUDFLARE_NS1,
-      ns2: process.env.CLOUDFLARE_NS2,
+      ns1: process.env.NS1,
+      ns2: process.env.NS2,
     },
     contacts: buildContacts(contact),
   };

@@ -150,8 +150,8 @@ exports.verifyOtp = async (req, res) => {
 
 exports.completeSignup = async (req, res) => {
   try {
-    const { name, email, password, slug, domain, plan,type ,url} = req.body;
-    console.log("➡️ Incoming signup request:", { name, email, slug, domain, plan, type });
+    const { name, email, password, slug, domain, plan,type ,url, contact} = req.body;
+    console.log("➡️ Incoming signup request:", { name, email, slug, domain, plan, type, contact });
 
     const user = await User.findOne({ email });
     console.log("🔍 Found user:", user ? user._id : "not found");
@@ -176,15 +176,20 @@ exports.completeSignup = async (req, res) => {
     if (existingTenant) {
       return res.status(400).json({ error: "Tenant slug or domain already in use" });
     }
-
+    
+    // Ensure contact is always an array
+    const contactArray = Array.isArray(contact) ? contact : [];
      // Generate tenantId once and use it for both tenant + user
     const tenantId = uuidv4();
     console.log("🆔 Generated tenantId:", tenantId);
-    const baseUrl =
-    process.env.APP_BASE_URL ||
-    `${req.protocol}://${req.get('host')}`;
 
-    const appUrl = `https://easyhostnet.com/multitenant/${tenantId}/${slug}`;
+    // TEMP: manual baseUrl per environment (refactor later)
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://easyhostnet.com"
+        : "http://localhost:3000";
+
+    const appUrl = `${baseUrl}/multitenant/${tenantId}/${slug}`;
 
     console.log("🌍 Generated app URL:", appUrl);
 
@@ -214,6 +219,7 @@ exports.completeSignup = async (req, res) => {
       tenantId,
       plan,
       type,
+      contact: contactArray, // ✅ ADDED HERE
       url: appUrl,
       provider: "paystack",
       status: "pending",
