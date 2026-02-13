@@ -1,172 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EasyApps || Login</title>
-  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png"/>
+  <title>Login | EasyApps</title>
 
   <style>
-    html, body {
-      height: 100%;
+    * {
       margin: 0;
-    }
-    .row-full {
-      min-height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
-    .col-left, .col-right {
+    body {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      display: flex;
+      background: white;
+      width: 80%;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .form-section {
+      flex: 1;
       padding: 2rem;
     }
 
-    .col-left {
-      background: #e9ecef;
+    .form-section h2 {
+      margin-bottom: 1.5rem;
+      font-weight: bold;
     }
 
-    /* ✅ Right side with background image */
-    .col-right {
-      background-image: url('/multitenant/img/signup-bg.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      position: relative;
-    }
-
-    /* Optional overlay for better text contrast (if you add text later) */
-    .col-right::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.25); /* Adjust opacity as needed */
-    }
-
-    .login-box {
+    .btn-main {
+      background-color: #1a202c;
+      color: white;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 6px;
       width: 100%;
-      max-width: 420px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-      z-index: 2; /* ensures it's above overlay if reused */
+      margin-top: 10px;
     }
 
-    .login-logo {
-      font-size: 1.6rem;
-      font-weight: 700;
+    .btn-main:hover {
+      background-color: #2d3748;
+    }
+
+    .btn-google {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 0.7rem;
+      width: 100%;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .btn-apple {
+      background-color: black;
+      color: white;
+      padding: 0.7rem;
+      width: 100%;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .divider {
       text-align: center;
+      margin: 15px 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+    .preview-section {
+      flex: 1;
+      background-color: #f4f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .preview {
+      width: 250px;
+      height: 480px;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .icon {
+      font-size: 3rem;
       margin-bottom: 1rem;
     }
 
-    .form-label {
-      font-weight: 500;
-    }
-
-    .btn-submit {
+    .preview nav {
+      display: flex;
+      justify-content: space-around;
       width: 100%;
-      height: 44px;
-      font-weight: 600;
-      border-radius: 8px;
+      margin-top: auto;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
     }
 
-    @media (max-width: 767.98px) {
-      .col-left {
-        padding: 1rem;
-        background: #fff;
+    .signup-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .signup-link a {
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    @media(max-width:768px) {
+      .container {
+        flex-direction: column;
       }
-      .login-box {
-        padding: 16px;
-        margin: 0.5rem auto;
-        box-shadow: none;
-      }
-      .col-right {
-        display: none; /* Hide right section on small screens */
+
+      .preview-section {
+        display: none;
       }
     }
   </style>
 </head>
+
 <body>
-  <div class="container-fluid">
-    <div class="row row-full g-0">
 
-      <!-- Left side (Form) -->
-      <div class="col-md-6 col-left">
-        <div class="login-box">
-          <div class="login-logo">EasyApps</div>
-          <h4 class="text-center mb-4">Welcome Back</h4>
+<div class="container">
 
-          <!-- Success and Error messages -->
-          <% if (typeof success_msg !== "undefined" && success_msg.length > 0) { %>
-            <div class="alert alert-success"><%= success_msg %></div>
-          <% } %>
-          <% if (typeof error_msg !== "undefined" && error_msg.length > 0) { %>
-            <div class="alert alert-danger"><%= error_msg %></div>
-          <% } %>
+  <!-- LEFT LOGIN FORM -->
+  <div class="form-section">
 
-          <!-- Login Form -->
-          <form action="/multitenant/login" method="POST">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
-            </div>
+    <h4>  🚀 Login To Your Account</h4>
 
-            <div class="mb-4">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
-            </div>
+    <% if (success_msg && success_msg.length) { %>
+      <div class="alert alert-success"><%= success_msg[0] %></div>
+    <% } %>
 
-            <button type="submit" class="btn btn-primary btn-submit">Login</button>
-          </form>
-          <!-- Social / alternative signups -->
-        <button class="btn btn-google btn-signup" type="button">🔵 Continue with Google</button>
-        <button class="btn btn-apple btn-signup" type="button"> Continue with iPhone</button>
+    <% if (error_msg && error_msg.length) { %>
+      <div class="alert alert-danger"><%= error_msg[0] %></div>
+    <% } %>
 
-          <p class="text-center mt-3">
-            Don’t have an account? <a href="/multitenant/signup">Sign up</a>
-          </p>
-        </div>
+    <form action="/multitenant/login" method="POST">
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          class="form-control"
+          placeholder="Enter email"
+          required>
       </div>
 
-      <!-- Right side (Background image) -->
-      <div class="col-md-6 col-right d-none d-md-flex"></div>
+      <!-- Password -->
+      <div class="mb-3">
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter password"
+          required>
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="btn-main">
+        Login
+      </button>
+
+    </form>
+
+    <div class="divider">OR</div>
+
+    <!-- Google Login -->
+    <a href="">
+      <button class="btn-google">
+       🔵 Continue with Google
+      </button>
+    </a>
+
+    <!-- Apple Login -->
+    <a href="">
+      <button class="btn-apple">
+         Continue with Apple
+      </button>
+    </a>
+
+    <!-- Signup Redirect -->
+    <div class="signup-link">
+      Don't have an account?
+      <a href="/multitenant/signup">Sign up</a>
     </div>
+
   </div>
-    <a
-  href="https://wa.me/2349123907060"
-  target="_blank"
-  class="whatsapp-float"
-  aria-label="Chat with us on WhatsApp"
->
-  <i class="fab fa-whatsapp"></i>
-</a>
-<style>
- .whatsapp-float {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  background-color: #25d366;
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  z-index: 9999;
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
 
-.whatsapp-float:hover {
-  transform: scale(1.08);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
-}
+  <!-- RIGHT PREVIEW -->
+  <div class="preview-section">
 
-  </style>
+    <div class="preview">
+
+      <div class="icon">🛒</div>
+
+      <h3>EasyApps</h3>
+
+      <div style="flex:1;"></div>
+
+      <nav>
+        <span>Home</span>
+        <span>Search</span>
+      </nav>
+
+    </div>
+
+  </div>
+
+</div>
+
 </body>
 </html>

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-
+const URL = process.env.DB_URL 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/EasyHostNet', {
+    await mongoose.connect(URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

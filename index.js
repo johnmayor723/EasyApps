@@ -41,9 +41,9 @@ const tenantResolver = require("./api/middleware/tenantResolver");
 /* =======================
    App Config
 ======================= */
-const PORT = process.env.PORT || 3050;
+const PORT = process.env.PORT || 3000;
 const DB =
-  process.env.DB || "mongodb://127.0.0.1:27017/multitenant-app";
+  process.env.DB_URL 
 
 /* =======================
    Database

@@ -518,7 +518,7 @@ router.get("/create-store", (req, res) => {
     return res.redirect("/multitenant/sign-up");
   }
    console.log("Email from session:", req.session.email);
-  res.render("multitenant/create-store", {
+  res.render("multitenant/createstore", {
     email: req.session.email
   });
 });
@@ -534,11 +534,11 @@ router.get("/complete-signup", (req, res) => {
 // Handle complete signup form
 router.post("/complete-signup", async (req, res) => {
   try {
-    const { name, password, slug, domain, plan, type , address,
+    const { name, password, domain, plan, type , address,
       city,
       state,
       country,
-      zip
+      zip, phone
     } = req.body;
 
     // ✅ Create contact object from address fields
@@ -557,7 +557,7 @@ router.post("/complete-signup", async (req, res) => {
         name: name || slug,
         email: req.session.otpEmail,
         password,
-        slug,
+        slug: name ,
         type,
         contact,
         domain: domain || "",
