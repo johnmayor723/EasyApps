@@ -82,42 +82,20 @@
           <h3><%= menu.name %></h3>
           <span class="price">$<%= menu.price %></span>
           <p><%= menu.description %></p>
-          <button>+ ADD TO ORDER</button>
+          <form action="/multitenant/cart/add/<%= menu._id %>" method="POST">
+            <input hidden="number" name="price" value="<%= menu.price %>">
+            <button type="submit" class="add-btn">+ ADD TO ORDER</button>
+          </form>
+          
         </div>
       </div>
     <% }) %>
   <% } else { %>
     <!-- Fallback to static content if no menu items -->
     <div class="menu-card">
-      <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&q=80">
-      <div class="menu-info">
-        <h3>Wagyu Beef Tartare</h3>
-        <span class="price">$42</span>
-        <p>Hand-cut A5 wagyu beef, quail egg yolk, truffle aioli</p>
-        <button>+ ADD TO ORDER</button>
-      </div>
+     <H2>NO ITEMS IN YOUR CART</H2>
     </div>
 
-    <div class="menu-card vegetarian">
-      <span class="badge">Vegetarian</span>
-      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80">
-      <div class="menu-info">
-        <h3>Burrata Caprese</h3>
-        <span class="price">$24</span>
-        <p>Fresh burrata, heirloom tomatoes, aged balsamic</p>
-        <button>+ ADD TO ORDER</button>
-      </div>
-    </div>
-
-    <div class="menu-card">
-      <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&q=80">
-      <div class="menu-info">
-        <h3>Seared Foie Gras</h3>
-        <span class="price">$38</span>
-        <p>Pan-seared foie gras, brioche, fig compote</p>
-        <button>+ ADD TO ORDER</button>
-      </div>
-    </div>
   <% } %>
 </div>
 

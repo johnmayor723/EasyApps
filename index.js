@@ -10,6 +10,7 @@ const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const path = require("path");
 const flash = require("connect-flash");
+const axios = require("axios");
 
 const app = express();
 
@@ -37,6 +38,7 @@ const clientRestaurantRouter = require("./routes/restaurant-management");
 ======================= */
 const connectDB = require("./api/config/database");
 const tenantResolver = require("./api/middleware/tenantResolver");
+const { platform } = require("os");
 
 /* =======================
    App Config
@@ -103,8 +105,10 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.session = req.session;
+  
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
+   res.locals.tenant = req.session.tenant || null;
   next();
 });
 
@@ -133,7 +137,7 @@ app.use((req, res, next) => {
 /* =======================
    Dynamic Partials
 ======================= */
-app.get("/partials/:name", (req, res) => {
+app.get("/partials/:name", async (req, res) => {
   const allowed = [
     "dashboard",
     "orders",
@@ -157,10 +161,46 @@ app.get("/partials/:name", (req, res) => {
     return res.status(404).send("Partial not found");
   }
 
-  res.render(`partials/${name}-content`, {
-    user: req.session.user || null
-  });
+  try {
+
+    const user = req.session.user || null;
+    const tenant = req.session.tenant || null;
+
+    let menu = [];
+
+    // Only fetch menu if tenant exists AND partial needs menu
+    if (tenant && tenant.tenantId && name === "menu") {
+
+      const menuresponse = await axios.post(
+        "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+        { tenantId: tenant.tenantId }
+      );
+
+      menu = menuresponse.data.menus || [];
+    }
+
+    res.render(`partials/${name}-content`, {
+      layout: false,
+      user,
+      tenant,
+      menu,
+      plan : tenant ? tenant.plan : 'null'  
+    });
+
+  } catch (err) {
+
+    console.error("Partial load error:", err);
+
+    res.render(`partials/${name}-content`, {
+      layout: false,
+      user: req.session.user || null,
+      tenant: req.session.tenant || null,
+      menu: []
+    });
+
+  }
 });
+
 
 /* =======================
    Client Routes

@@ -1,30 +1,26 @@
+
 <div class="page">
 
   <!-- Header -->
   <div class="page-header">
-    <h2>MenuItem</h2>
+    <h2>Menu Items</h2>
     <div class="actions">
-      <button class="icon-btn">•••</button>
-     <button class="add-btn" onclick="openMenuModal()">+ Add</button>
-
-
+      <button class="add-btn" onclick="toggleForm()">+ Add Menu</button>
     </div>
   </div>
 
   <!-- Card -->
+   <!-- Card -->
   <div class="card">
-<% const menu = (typeof session !== 'undefined' && session.menu !== undefined)
-  ? session.menu
-  : null;
-%>
-<% const tenant = session.tenant ; %>
-<% const menuData = session.menuData ; %>
-   <% if (!menu || menu.length === 0) { %>
+
+    <% const tenant = session.tenant; %>
+    
+    <% if (!menu ) { %>
       <!-- EMPTY STATE -->
       <div class="menu-empty">
         <h3>No menu created yet</h3>
         <p>Your restaurant doesn’t have any menu items.</p>
-       <button class="add-btn" onclick="alert('clicked')">+ Add</button>
+       <button class="add-btn" onclick="toggleForm()">+ Add a Menu Item</button>
 
       </div>
     <% } else { %>
@@ -55,7 +51,7 @@
           </thead>
           <tbody>
             <!-- STATIC CONTENT -->
-             <% menuData.forEach(item => { %>
+             <% menu.forEach(item => { %>
               <tr>
                 <td><%= item.name %></td>
                 <td><%= item.description %></td>
@@ -74,7 +70,13 @@
                 </td>
                 <td><%= item.available ? 'true' : 'false' %></td>
                 <td class="actions">
-                  <a href="/restaurant-management/menu/<%= item._id %>/edit" class="btn btn-edit">Edit</a>
+                 <button
+                    type="button"
+                    class="btn btn-edit"
+                    onclick='openEditModal(<%- JSON.stringify(item) %>)'
+                  >
+                    Edit
+                  </button>
                   <a href="/restaurant-management/menu/<%= item._id %>/delete" class="btn btn-delete">Delete</a>
                 </td>
               </tr>
@@ -87,233 +89,335 @@
 
   </div>
 </div>
-<!-- Create Menu Section (TEMP TEST MODE) -->
-<div class="menu-modal test-mode">
-  <div class="modal-header">
-    <h3>Create Menu Item</h3>
+
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="menuModal">
+
+  <div class="modal-content">
+
+    <button class="modal-close" onclick="toggleForm()">✕</button>
+
+    <form  action="/restaurant-management/create-menu"
+     enctype="multipart/form-data" method="POST" class="menu-form">
+
+      <h3>Create Menu Item</h3>
+
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" required>
+          <option value="" disabled selected>Select category</option>
+          <option value="appetizers">Appetizers</option>
+          <option value="soups">Soups</option>
+          <option value="salads">Salads</option>
+          <option value="main_courses">Main Courses</option>
+          <option value="grills_bbq">Grills / BBQ</option>
+          <option value="sides">Sides</option>
+          <option value="pasta_noodles">Pasta & Noodles</option>
+          <option value="rice_dishes">Rice Dishes</option>
+          <option value="seafood">Seafood</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="desserts">Desserts</option>
+          <option value="beverages">Beverages</option>
+          <option value="breakfast">Breakfast</option>
+          <option value="kids_menu">Kids Menu</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" name="price" step="0.01" required />
+      </div>
+
+      <div class="form-group">
+        <label>Available</label>
+        <select name="available">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Image</label>
+        <input type="file" name="image" accept="image/*" />
+      </div>
+
+      <input type="hidden" name="tenantId" value="<%= tenant.tenantId %>" />
+
+      <button type="submit" class="add-btn">Save Menu</button>
+
+    </form>
+
   </div>
 
-  <form method="POST" action="/restaurant-management/create-menu" enctype="multipart/form-data">
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" name="name" required />
-    </div>
-
-    <div class="form-group">
-      <label>Description</label>
-      <textarea name="description" rows="3" required></textarea>
-    </div>
-
-    <div class="form-group">
-  <label>Category</label>
-  <select name="category" required>
-    <option value="" disabled selected>Select category</option>
-    <option value="appetizers">Appetizers</option>
-    <option value="soups">Soups</option>
-    <option value="salads">Salads</option>
-    <option value="main_courses">Main Courses</option>
-    <option value="grills_bbq">Grills / BBQ</option>
-    <option value="sides">Sides</option>
-    <option value="pasta_noodles">Pasta & Noodles</option>
-    <option value="rice_dishes">Rice Dishes</option>
-    <option value="seafood">Seafood</option>
-    <option value="vegetarian">Vegetarian</option>
-    <option value="desserts">Desserts</option>
-    <option value="beverages">Beverages</option>
-    <option value="breakfast">Breakfast</option>
-    <option value="kids_menu">Kids Menu</option>
-  </select>
 </div>
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editMenuModal">
 
-    <div class="form-group">
-      <label>Price</label>
-      <input type="number" name="price" step="0.01" required />
-    </div>
+  <div class="modal-content">
 
-    <div class="form-group">
-      <label>Available</label>
-      <select name="available">
-        <option value="true">Yes</option>
-        <option value="false">No</option>
-      </select>
-    </div>
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
 
-    <div class="form-group">
-      <label>Image</label>
-      <input type="file" name="image" accept="image/*" />
-    </div>
+    <form
+      method="POST"
+      id="editMenuForm"
+      enctype="multipart/form-data"
+      class="menu-form"
+    >
 
-    <input type="hidden" name="tenantId" value="<%= tenant.tenantId %>" />
+      <h3>Edit Menu Item</h3>
 
-    <button type="submit" class="add-btn">Save Menu</button>
-  </form>
-</div>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" id="edit_name" required />
+      </div>
 
-<!-- Right Slide-in Modal -->
- <!--
-<div id="menuModal" class="menu-modal">
-  <div class="modal-header">
-    <h3>Create Menu Item</h3>
-    <span class="close-btn" onclick="closeMenuModal()">✕</span>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" id="edit_description" rows="3" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" id="edit_category" required>
+          <option value="appetizers">Appetizers</option>
+          <option value="soups">Soups</option>
+          <option value="salads">Salads</option>
+          <option value="main_courses">Main Courses</option>
+          <option value="grills_bbq">Grills / BBQ</option>
+          <option value="sides">Sides</option>
+          <option value="pasta_noodles">Pasta & Noodles</option>
+          <option value="rice_dishes">Rice Dishes</option>
+          <option value="seafood">Seafood</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="desserts">Desserts</option>
+          <option value="beverages">Beverages</option>
+          <option value="breakfast">Breakfast</option>
+          <option value="kids_menu">Kids Menu</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" name="price" id="edit_price" step="0.01" required />
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select name="available" id="edit_available">
+          <option value="true">Available</option>
+          <option value="false">Unavailable</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Current Image</label>
+        <img id="edit_image_preview" style="width:80px;border-radius:6px;" />
+      </div>
+
+      <div class="form-group">
+        <label>Change Image</label>
+        <input type="file" name="image" />
+      </div>
+
+      <button type="submit" class="add-btn">Update Menu</button>
+
+    </form>
+
   </div>
-  <form method="POST" action="/restaurant-management/create-menu" enctype="multipart/form-data">
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" name="name" required />
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea name="description" rows="3" required></textarea>
-    </div>
-    <div class="form-group">
-      <label>Category</label>
-      <input type="text" name="category" required />
-    </div>
-    <div class="form-group">
-      <label>Price</label>
-      <input type="number" name="price" step="0.01" required />
-    </div>
-    <div class="form-group">
-      <label>Available</label>
-      <select name="available">
-        <option value="true">Yes</option>
-        <option value="false">No</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Image</label>
-      <input type="file" name="image" accept="image/*" />
-    </div>
 
-    <input type="hidden" name="tenantId" value="<%= tenant.tenantId %>" />
+</div>
 
-    <button type="submit" class="add-btn">Save Menu</button>
-  </form>
-</div>  -->
 
 <style>
-  .btn-edit {
-    background-color: #3b82f6; /* Blue */
-    color: white;
-    padding: 6px 12px;
-    border-radius: 4px;
-    text-decoration: none;
-  } 
-  .btn-delete {
-    background-color: #ef4444; /* Red */
-    color: white;
-    padding: 6px 12px;
-    border-radius: 4px;
-    text-decoration: none;
-  }
-  .menu-modal.test-mode {
-  position: static;        /* NORMAL FLOW */
-  margin-top: 24px;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
 
-/* REMOVE these for now */
-.menu-modal {
-  transform: none !important;
-}
+/* ===== Layout ===== */
 
-.menu-modal {
+.page {
+  padding: 24px;
+}
+/* ===== MODAL OVERLAY ===== */
+
+.modal-overlay {
+ 
   position: fixed;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 350px;
-  max-width: 100%;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Show modal */
+.modal-overlay.active {
+  display: flex;
+}
+
+/* Modal box */
+.modal-content {
+  margin-top: 100px;
   background: #fff;
-  z-index: 9999;
-  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
-
-  transform: translateX(100%); /* hidden by default */
-  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  position: relative;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
-.menu-modal.open {
-  transform: translateX(0); /* slide in */
+/* Close button */
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
 }
 
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 
-
-
-.menu-modal .modal-header {
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-.menu-modal .close-btn {
-  cursor: pointer;
-  font-size: 20px;
-}
-
-.menu-modal .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-
-.menu-modal input,
-.menu-modal textarea,
-.menu-modal select {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-}
-
-.menu-modal button.add-btn {
-  width: 100%;
-  background: #111827;
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.table-wrapper table {
-  width: 100%;
-  border-collapse: collapse; /* IMPORTANT */
+.card {
   background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-.table-wrapper th,
-.table-wrapper td {
-  border: 1px solid #e5e7eb; /* light gray lines */
+/* ===== Empty State ===== */
+
+.menu-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* ===== Table ===== */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #e5e7eb;
   padding: 12px;
   text-align: left;
   font-size: 14px;
 }
 
-.table-wrapper thead th {
+thead th {
   background: #f9fafb;
   font-weight: 600;
-  text-transform: capitalize;
 }
 
-/* Optional: zebra rows (nice UX) */
-.table-wrapper tbody tr:nth-child(even) {
+tbody tr:nth-child(even) {
   background: #f9fafb;
 }
 
-/* Hover effect (optional but clean) */
-.table-wrapper tbody tr:hover {
+tbody tr:hover {
   background: #eef2ff;
 }
 
+/* ===== Buttons ===== */
 
-@media (max-width: 768px) {
-  .menu-modal {
+.add-btn {
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: #3b82f6;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn-delete {
+  background-color: #ef4444;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+/* ===== FORM CENTERING ===== */
+
+.menu-form-container {
+  margin-top: 40px;
+  display:none ;
+}
+
+.menu-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* Desktop center */
+@media (min-width: 1024px) {
+  .menu-form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+/* Mobile full width */
+@media (max-width: 1023px) {
+  .menu-form {
     width: 100%;
   }
 }
-</style>
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+input, textarea, select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+</style>
 

@@ -382,6 +382,7 @@ exports.tenantLogin = async (req, res) => {
       tenant: { id: tenant._id, slug: tenant.slug, domain: tenant.domain, plan: tenant.plan, tenantId: tenant.tenantId, url: tenant.url },
       owner: { id: user._id, email: user.email, tenantId: user.tenantId , url: user.url },
       type: tenant.type,
+      token,
     });
   } catch (error) {
     console.error("Tenant login error:", error);

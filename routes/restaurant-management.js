@@ -62,11 +62,12 @@ router.post('/create-menu', upload.single('image'), async (req, res) => {
       { tenantId }
     );
 
-    res.render('multitenant/dashboard-menu', {
+    /*res.render('multitenant/dashboard-menu', {
       menus: menusRes.data.menus,
       successMessage: 'Menu created successfully',
       errorMessage: null
-    });
+    });*/
+    res.redirect('/multitenant/dashboard');
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -81,9 +82,9 @@ router.get('/dashboard-menu', async (req, res) => {
       `${API_BASE}/menus/menus-by-tenant`,
       { tenantId }
     );
-
-    res.render('multitenant/dashboard-menu', {
-      menus: response.data.menus
+    
+    res.render('multitenant/dashboard', {
+      menus: response.data.menus || []
     });
   } catch (err) {
     console.error(err.message);
@@ -153,11 +154,11 @@ router.post('/menu/:id/edit', upload.single('image'), async (req, res) => {
     console.log('Updated Menu:', updatedMenu);
     req.session.menu = response.data.menu;
     req.flash('success_msg', 'Menu updated successfully');
-    res.redirect('/restaurant-management/dashboard-menu');
+    res.redirect('/multitenant/dashboard');
   } catch (err) {
     console.error(err.message);
     req.flash('error_msg', 'Failed to update menu');
-    res.redirect('/restaurant-management/dashboard-menu');
+    res.redirect('/multitenant/dashboard');
   }
 });
 
@@ -179,10 +180,10 @@ router.get('/menu/:id/delete/', async (req, res) => {
     req.session.menu = null;
     req.session.menus = menusRes.data.menu
     req.flash('success_msg', 'Menu deleted successfully');
-    res.redirect('/restaurant-management/dashboard-menu');
+    res.redirect('/multitenant/dashboard');
   } catch (err) {
    req.flash('error_msg', 'Failed to delete menu');
-    res.redirect('/restaurant-management/dashboard-menu');
+    res.redirect('/multitenant/dashboard');
   }
 });
 

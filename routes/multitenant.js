@@ -7,6 +7,7 @@ const router = express.Router();
 const Product = require('../api/models/Product');
 const FormData = require('form-data');
 const nodemailer = require('nodemailer');
+const Menu = require('../api/models/Menu'); 
 
 // 🔧 Mail transport (Zoho or replace with another SMTP)
 
@@ -398,9 +399,30 @@ router.post("/adbeaconhope", (req, res) => {
     res.send("Invalid credentials. Please try again with valid credentials.");
   }
 });
-router.get("/dashboard", (req, res) => {
-    res.render("multitenant/tenant-dashboard", { layout: false });
+router.get("/dashboard", async (req, res) => {
+  try {
+    const user = req.session.user;
+    const tenant = req.session.tenant;
+
+    // Await the API call
+    const menuresponse = await axios.post(
+      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      { tenantId: tenant.tenantId }
+    );
+
+    const menu = menuresponse.data.menus || []; // <-- note 'menus' to match EJS
+    // When fetching menus (dashboard or menu API)
+    //req.session.menu = menu || [];
+
+    console.log("Menu in dashboard route:", menu);
+     res.locals.menu = menu;
+    res.render("multitenant/tenant-dashboard", { layout: false, user, tenant, menu, plan: tenant.plan });
+  } catch (err) {
+    console.error("Error fetching menus:", err);
+    res.render("multitenant/tenant-dashboard", { layout: false, user, tenant, menu: [], plan: 'null' });
+  }
 });
+
 
 router.get("/signup", (req, res) => {
     res.render("multitenant/signup", { layout: false });
@@ -612,7 +634,8 @@ We’re excited to have you onboard 🚀
       layout: false,
       message: data.message,
       data,
-      email: owner.email
+      email: owner.email,
+      plan: tenant.plan || "free"
     });
 
   } catch (err) {
@@ -782,13 +805,15 @@ router.post("/login", async (req, res) => {
     console.log("Session user:", req.session.user);
 
     // Render dashboard or success page after login
-    res.render("multitenant/tenant-dashboard", { 
+    res.redirect("/multitenant/dashboard");
+    /*res.render("multitenant/tenant-dashboard", { 
       message: response.data.message || "Login successful",
       email: email,
       layout: false,
       user,
-      plan: tenant.plan || "free"
-    });
+      plan: tenant.plan || "free",
+      tenant
+    });*/
 
   } catch (err) {
     console.error(err);
@@ -843,11 +868,12 @@ router.post('/add-products', upload.single('image'), async (req, res) => {
     const allProducts = await Product.find({ tenantId });
     console.log(`Fetched ${allProducts.length} products for tenant ${tenantId}`);
     // ✅ Render the dashboard page with updated product list
-    res.render('multitenant/dashboard-products', {
+    /*res.render('multitenant/dashboard-products', {
       message: 'Product created successfully!',
       user: req.session.user,
       products: allProducts
-    });
+    });*/
+    res.redirect('/multitenant/dashboard');
 
   } catch (err) {
     console.error('❌ Error creating product:', err);
@@ -1033,18 +1059,19 @@ function initializeCart(req) {
 // ===== Add to cart =====
 router.post('/cart/add/:id', async (req, res) => {
   try {
-    const productId = req.params.id;
+    console.log('Add to cart request for product ID:', req.params.id, 'with qty:', req.body.qty);
+    const Id = req.params.id;
     const qty = parseInt(req.body.qty) || 1;
 
     initializeCart(req);
 
-    const product = await Product.findById(productId);
+    const product = await Menu.findById(Id);
     if (!product) return res.status(404).send('Product not found');
 
     const cart = req.session.cart;
 
     // Check if product already in cart
-    const existing = cart.items.find(i => i._id.toString() === productId);
+    const existing = cart.items.find(i => i._id.toString() === Id);
 
     if (existing) {
       existing.qty += qty;

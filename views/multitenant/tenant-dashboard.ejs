@@ -218,14 +218,12 @@
     `;
   }
 }
- const tenant = {
-    plan: "<%= plan %>"
-  };
+ 
 async function reserveDomain(domain) {
   const resultsBox = document.getElementById('domainResults');
 
   // Block FREE plan users
-    if (!tenant || tenant.plan === 'free') {
+    if (!tenant || "<%= tenant.plan %>" === 'free') {
       alert('Upgrade your plan to reserve a custom domain.');
       return;
     }
@@ -305,6 +303,207 @@ async function manualReserveDomain(domain) {
     `;
   }, 1200);
 }
+</script>
+<script>
+document.getElementById('menuForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+
+  const imageFile = form.image.files[0];
+
+  let imageUrl = '';
+
+  try {
+
+    // STEP 1: upload image
+    if (imageFile) {
+
+      const uploadData = new FormData();
+      uploadData.append('image', imageFile);
+
+      const uploadRes = await fetch('/upload', {
+        method: 'POST',
+        body: uploadData
+      });
+
+      const uploadResult = await uploadRes.json();
+
+      imageUrl = uploadResult.imageUrl;
+    }
+
+    // STEP 2: send menu to API
+    const payload = {
+      name: form.name.value,
+      description: form.description.value,
+      category: form.category.value,
+      price: parseFloat(form.price.value),
+      available: form.available.value === 'true',
+      tenantId: form.tenantId.value,
+      image: imageUrl
+    };
+
+    await fetch('http://easyhostnet.localhost:3000/api/menus/create-menu', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    // STEP 3: reload dashboard
+    window.location.reload();
+
+  } catch(err) {
+    console.error(err);
+    alert('Failed to create menu');
+  }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+  const tenantId = "<%= tenant.tenantId %>";
+
+  try {
+    const response = await fetch('http://easyhostnet.localhost:3000/api/menus/menus-by-tenant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tenantId })
+    });
+
+    const data = await response.json();
+
+    // If no menus
+    if (!data.menus || data.menus.length === 0) return;
+
+    // Replace empty state with table dynamically
+    console.log(data.menus);
+
+    // Optional: build table rows dynamically here
+  } catch (err) {
+    console.error(err);
+  }
+});
+</script>
+<script>
+
+/* Toggle form */
+function toggleForm() {
+  const container = document.getElementById('menuFormContainer');
+  container.style.display =
+    container.style.display === 'block' ? 'none' : 'block';
+}
+
+/* Load menus dynamically */
+document.addEventListener('DOMContentLoaded', async function () {
+
+  const tenantId = "<%= tenant.tenantId %>";
+
+  const tableBody = document.getElementById('menuTableBody');
+  const emptyState = document.getElementById('menuEmptyState');
+  const tableWrapper = document.getElementById('menuTableWrapper');
+
+  try {
+
+    const response = await fetch('http://easyhostnet.localhost:3000/api/menus/menus-by-tenant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tenantId })
+    });
+
+    const data = await response.json();
+    const menus = data.menus || [];
+
+    if (menus.length === 0) {
+      emptyState.style.display = 'block';
+      tableWrapper.style.display = 'none';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    tableWrapper.style.display = 'block';
+
+    menus.forEach(item => {
+
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.description}</td>
+        <td>${item.price}</td>
+        <td>${item.category}</td>
+        <td>${item.image ? `<img src="${item.image}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">` : '—'}</td>
+        <td>${item.available ? 'true' : 'false'}</td>
+        <td>
+          <a href="/restaurant-management/menu/${item._id}/edit" class="btn-edit">Edit</a>
+          <a href="/restaurant-management/menu/${item._id}/delete" class="btn-delete">Delete</a>
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+
+});
+
+</script>
+<script>
+function toggleForm() {
+  const modal = document.getElementById('menuModal');
+  modal.classList.toggle('active');
+}
+
+/* Close when clicking outside modal */
+document.getElementById('menuModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+  }
+});
+</script>
+
+<script>
+
+function openEditModal(menu)
+{
+  const modal = document.getElementById("editMenuModal");
+
+  // Set form action dynamically
+  document.getElementById("editMenuForm").action =
+    "/restaurant-management/menu/" + menu._id + "/edit";
+
+  // Fill fields
+  document.getElementById("edit_name").value = menu.name;
+  document.getElementById("edit_description").value = menu.description;
+  document.getElementById("edit_category").value = menu.category;
+  document.getElementById("edit_price").value = menu.price;
+  document.getElementById("edit_available").value = menu.available;
+
+  // Image preview
+  const img = document.getElementById("edit_image_preview");
+
+  if(menu.image)
+  {
+    img.src = menu.image;
+    img.style.display = "block";
+  }
+  else
+  {
+    img.style.display = "none";
+  }
+
+  modal.classList.add("active");
+}
+
+function closeEditModal()
+{
+  document.getElementById("editMenuModal")
+    .classList.remove("active");
+}
+
 </script>
 
 </body>
