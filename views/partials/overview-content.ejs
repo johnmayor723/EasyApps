@@ -1,7 +1,7 @@
 
 <%
   const appSlug = session?.tenant.slug || 'Your App';
-  const appUrl  = session?.user.url || '#';
+  const appUrl  = session?.user.url || session?.tenant.url || '#';
   const tenant  = session?.tenant || {};
 %>
 
