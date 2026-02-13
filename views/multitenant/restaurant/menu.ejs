@@ -23,12 +23,20 @@
     <div class="nav-container">
       <div class="logo">La Maison</div>
 
-      <nav class="nav-links">
-        <a href="#" class="active">HOME</a>
-        <a href="#">MENU</a>
-        <a href="#">RESERVATIONS</a>
-        <a href="#">REWARDS</a>
-        <a href="#">TRACK ORDER</a>
+     <nav class="nav-links">
+        <a href="/" >HOME</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/track-order">TRACK ORDER</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/cart" class="cart-link">
+            
+            🛒 Cart
+            
+            <span id="cart-count" class="cart-count">0</span>
+
+          </a>
+
       </nav>
     </div>
   </header>

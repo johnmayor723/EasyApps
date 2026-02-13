@@ -376,16 +376,12 @@ exports.tenantLogin = async (req, res) => {
       jwtSecret,
       { expiresIn: "7d" }
     );
-
-    return res.json({
-      message: "Login successful",
-      token,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        tenantId: user.tenantId,
-      },
+    const tenant = await Tenant.findOne({ tenantId: user.tenantId });
+     res.status(201).json({
+      message: "Logged in successfully",
+      tenant: { id: tenant._id, slug: tenant.slug, domain: tenant.domain, plan: tenant.plan, tenantId: tenant.tenantId, url: tenant.url },
+      owner: { id: user._id, email: user.email, tenantId: user.tenantId , url: user.url },
+      type: tenant.type,
     });
   } catch (error) {
     console.error("Tenant login error:", error);

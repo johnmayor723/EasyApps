@@ -769,7 +769,16 @@ router.post("/login", async (req, res) => {
     const user = response.data.user;
     console.log("User data:", user);
     // ✅ Save user into session
-    req.session.user = user;
+    const data = response.data;
+    console.log("Login response data:", data);
+    const { owner, tenant } = data;
+
+    // ✅ Persist session
+    req.session.user = owner;
+    req.session.tenant = tenant;
+    req.session.type = data.type;
+
+    console.log("session user tenantId:", owner.tenantId);
     console.log("Session user:", req.session.user);
 
     // Render dashboard or success page after login
@@ -777,7 +786,8 @@ router.post("/login", async (req, res) => {
       message: response.data.message || "Login successful",
       email: email,
       layout: false,
-      user
+      user,
+      plan: tenant.plan || "free"
     });
 
   } catch (err) {

@@ -174,7 +174,7 @@
   `;
 
   try {
-   const res = await fetch('http://easyhostnet.localhost:3060/api/domain/check-domain', {
+   const res = await fetch('http://easyhostnet.localhost:3000/api/domain/check-domain', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -218,15 +218,24 @@
     `;
   }
 }
+ const tenant = {
+    plan: "<%= plan %>"
+  };
 async function reserveDomain(domain) {
   const resultsBox = document.getElementById('domainResults');
+
+  // Block FREE plan users
+    if (!tenant || tenant.plan === 'free') {
+      alert('Upgrade your plan to reserve a custom domain.');
+      return;
+    }
 
   resultsBox.innerHTML = `
     <div class="muted">Reserving <strong>${domain}</strong>…</div>
   `;
 
   try {
-    const res = await fetch(`http://easyhostnet.localhost:3060/api/domain/get-domain`, {
+    const res = await fetch(`http://easyhostnet.localhost:3000/api/domain/get-domain`, {
       method: 'POST', // assuming POST for reservation
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ domain })
@@ -234,7 +243,7 @@ async function reserveDomain(domain) {
 
     if (res.ok) {
       // Redirect to dashboard if status is 200
-      window.location.href = 'http://easyhostnet.localhost:3060/multitenant/dashboard';
+      window.location.href = 'http://easyhostnet.localhost:3000/multitenant/dashboard';
       return; // stop further execution
     }
 

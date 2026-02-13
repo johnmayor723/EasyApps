@@ -304,15 +304,24 @@
 </head>
 <body>
 
+  
+
   <!-- NAV -->
   <div class="navbar">
     <div class="brand"><%=tenant.name%></div>
     <div class="nav-links">
-      <a href="#">HOME</a>
-      <a href="#">MENU</a>
-      <a href="#" class="active">RESERVATIONS</a>
-      <a href="#">REWARDS</a>
-      <a href="#">TRACK ORDER</a>
+     <a href="/" >HOME</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/track-order">TRACK ORDER</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/cart" class="cart-link">
+            
+            🛒 Cart
+            
+            <span id="cart-count" class="cart-count">0</span>
+
+          </a>
     </div>
   </div>
 

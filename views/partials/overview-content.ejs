@@ -76,7 +76,7 @@
     Upgrade Plan
   </a>
 
-<% } else if (tenant.plan === 'pro') { %>
+<% } else if (tenant.plan !== 'free') { %>
   <button
     class="btn primary"
     style="background-color: #2e2e2f; color: white;"
@@ -85,7 +85,13 @@
     Get Your Free .com.ng Domain
   </button>
 <% } %>
- 
+  <button
+    class="btn primary"
+    style="background-color: #2e2e2f; color: white;"
+    onclick="openModal('getDomainModal')"
+  >
+    Get Your Free .com.ng Domain
+  </button>
   </div>
 </div>
 
