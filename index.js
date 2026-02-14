@@ -142,18 +142,18 @@ app.use((req, res, next) => {
 ======================= */
 app.get("/partials/:name", async (req, res) => {
   const allowed = [
-    "dashboard",
+    "",
     "orders",
     "products",
     "customers",
-    "chats",
-    "design",
-    "settings",
-    "marketing",
+    //"chats",
+    //"design",
+    //"settings",
+    //"marketing",
     "create-product",
     "menu",
     "reservations",
-    "tables",
+    //"tables",
     "overview",
     "createmenu"
   ];
@@ -161,7 +161,7 @@ app.get("/partials/:name", async (req, res) => {
   const { name } = req.params;
 
   if (!allowed.includes(name)) {
-    return res.status(404).send("Partial not found");
+    return res.status(404).send("This Feature is not available yet.");
   }
 
   try {
