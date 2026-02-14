@@ -134,11 +134,14 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
     /* -------------------------
        1. Resolve tenant
     -------------------------- */
-    req.session.tenantId = tenantId; // ✅ Persist tenantId in session
+   
     const tenantResponse = await axios.post(
       "http://localhost:3000/api/tenant-auth/get-one-tenant",
       { tenantId }
     );
+    const name =  tenantResponse.data?.tenant?.owner?.name || "Our Store";
+    console.log("Resolved name tenant for menu:", name);
+    const contactInfo = tenant.contact || {};
 
     const tenant = tenantResponse.data?.tenant;
     console.log("Resolved tenant:", tenant);
@@ -183,6 +186,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
   return res.render("multitenant/restaurant/home", {
     tenant,
     menu: menu ?? null, // 👈 GUARANTEED
+    contact: contactInfo,
   });
 }
 
@@ -227,7 +231,15 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
   console
   console.log("Accessing menu for tenant:", req.params.tenantId);
   const { tenantId } = req.params;
-
+  const tenantResponse = await axios.post(
+      "http://localhost:3000/api/tenant-auth/get-one-tenant",
+      { tenantId }
+    );
+    const tenant = tenantResponse.data?.tenant;
+    const name =  tenant.owner.name;
+    console.log("Resolved name tenant for menu:", name);
+    const contactInfo = tenant.contact || {};
+    console.log("Resolved tenant contact info :", contactInfo);
   try {
     const response = await axios.post(
       "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
@@ -238,6 +250,8 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
     return res.render("multitenant/restaurant/menu", {
       tenant: req.session.tenant,
       menus,
+      contact: contactInfo,
+      name
     });
   } catch (err) {
     console.error("Error fetching menu:", err.message);
@@ -248,17 +262,29 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
   console.log("Accessing reservations for tenant:", req.params.tenantId);
 
   const { tenantId } = req.params;
+   const tenantResponse = await axios.post(
+      "http://localhost:3000/api/tenant-auth/get-one-tenant",
+      { tenantId }
+    );
+    const contact = tenantResponse.data.tenant.contact
+    const tenant1 = tenantResponse.data?.tenant;
+    const name =  tenant1.owner.name;
+    console.log("Resolved tenant for reservations:", tenantResponse.data?.tenant);
 
   try {
+   
     const response = await axios.get(
       `http://easyhostnet.localhost:3000/api/reservations/tenant/${tenantId}`
     );
 
     const reservations = response.data?.reservations || [];
+    
 
     return res.render("multitenant/restaurant/reservation", {
       tenant: req.session.tenant,
-      reservations
+      reservations,
+      contact,
+      name
     });
   } catch (err) {
     console.error("Error fetching reservations:", err.message);
@@ -266,16 +292,24 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
   }
 });
 
-router.get("/shopp/:tenantId/reservations", (req, res) => {
+router.get("/shop/:tenantId/reservations", async (req, res) => {
   const { tenantId } = req.params;
-
+  const tenantResponse = await axios.post(
+      "http://localhost:3000/api/tenant-auth/get-one-tenant",
+      { tenantId }
+    );
+    const tenant = tenantResponse.data?.tenant;
+    const name =  tenant.owner.name;
+    console.log("Resolved name tenant for menu:", name);
+    const contactInfo = tenant.contact || {};
   // Fetch reservations for the tenant
   axios.post("http://easyhostnet.localhost:3000/api/reservations/by-tenant", { tenantId })
     .then(response => {
       const reservations = response.data?.reservations || [];
       res.render("multitenant/restaurant/reservations", {
-        tenant: req.session.tenant,
+        tenant,
         reservations,
+        contact: contactInfo,
       });
     })
     .catch(err => {
@@ -562,7 +596,7 @@ router.post("/complete-signup", async (req, res) => {
       country,
       zip, phone
     } = req.body;
-
+    console.log("Complete signup data:", req.body);
     // ✅ Create contact object from address fields
     const contact = {
       phone: phone || "",
@@ -572,7 +606,7 @@ router.post("/complete-signup", async (req, res) => {
       country: country || "",
       zip: zip || ""
     };
-
+    console.log("Constructed contact object:", contact);
     const response = await axios.post(
       "http://easyhostnet.localhost:3000/api/tenant-auth/complete-signup",
       {
@@ -583,7 +617,13 @@ router.post("/complete-signup", async (req, res) => {
         type,
         contact,
         domain: domain || "",
-        plan: plan || "free"
+        plan: plan || "free",
+        address,
+        city,
+        state,
+        country,
+        zip,
+        phone
       }
     );
 
@@ -783,7 +823,7 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     console.log(req.body);
     // Send to backend API
-    const response = await axios.post("http:///easyhostnet.localhost:3000/api/tenant-auth/email-login", {
+    const response = await axios.post("http://easyhostnet.localhost:3000/api/tenant-auth/email-login", {
       email,
       password,
     });
@@ -1060,9 +1100,10 @@ function initializeCart(req) {
 router.post('/cart/add/:id', async (req, res) => {
   try {
     console.log('Add to cart request for product ID:', req.params.id, 'with qty:', req.body.qty);
-    const Id = req.params.id;
+    const Id =  req.params.id; // Fallback to URL param if session doesn't have it
     const qty = parseInt(req.body.qty) || 1;
-
+    const storeId = req.query.tenantId || req.session.storeId; // Try query param first, then session
+    console.log('Resolved tenant ID for cart:', storeId);
     initializeCart(req);
 
     const product = await Menu.findById(Id);
@@ -1092,15 +1133,64 @@ router.post('/cart/add/:id', async (req, res) => {
     cart.totalPrice = cart.items.reduce((acc, i) => acc + i.total, 0);
 
     console.log('🛒 Cart updated:', cart);
-
-    res.redirect('/cart');
+    req.session.cart = cart; // Save back to session
+    res.redirect(`/multitenant/shop/${storeId}/menu`);
   } catch (err) {
     console.error('❌ Error adding to cart:', err);
     res.status(500).send('Failed to add to cart.');
   }
 });
+router.post("/cart/update/:id", (req, res) => {
 
-// ===== Update item quantity =====
+  const { id } = req.params;
+  const { change } = req.body;
+
+  if (!req.session.cart) {
+
+    return res.json({ success: false });
+
+  }
+
+  const item = req.session.cart.items.find(i => i._id === id);
+
+  if (!item) {
+
+    return res.json({ success: false });
+
+  }
+
+  item.qty += change;
+
+  if (item.qty <= 0) {
+
+    req.session.cart.items =
+      req.session.cart.items.filter(i => i._id !== id);
+
+  }
+  else {
+
+    item.total = item.qty * item.price;
+
+  }
+
+
+  // recalc totals
+  req.session.cart.totalQty =
+    req.session.cart.items.reduce((sum, i) => sum + i.qty, 0);
+
+  req.session.cart.totalPrice =
+    req.session.cart.items.reduce((sum, i) => sum + i.total, 0);
+
+
+  res.json({
+    success: true,
+    cart: req.session.cart
+  });
+
+});
+
+
+/* ===== Update item quantity =====
 router.post('/cart/update/:id', (req, res) => {
   try {
     initializeCart(req);
@@ -1125,12 +1215,12 @@ router.post('/cart/update/:id', (req, res) => {
     cart.totalQty = cart.items.reduce((acc, i) => acc + i.qty, 0);
     cart.totalPrice = cart.items.reduce((acc, i) => acc + i.total, 0);
 
-    res.redirect('/cart');
+    res.redirect('/');
   } catch (err) {
     console.error('❌ Error updating cart:', err);
     res.status(500).send('Failed to update cart.');
   }
-});
+});*/
 
 // ===== View cart =====
 router.get('/cart', (req, res) => {

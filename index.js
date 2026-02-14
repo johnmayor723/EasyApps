@@ -56,6 +56,9 @@ connectDB();
    View Engine
 ======================= */
 app.set("view engine", "ejs");
+// Disable EJS caching
+app.set('view cache', false);
+
 app.set("views", path.join(__dirname, "views"));
 app.locals.basedir = path.join(__dirname, "views");
 

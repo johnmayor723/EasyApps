@@ -68,12 +68,35 @@ const TenantSchema = new Schema({
     postcode: { type: String, trim: true },
     country: { type: String, trim: true, default: 'NG' },
   },
-  contact: [
-    {
-      type: String,
-      trim: true,
-    },
-  ],
+contact: {
+    email: { type: String, default: "" },
+    phone: { type: String, default: "" },
+    address: { type: String, default: "" },
+    city: { type: String, default: "" },
+    state: { type: String, default: "" },
+    country: { type: String, default: "" },
+    zip: { type: String, default: "" }
+  },
+  address: {
+    type: String,
+    trim: true,
+  },
+  city: {
+    type: String,
+    trim: true,
+  },
+  state: {
+    type: String,
+    trim: true,
+  },
+  country: {
+    type: String,
+    trim: true,
+  },
+  zip: {
+    type: String,
+    trim: true,
+  },
   owner: {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },

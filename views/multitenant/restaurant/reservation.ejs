@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reservations – <%=tenant.name%></title>
+  <title>Reservations – <%= name %></title>
 
   <style>
     :root {
@@ -308,7 +308,7 @@
 
   <!-- NAV -->
   <div class="navbar">
-    <div class="brand"><%=tenant.name%></div>
+    <div class="brand"><%=name%></div>
     <div class="nav-links">
      <a href="/" >HOME</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
@@ -336,7 +336,7 @@
         <div class="icon">📍</div>
         <div>
           <h4>Location</h4>
-          <p>123 Culinary Avenue<br>Downtown District<br>New York, NY 10001</p>
+          <p><%= contact.address %><br><%= contact.city %>, <%= contact.state %> <%= contact.zip %></p>
         </div>
       </div>
 
@@ -352,7 +352,7 @@
         <div class="icon">📞</div>
         <div>
           <h4>Contact</h4>
-          <p>+1 (555) 123-4567<br>reservations@lamaison.com</p>
+          <p>+<%= contact.phone %><br><%= tenant.owneremail %></p>
         </div>
       </div>
 
@@ -430,7 +430,7 @@
 
     <!-- BRAND -->
     <div class="footer-brand">
-      <h3>L<%=tenant.name%></h3>
+      <h3><%=name%></h3>
       <p>
         Where culinary excellence meets timeless elegance.
         Experience the art of fine dining in an atmosphere of
@@ -451,9 +451,9 @@
     <!-- CONTACT -->
     <div class="footer-contact">
       <h4>CONTACT</h4>
-      <p>123 Culinary Avenue</p>
-      <p>New York, NY 10001</p>
-      <p>+1 (555) 123-4567</p>
+      <p><%=contact.address%></p>
+      <p><%=contact.city%>, <%=contact.state%> <%=contact.zip%></p>
+      <p><%=contact.phone%></p>
     </div>
 
   </div>

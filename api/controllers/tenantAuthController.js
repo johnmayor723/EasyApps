@@ -150,8 +150,16 @@ exports.verifyOtp = async (req, res) => {
 
 exports.completeSignup = async (req, res) => {
   try {
-    const { name, email, password, slug, domain, plan,type ,url, contact} = req.body;
-    console.log("➡️ Incoming signup request:", { name, email, slug, domain, plan, type, contact });
+    const { name, email, password, slug, domain, plan,type ,url, contact, address,
+      city,
+      state,
+      country,
+      zip, phone} = req.body;
+    console.log("➡️ Incoming signup request:", { name, email, slug, domain, plan, type, contact,address,
+      city,
+      state,
+      country,
+      zip, phone });
 
     const user = await User.findOne({ email });
     console.log("🔍 Found user:", user ? user._id : "not found");
@@ -178,7 +186,16 @@ exports.completeSignup = async (req, res) => {
     }
     
     // Ensure contact is always an array
-    const contactArray = Array.isArray(contact) ? contact : [];
+    const contactArray = {
+      email: contact?.email || "",
+      phone: contact?.phone || "",
+      address: contact?.address || "",
+      city: contact?.city || "",
+      state: contact?.state || "",
+      country: contact?.country || "",
+      zip: contact?.zip || "",
+      phone: contact?.phone || ""
+    }
      // Generate tenantId once and use it for both tenant + user
     const tenantId = uuidv4();
     console.log("🆔 Generated tenantId:", tenantId);
@@ -219,7 +236,21 @@ exports.completeSignup = async (req, res) => {
       tenantId,
       plan,
       type,
-      contact: contactArray, // ✅ ADDED HERE
+      contact: {
+        email: contact?.email || "",
+        phone: contact?.phone || "",
+        address: contact?.address || "",
+        city: contact?.city || "",
+        state: contact?.state || "",
+        country: contact?.country || "",
+        zip: contact?.zip || "",
+      },  
+      address,
+      city,
+      state,
+      country,
+      zip,
+      phone,
       url: appUrl,
       provider: "paystack",
       status: "pending",
@@ -446,7 +477,7 @@ exports.getTenant = async (req, res) => {
     if (!tenant) {
       return res.status(404).json({ error: "Tenant not found"});
     }
-
+    const contactInfo = tenant.contact || {};
     // Return tenant as JSON
     res.json({
       tenant: {
@@ -465,10 +496,7 @@ exports.getTenant = async (req, res) => {
           secondaryColor: tenant.secondaryColor || "#111827",
           contactColor: tenant.contactColor || "#10b981",
         },
-        contact: {
-          email: tenant.email || "",
-          phone: tenant.phone || "",
-        },
+        contact: contactInfo,
       },
     });
   } catch (err) {
