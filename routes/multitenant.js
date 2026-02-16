@@ -244,6 +244,7 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
     );
     const tenant = tenantResponse.data?.tenant;
     const name =  tenant.owner.name;
+    const email = tenant.owner.email;
     console.log("Resolved name tenant for menu:", name);
     const contactInfo = tenant.contact || {};
     console.log("Resolved tenant contact info :", contactInfo);

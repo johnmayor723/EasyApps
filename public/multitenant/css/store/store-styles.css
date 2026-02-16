@@ -664,3 +664,131 @@ body{
     width:100%;
   }
 }
+ .cart-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+}
+
+.cart-modal-content {
+  background: #fff;
+  width: 420px;
+  max-width: 95%;
+  margin: 60px auto;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: slideDown 0.25s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.cart-header {
+  padding: 16px;
+  background: linear-gradient(to right, #f39c12, #e67e00);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.cart-body {
+  padding: 16px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-item-name {
+  font-weight: 600;
+}
+
+.cart-item-qty {
+  font-size: 13px;
+  color: #777;
+}
+
+.cart-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+.cart-total {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.whatsapp-btn {
+  width: 100%;
+  padding: 12px;
+  background: #202120;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.whatsapp-btn:hover {
+  background: #1ebe5d;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 40px;
+  color: #777;
+}
+.cart-qty-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.cart-qty-control button {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #111;
+  color: white;
+  font-size: 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cart-qty-control button:hover {
+  background: #333;
+}
+
+.cart-qty-control span {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}

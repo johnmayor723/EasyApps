@@ -40,7 +40,8 @@
 
   <!-- CART (inline styled as requested) -->
   <div style="margin-left:20px; position:relative;">
-    <a href="/cart" style="text-decoration:none; font-weight:600; color:inherit;">
+    <a href="" style="text-decoration:none; font-weight:600; color:inherit;"
+      onclick="openCartModal(); return false;" class="cart-link">
       🛒 Cart
     </a>
 
@@ -105,7 +106,7 @@
              <p> ₦<%= product.price %></p>
             </div>
 
-            <form action="/multitenant/cart//<%= product._id %>/add" method="POST">
+            <form action="/store/cart/<%= product._id %>/add" method="POST">
               <input type="hidden" name="name" value="<%= product.name %>">
               <input type="hidden" name="price" value="<%= product.price %>">
               <button style="padding: 10px 13px; background: #c76b00; color: #fff; border: none; border-radius: 5px; cursor: pointer;" type="submit">Add to Cart</button>
@@ -203,12 +204,169 @@
 </footer>
 
 
+<!-- CART MODAL -->
+<div id="cartModal" class="cart-modal">
 
+  <div class="cart-modal-content">
+
+    <!-- HEADER -->
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" onclick="closeCartModal()">&times;</button>
+    </div>
+
+
+    <!-- BODY -->
+    <div style="color: #333;" class="cart-body">
+
+      <% if (!session.cart || session.cart.items.length === 0) { %>
+
+        <div class="cart-empty">
+          Your cart is empty
+        </div>
+
+      <% } else { %>
+
+        <% session.cart.items.forEach(item => { %>
+
+          <div class="cart-item">
+
+            <div>
+
+              <div class="cart-item-name">
+                <%= item.name %>
+              </div>
+
+
+              <!-- QTY CONTROLS -->
+              <div class="cart-qty-control">
+
+                <button onclick="updateQty('<%= item._id %>', -1)">
+                  −
+                </button>
+
+                <span id="qty-<%= item._id %>">
+                  <%= item.qty %>
+                </span>
+
+                <button onclick="updateQty('<%= item._id %>', 1)">
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <div class="cart-item-price">
+              ₦<%= item.total.toFixed(2) %>
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      <% } %>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="cart-footer">
+
+      <div class="cart-total">
+        Total: ₦<%= session.cart?.totalPrice?.toFixed(2) || "0.00" %>
+      </div>
+
+      <button onclick="sendWhatsAppOrder()" class="whatsapp-btn">
+        Place Order via WhatsApp
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
 <script>
 function toggleMenu(){
   document.getElementById("navLinks").classList.toggle("active");
 }
+</script>
+<script>
+
+function openCartModal() {
+  document.getElementById("cartModal").style.display = "block";
+}
+
+function closeCartModal() {
+  document.getElementById("cartModal").style.display = "none";
+}
+
+window.onclick = function(e) {
+  const modal = document.getElementById("cartModal");
+
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+};
+
+
+function sendWhatsAppOrder() {
+
+  const rawPhone = "<%= contact.phone || '' %>";
+  let phone = rawPhone.replace(/\D/g, '');
+
+  // common normalization: if local format starts with 0 (e.g. 08012345678) convert to 234XXXXXXXXX
+  if (phone.length === 11 && phone.startsWith('0')) {
+    phone = '234' + phone.slice(1);
+  }
+
+  // enforce format: must start with 234 and be exactly 12 digits long (234 + 10 digits)
+  if (!/^234\d{10}$/.test(phone)) {
+    alert('Invalid phone format. Expected: 234XXXXXXXXX (12 digits, starting with 234).');
+    return;
+  }
+
+  <% 
+    // build the message on the server to avoid injecting unescaped strings into client JS
+    var waMessage = 'Hello, I want to place an order:\n\n';
+    if (typeof session !== 'undefined' && session && session.cart && Array.isArray(session.cart.items) && session.cart.items.length > 0) {
+      session.cart.items.forEach(function(item) {
+        waMessage += '• ' + (item.name || '') + ' x ' + (item.qty || 0) + ' = ₦' + (item.total ? item.total.toFixed(2) : '0.00') + '\n';
+      });
+      waMessage += '\nTotal: ₦' + (session.cart.totalPrice ? session.cart.totalPrice.toFixed(2) : '0.00');
+    }
+  %>
+
+  // message is already URL-encoded on the server to ensure it's safe in the client script
+  const message = "<%= encodeURIComponent(waMessage) %>";
+
+  const url = `https://wa.me/${phone}?text=${message}`;
+
+  window.open(url, "_blank");
+
+}
+
+</script>
+<script>
+  // UPDATE QTY 
+  async function updateQty(menuId, change) {
+    try {
+      const res = await fetch(`/store/cart/update/${menuId}?tenantId=<%= tenant.tenantId %>`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ change })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById("cart-count").innerText = data.cart.totalQty;
+        location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 </script>
 
 </body>

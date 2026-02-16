@@ -193,7 +193,8 @@
       <button>DRINKS</button>
     </div>
 
-    <a href="#" style="padding: 10px 13px;background-color: #d3b325;color: whitesmoke;text-decoration: none;border-radius: 10px;" onclick="openCartModal(); return false;" class="cart-link">
+    <a href="#" style="padding: 10px 13px;background-color: #d3b325;color: whitesmoke;text-decoration: none;border-radius: 10px;"
+     onclick="openCartModal(); return false;" class="cart-link">
         🛒 Cart
         <span id="cart-count" class="cart-count">
           <%= session.cart?.totalQty || 0 %>

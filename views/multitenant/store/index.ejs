@@ -78,7 +78,89 @@
   </div>
 </section>
 
+<!-- CART MODAL -->
+<div id="cartModal" class="cart-modal">
 
+  <div class="cart-modal-content">
+
+    <!-- HEADER -->
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" onclick="closeCartModal()">&times;</button>
+    </div>
+
+
+    <!-- BODY -->
+    <div style="color: #333;" class="cart-body">
+
+      <% if (!session.cart || session.cart.items.length === 0) { %>
+
+        <div class="cart-empty">
+          Your cart is empty
+        </div>
+
+      <% } else { %>
+
+        <% session.cart.items.forEach(item => { %>
+
+          <div class="cart-item">
+
+            <div>
+
+              <div class="cart-item-name">
+                <%= item.name %>
+              </div>
+
+
+              <!-- QTY CONTROLS -->
+              <div class="cart-qty-control">
+
+                <button onclick="updateQty('<%= item._id %>', -1)">
+                  −
+                </button>
+
+                <span id="qty-<%= item._id %>">
+                  <%= item.qty %>
+                </span>
+
+                <button onclick="updateQty('<%= item._id %>', 1)">
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <div class="cart-item-price">
+              ₦<%= item.total.toFixed(2) %>
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      <% } %>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="cart-footer">
+
+      <div class="cart-total">
+        Total: ₦<%= session.cart?.totalPrice?.toFixed(2) || "0.00" %>
+      </div>
+
+      <button onclick="sendWhatsAppOrder()" class="whatsapp-btn">
+        Place Order via WhatsApp
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 <script>
 function toggleMenu(){
   document.getElementById("navLinks").classList.toggle("active");
