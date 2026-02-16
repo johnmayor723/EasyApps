@@ -32,6 +32,7 @@ const domainRoutes = require("./api/routes/domain");
 
 const clientMultitenantRouter = require("./routes/multitenant");
 const clientRestaurantRouter = require("./routes/restaurant-management");
+const storeRouter = require("./routes/store");  
 
 /* =======================
    Middleware / Config
@@ -213,6 +214,7 @@ app.use("/multitenant", clientMultitenantRouter);
 app.use("/restaurant-management", clientRestaurantRouter);
 app.use("/restaurants", clientRestaurantRouter);
 app.use("/paystack", paystackRoutes);
+app.use("/store", storeRouter);
 
 /* =======================
    Health Check

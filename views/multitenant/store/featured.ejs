@@ -29,7 +29,7 @@
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar">
   <div class="logo">
-    🛍️ <%= name %>
+   <%= name %>
   </div>
 
   <ul class="nav-links" id="navLinks">
@@ -69,10 +69,11 @@
 <!-- ================= HERO ================= -->
 <section class="catalog-hero">
   <div class="catalog-hero-content">
-    <h1>Welcome to <%= name %></h1>
-    <p>Browse our latest collection of products</p>
+    <h1>Featured Products</h1>
+    <p>Explore our available products, filter by category, and find what fits your needs.</p>
   </div>
 </section>
+
 
 
 
@@ -89,25 +90,25 @@
 
           <div class="product-image">
             <img 
-              src="<%= product.image ? product.image : 'https://via.placeholder.com/400x400?text=Product' %>" 
+              src="<%= product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/400x400?text=Product' %>" 
               alt="<%= product.name %>">
           </div>
 
           <div class="product-info">
-            <h3><%= product.name %></h3>
+            <a style="text-decoration: none;color: #c76b00;;" href="/store/product/<%= product._id %>"><h6><%= product.name %></h6></a>
 
             <% if(product.description){ %>
               <p><%= product.description.substring(0, 100) %>...</p>
             <% } %>
 
             <div class="price">
-              $<%= product.price %>
+             <p> ₦<%= product.price %></p>
             </div>
 
-            <form action="/cart/add" method="POST">
+            <form action="/multitenant/cart//<%= product._id %>/add" method="POST">
               <input type="hidden" name="name" value="<%= product.name %>">
               <input type="hidden" name="price" value="<%= product.price %>">
-              <button type="submit">Add to Cart</button>
+              <button style="padding: 10px 13px; background: #c76b00; color: #fff; border: none; border-radius: 5px; cursor: pointer;" type="submit">Add to Cart</button>
             </form>
 
           </div>
@@ -137,7 +138,11 @@
     <div class="footer-brand">
       <h2><%= name %></h2>
       <p>
-        Quality products. Reliable service. Affordable pricing.
+      Explore our carefully curated collection of
+      high-quality products designed to deliver style, performance,
+      and exceptional value.
+      Our commitment to quality products, reliable service, and affordable pricing
+      ensures that you have the best shopping experience.
       </p>
     </div>
 
@@ -145,13 +150,49 @@
     <div class="footer-contact">
       <h3>Contact Us</h3>
 
-      <% if(contact){ %>
+      <% if (contact) { %>
         <p>
-          <%= contact.address %><br>
-          <%= contact.city %>, <%= contact.state %> <%= contact.zip %>
+          <%= contact.address || '' %><br>
+          <%= contact.city || '' %>, 
+          <%= contact.state || '' %> 
+          <%= contact.zip || '' %>
+
         </p>
-        <p>Phone: <%= contact.phone %></p>
+
+        <% if (contact.phone) { %>
+          <p>Phone: <%= contact.phone %></p>
+        <% } %>
+        <p>Email: <%= email || '' %></p>
+      <% } else { %>
+        <p>Contact information coming soon.</p>
       <% } %>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <ul style="list-style: none;">
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/<%= tenant.tenantId %>">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/products">
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/about">
+            About
+          </a>
+        </li>
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/contact">
+            Contact
+          </a>
+        </li>
+      </ul>
     </div>
 
   </div>
@@ -160,6 +201,7 @@
     © <%= new Date().getFullYear() %> <%= name %>. All rights reserved.
   </div>
 </footer>
+
 
 
 

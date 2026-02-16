@@ -59,7 +59,7 @@
 
     <!-- PRODUCT IMAGE (Placeholder Universal Image) -->
     <div class="product-image-box">
-      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+      <img src="<%= product.images[0] %>"
            alt="<%= product.name %>">
     </div>
 
@@ -79,7 +79,7 @@
       <hr>
 
       <div class="price">
-        $<%= product.price %>
+        <p> ₦<%= product.price %></p>
       </div>
 
       <!-- ADD TO CART -->
@@ -127,24 +127,69 @@
   </div>
 </section>
 
-
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
   <div class="footer-container">
 
+    <!-- STORE INFO -->
     <div class="footer-brand">
       <h2><%= name %></h2>
       <p>
-        Thank you for shopping with us. We are committed to delivering
-        quality products and excellent customer service.
+       Explore our carefully curated collection of
+      high-quality products designed to deliver style, performance,
+      and exceptional value.
+      Our commitment to quality products, reliable service, and affordable pricing
+      ensures that you have the best shopping experience.
       </p>
     </div>
 
+    <!-- CONTACT INFO (dynamic) -->
     <div class="footer-contact">
-      <h3>Contact Information</h3>
-      <p><%= contact.address %></p>
-      <p><%= contact.city %>, <%= contact.state %> <%= contact.zip %></p>
-      <p>Phone: <%= contact.phone %></p>
+      <h3>Contact Us</h3>
+
+      <% if (contact) { %>
+        <p>
+          <%= contact.address || '' %><br>
+          <%= contact.city || '' %>, 
+          <%= contact.state || '' %> 
+          <%= contact.zip || '' %>
+
+        </p>
+
+        <% if (contact.phone) { %>
+          <p>Phone: <%= contact.phone %></p>
+        <% } %>
+        <p>Email: <%= email || '' %></p>
+      <% } else { %>
+        <p>Contact information coming soon.</p>
+      <% } %>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <ul style="list-style: none;">
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/<%= tenant.tenantId %>">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/products">
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/about">
+            About
+          </a>
+        </li>
+        <li>
+          <a href="/store/<%= tenant.slug || name %>/contact">
+            Contact
+          </a>
+        </li>
+      </ul>
     </div>
 
   </div>
@@ -155,6 +200,8 @@
 </footer>
 
 
+
+
 <script>
 function toggleMenu(){
   document.getElementById("navLinks").classList.toggle("active");
@@ -163,4 +210,3 @@ function toggleMenu(){
 
 </body>
 </html>
-
