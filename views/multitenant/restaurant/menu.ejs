@@ -387,7 +387,7 @@ function sendWhatsAppOrder() {
   }
 
   // enforce format: must start with 234 and be exactly 12 digits long (234 + 9 digits)
-  if (!/^234\d{9}$/.test(phone)) {
+  if (!/^234\d{10}$/.test(phone)) {
     alert('Invalid phone format. Expected: 234XXXXXXXXX (12 digits, starting with 234).');
     return;
   }
