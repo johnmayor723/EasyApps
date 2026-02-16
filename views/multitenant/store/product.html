@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= name %> | <%= product.name %></title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/multitenant/css/store/store-styles.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <div class="logo">
+    🛍️ <%= name %>
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Home</a></li>
+    <li><a href="/catalog">Catalog</a></li>
+  </ul>
+
+  <div class="search-box">
+    <input type="text" placeholder="Search products...">
+  </div>
+
+  <!-- CART (INLINE STYLED) -->
+  <a href="/cart" 
+     style="position:relative; margin-right:20px; text-decoration:none; font-size:20px;">
+     🛒
+     
+     <% if(session && session.cart && session.cart.totalQty > 0){ %>
+        <span style="
+            position:absolute;
+            top:-8px;
+            right:-12px;
+            background:red;
+            color:white;
+            font-size:12px;
+            padding:2px 7px;
+            border-radius:50%;
+            font-weight:600;">
+            <%= session.cart.totalQty %>
+        </span>
+     <% } %>
+  </a>
+
+  <button class="login-btn">Login</button>
+
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+</nav>
+
+
+<!-- ================= PRODUCT DETAIL ================= -->
+<section class="product-detail">
+  <div class="product-container">
+
+    <!-- PRODUCT IMAGE (Placeholder Universal Image) -->
+    <div class="product-image-box">
+      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+           alt="<%= product.name %>">
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="product-info-box">
+
+      <h1><%= product.name %></h1>
+
+      <div class="rating">
+        ★★★★★ <span>(0 reviews)</span>
+      </div>
+
+      <p class="description">
+        <%= product.description %>
+      </p>
+
+      <hr>
+
+      <div class="price">
+        $<%= product.price %>
+      </div>
+
+      <!-- ADD TO CART -->
+      <form action="/cart/add" method="POST" style="margin-top:20px;">
+        
+        <input type="hidden" name="name" value="<%= product.name %>">
+        <input type="hidden" name="price" value="<%= product.price %>">
+
+        <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+          
+          <input type="number" 
+                 name="qty" 
+                 value="1" 
+                 min="1"
+                 style="
+                    width:70px;
+                    padding:8px;
+                    border-radius:6px;
+                    border:1px solid #ccc;">
+          
+          <button type="submit"
+                  style="
+                    background:linear-gradient(to right,#f39c12,#e67e00);
+                    color:#fff;
+                    border:none;
+                    padding:12px 25px;
+                    border-radius:30px;
+                    cursor:pointer;
+                    font-weight:600;">
+            🛒 Add to Cart
+          </button>
+
+        </div>
+      </form>
+
+      <hr>
+
+      <div class="features">
+        <div>🔒 Secure Checkout</div>
+        <div>🚚 Fast Shipping</div>
+        <div>↩ Easy Returns</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-brand">
+      <h2><%= name %></h2>
+      <p>
+        Thank you for shopping with us. We are committed to delivering
+        quality products and excellent customer service.
+      </p>
+    </div>
+
+    <div class="footer-contact">
+      <h3>Contact Information</h3>
+      <p><%= contact.address %></p>
+      <p><%= contact.city %>, <%= contact.state %> <%= contact.zip %></p>
+      <p>Phone: <%= contact.phone %></p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © <%= new Date().getFullYear() %> <%= name %>. All rights reserved.
+  </div>
+</footer>
+
+
+<script>
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>
+

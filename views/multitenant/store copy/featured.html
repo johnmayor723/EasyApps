@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%=name%></title>
+<link rel="stylesheet" href="styles.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/multitenant/css/store/store-styles.css">
+
+<style>
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">
+    👑 <%=name%>
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Catalog</a></li>
+    <li><a href="#">Featured</a></li>
+    <li><a href="#">Offers</a></li>
+  </ul>
+
+  <div class="search-box">
+    <input type="text" placeholder="Search perfumes...">
+  </div>
+
+  <button class="login-btn">Login</button>
+
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+</nav>
+
+
+<!-- ================= CATALOG HERO ================= -->
+<section class="catalog-hero">
+  <div class="catalog-hero-content">
+    <h1>Catalog</h1>
+    <p>Explore our premium fragrance collection</p>
+  </div>
+</section>
+
+
+
+
+
+<!-- ================= PRODUCTS ================= -->
+<section class="catalog-products">
+  <div class="product-grid">
+
+    <!-- PRODUCT CARD -->
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad" alt="Ocean Breeze">
+      </div>
+
+      <div class="product-info">
+        <h3>Ocean Breeze</h3>
+        <p class="brand">Aqua Di Mare</p>
+        <p class="inspired">Inspired by Cool Water</p>
+
+        <div class="rating">
+          ★★★★★ <span>(5)</span>
+        </div>
+
+        <div class="price">$45</div>
+      </div>
+    </div>
+
+
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539" alt="Spiced Ember">
+      </div>
+
+      <div class="product-info">
+        <h3>Spiced Ember</h3>
+        <p class="brand">Ignis</p>
+        <p class="inspired">Inspired by Spicebomb</p>
+
+        <div class="rating">
+          ★★★★☆ <span>(4)</span>
+        </div>
+
+        <div class="price">$68</div>
+      </div>
+    </div>
+
+
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1615361200141-f45040f367be" alt="Velvet Rose">
+      </div>
+
+      <div class="product-info">
+        <h3>Velvet Rose</h3>
+        <p class="brand">Fleur Couture</p>
+        <p class="inspired">Inspired by Chloé</p>
+
+        <div class="rating">
+          ★★★★☆ <span>(4.5)</span>
+        </div>
+
+        <div class="price">$89.99</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- LEFT COLUMN -->
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="logo-icon">👑</div>
+        <div>
+          <h2><%=name%></h2>
+          <span>Premium Fragrances</span>
+        </div>
+      </div>
+
+      <p>
+        Discover our exclusive collection of fragrances inspired by the world's
+        most iconic perfumes. Premium quality, accessible prices.
+      </p>
+
+      <div class="footer-rating">
+        ⭐ 4.9/5 stars  
+        <span>👑 Premium Quality</span>
+      </div>
+    </div>
+
+    <!-- MIDDLE COLUMN -->
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <a href="#">Catalog</a>
+      <a href="#">Featured</a>
+      <a href="#">Offers</a>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="footer-contact">
+      <h3>Customer Service</h3>
+      <p>Email: info@essenceluxury.com</p>
+      <p>Phone: +1 (555) 123-4567</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2024 Essence Luxury. All rights reserved
+  </div>
+</footer>
+
+<script>
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>
+<!-- ================= FOOTER ================= -->
+

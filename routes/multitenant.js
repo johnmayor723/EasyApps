@@ -139,11 +139,12 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
       "http://localhost:3000/api/tenant-auth/get-one-tenant",
       { tenantId }
     );
+    const tenant = tenantResponse.data?.tenant;
     const name =  tenantResponse.data?.tenant?.owner?.name || "Our Store";
     console.log("Resolved name tenant for menu:", name);
     const contactInfo = tenant.contact || {};
 
-    const tenant = tenantResponse.data?.tenant;
+    
     console.log("Resolved tenant:", tenant);
     if (!tenant) {
       return res.status(404).render("errors/404");
@@ -166,7 +167,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
        2. Restaurant
     -------------------------- */
    if (tenant.type === "restaurant") {
-  let menu = null;
+   let menu = null;
 
   try {
     const response = await axios.post(
@@ -198,26 +199,28 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
       let products = null;
 
       try {
-        const productRes = await axios.get(
-          "http://easyhostnet.localhost:3000/api/multitenant/products"
+        const productRes = await axios.post(
+          "http://easyhostnet.localhost:3000/api/products/by-tenant",
+          { tenantId }
         );
-
-        const allProducts = productRes.data?.products || [];
-
-        const tenantProducts = allProducts.filter(
-          p => p.tenantId === tenantId
-        );
-
-        products = tenantProducts.length ? tenantProducts : null;
+        console.log("Fetched all product for tenant:", productRes.data.products);
+        const products = productRes.data?.products || [];
+        
+       return res.render("multitenant/store/index", {
+        tenant,
+        products: products || [],
+        name,
+        contact: contactInfo,
+        
+      });
+        
 
       } catch (err) {
         products = null;
+        res.json({ error: "Error fetching products for tenant", details: err.message });
       }
-
-      return res.render("multitenant/shop/home", {
-        tenant,
-        products,
-      });
+     
+      
     }
 
     return res.status(400).render("errors/unsupported-business");
@@ -226,6 +229,10 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
     console.error("Tenant resolver error:", err.message);
     return res.status(500).render("errors/500");
   }
+});
+router.get('/multitenant/:tenantId/store/catalog', (req, res) => {
+
+  res.send("Catalog page for tenant: " + req.params.tenantId);
 });
 router.get("/shop/:tenantId/menu", async (req, res) => {
   console
@@ -567,15 +574,16 @@ router.post("/verify-otp", async (req, res) => {
 // create-store
 router.get("/create-store", (req, res) => {
   console.log("Accessing create-store route");
-  console.log("Email from session:", req.session.email);
-  if (!req.session.email) {
+  console.log("Email from session:", req.session.otpEmail);
+  const email = req.session.otpEmail;
+  if (!email) {
 
     req.flash("error_msg", "Please verify your email first.");
     return res.redirect("/multitenant/sign-up");
   }
-   console.log("Email from session:", req.session.email);
+   console.log("Email from session:", email);
   res.render("multitenant/createstore", {
-    email: req.session.email
+    email
   });
 });
 router.get("/multitenant/select-domain", (req, res) => {

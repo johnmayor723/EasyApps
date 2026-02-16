@@ -10,7 +10,8 @@ const {
   publishPreviewProducts,
   getOneProductPreview,
   updateOneProductPreview,
-  deleteProductPreview
+  deleteProductPreview,
+  getProductsByTenantId
 } = require('../controllers/productController');
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router.post('/publish', publishPreviewProducts);
 // Final Product Routes
 router.post('/', createProduct);
 router.get('/', getAllProducts);
+router.post('/by-tenant', getProductsByTenantId);
 router.get('/:id', getProductById);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);

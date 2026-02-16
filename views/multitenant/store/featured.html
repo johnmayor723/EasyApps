@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= name %> | Catalog</title>
+
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/multitenant/css/store/store-styles.css">
+
+<style>
+/* Only layout styles — NOT card styles */
+
+.catalog-products {
+  padding: 60px 5%;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <div class="logo">
+    🛍️ <%= name %>
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Home</a></li>
+    <li><a href="/catalog">Catalog</a></li>
+    <li><a href="/offers">Offers</a></li>
+  </ul>
+
+  <!-- CART (inline styled as requested) -->
+  <div style="margin-left:20px; position:relative;">
+    <a href="/cart" style="text-decoration:none; font-weight:600; color:inherit;">
+      🛒 Cart
+    </a>
+
+    <% if(session && session.cart && session.cart.totalQty > 0){ %>
+      <span style="
+        position:absolute;
+        top:-8px;
+        right:-14px;
+        background:#e63946;
+        color:#fff;
+        font-size:12px;
+        padding:4px 7px;
+        border-radius:50%;
+        font-weight:600;
+      ">
+        <%= session.cart.totalQty %>
+      </span>
+    <% } %>
+  </div>
+
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+</nav>
+
+
+
+<!-- ================= HERO ================= -->
+<section class="catalog-hero">
+  <div class="catalog-hero-content">
+    <h1>Welcome to <%= name %></h1>
+    <p>Browse our latest collection of products</p>
+  </div>
+</section>
+
+
+
+<!-- ================= PRODUCTS ================= -->
+<section class="catalog-products">
+  <div class="product-grid">
+
+    <% if (products && products.length > 0) { %>
+
+      <% products.forEach(function(product){ %>
+
+        <!-- PRODUCT CARD (uses your existing styling) -->
+        <div class="product-card">
+
+          <div class="product-image">
+            <img 
+              src="<%= product.image ? product.image : 'https://via.placeholder.com/400x400?text=Product' %>" 
+              alt="<%= product.name %>">
+          </div>
+
+          <div class="product-info">
+            <h3><%= product.name %></h3>
+
+            <% if(product.description){ %>
+              <p><%= product.description.substring(0, 100) %>...</p>
+            <% } %>
+
+            <div class="price">
+              $<%= product.price %>
+            </div>
+
+            <form action="/cart/add" method="POST">
+              <input type="hidden" name="name" value="<%= product.name %>">
+              <input type="hidden" name="price" value="<%= product.price %>">
+              <button type="submit">Add to Cart</button>
+            </form>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    <% } else { %>
+
+      <p style="text-align:center; width:100%; padding:40px;">
+        No products available.
+      </p>
+
+    <% } %>
+
+  </div>
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- STORE INFO -->
+    <div class="footer-brand">
+      <h2><%= name %></h2>
+      <p>
+        Quality products. Reliable service. Affordable pricing.
+      </p>
+    </div>
+
+    <!-- CONTACT INFO (dynamic) -->
+    <div class="footer-contact">
+      <h3>Contact Us</h3>
+
+      <% if(contact){ %>
+        <p>
+          <%= contact.address %><br>
+          <%= contact.city %>, <%= contact.state %> <%= contact.zip %>
+        </p>
+        <p>Phone: <%= contact.phone %></p>
+      <% } %>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © <%= new Date().getFullYear() %> <%= name %>. All rights reserved.
+  </div>
+</footer>
+
+
+
+<script>
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>

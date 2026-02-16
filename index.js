@@ -226,14 +226,14 @@ app.get("/health", (req, res) => {
 ======================= */
 app.use("/api/auth", authRoutes);
 app.use("/api/tenant-auth", tenantAuthRoutes);
-app.use("/api/products", tenantResolver, productRoutes);
+app.use("/api/products",  productRoutes);
 app.use("/api/orders", tenantResolver, orderRoutes);
 app.use("/api/carts", tenantResolver, cartRoutes);
 app.use("/api/categories", tenantResolver, categoryRoutes);
 app.use("/api/blogs", tenantResolver, blogRoutes);
 app.use("/api/comments", tenantResolver, commentRoutes);
-app.use("/api/menus", tenantResolver, menuRoutes);
-app.use("/api/reservations", tenantResolver, reservationRoutes);
+app.use("/api/menus",  menuRoutes);
+app.use("/api/reservations",  reservationRoutes);
 app.use("/api/domain", domainRoutes);
 
 
