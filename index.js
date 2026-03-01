@@ -29,6 +29,7 @@ const menuRoutes = require("./api/routes/MenuRoute");
 const reservationRoutes = require("./api/routes/ReservationRoutes");
 const paystackRoutes = require("./api/paystack/routes/paystack");
 const domainRoutes = require("./api/routes/domain");
+const passwordRoutes = require("./routes/password");
 
 const clientMultitenantRouter = require("./routes/multitenant");
 const clientRestaurantRouter = require("./routes/restaurant-management");
@@ -215,6 +216,7 @@ app.use("/restaurant-management", clientRestaurantRouter);
 app.use("/restaurants", clientRestaurantRouter);
 app.use("/paystack", paystackRoutes);
 app.use("/store", storeRouter);
+app.use("/password", passwordRoutes);
 
 /* =======================
    Health Check

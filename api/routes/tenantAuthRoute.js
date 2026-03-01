@@ -14,10 +14,14 @@ router.post("/email-login", TenantAuthController.tenantLogin);
 //router.get("/verify-email/:token", TenantAuthController.verifyEmail); 
 
 // 📌 Request password reset (tenant admin only)
-router.post("/request-password-reset", TenantAuthController.requestPasswordReset);
+router.post("/request-password-reset", TenantAuthController.requestPasswordResetOtp);
 
 // 📌 Reset password (tenant admin only)
-router.post("/reset-password", TenantAuthController.resetPassword);
+//router.post("/reset-password", TenantAuthController.requestPasswordResetOtp);
+router.post("/verify-reset-otp", TenantAuthController.verifyResetOtp);
+router.post("/update-password", TenantAuthController.completePasswordReset);
+
+// 📌 Update tenant info (tenant admin only)
 router.post('/complete-signup', TenantAuthController.completeSignup);
 router.post('/select-plan', TenantAuthController.selectPlan);
 router.post('/update-branding', TenantAuthController.updateTenantBranding);

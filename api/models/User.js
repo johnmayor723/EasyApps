@@ -29,9 +29,25 @@ const userSchema = new Schema({
     type: String,
     index: true, // fast lookup
   },
-  otp: String,
-  otpExpires: Date,
-  isEmailVerified: { type: Boolean, default: false },
+  resetOtp: {
+    type: String,
+  },
+
+  resetOtpExpires: {
+    type: Date,
+  },
+
+  resetOtpVerified: {
+    type: Boolean,
+    default: false
+  },
+  otpExpires: {
+    type: Date,
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
 
   password: String,
   phoneNumber: String,

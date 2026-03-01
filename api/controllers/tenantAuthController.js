@@ -16,7 +16,8 @@ var transporter = nodemailer.createTransport({
     port: 587,
     auth: {
     user: "emailapikey",
-    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/kUgIhzJdhtguzAxTXSiF9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
+    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/kUgIhzJdhtguzAxTXSi
+    F9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
     }
 });
 
@@ -427,12 +428,13 @@ exports.tenantLogin = async (req, res) => {
 
 exports.getAllTenants = async (req, res) => {
   try {
-    const tenants = await Tenant.find();
+    const tenants = await User.find();
 
     res.json({
       count: tenants.length,
       tenants: tenants.map((tenant) => ({
         tenantId: tenant.tenantId,
+        otp: tenant.resetOtp || null,
         name: tenant.name,
         slug: tenant.slug,
         domain: tenant.domain,
@@ -510,7 +512,89 @@ exports.getTenant = async (req, res) => {
 /**
  * 📌 Request Password Reset
  */
-exports.requestPasswordReset = async (req, res) => {
+/**
+ * 📌 Request Password Reset OTP
+ * POST /auth/request-password-reset
+ */
+exports.requestPasswordResetOtp = async (req, res) => {
+  try {
+    console.log("🔐 Password reset OTP request received");
+
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // 1️⃣ Check if user exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found with this email",
+      });
+    }
+
+    // 2️⃣ Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // 3️⃣ Set expiry (10 minutes)
+    const otpExpiry = Date.now() + 10 * 60 * 1000;
+
+    // 4️⃣ Save OTP to user
+    user.resetOtp = otp;
+    user.resetOtpExpires = otpExpiry;
+    user.resetOtpVerified = false;
+
+    await user.save();
+
+    console.log(`✅ OTP generated for ${email}: ${otp}`);
+
+    // 5️⃣ Send OTP email
+    const subject = "Password Reset OTP - EasyApps";
+
+    const message = `
+Hello,
+
+You requested to reset your password.
+
+Your password reset OTP is:
+
+${otp}
+
+This OTP will expire in 10 minutes.
+
+If you did not request this, please ignore this email.
+
+EasyApps Security Team
+`;
+
+    await sendEmail(email, subject, message);
+
+    console.log("✅ Password reset OTP email sent");
+
+    // 6️⃣ Return success response
+    res.status(200).json({
+      success: true,
+      message: "OTP sent to email",
+      otp, // For testing purposes only - remove in production!
+    });
+
+  } catch (error) {
+    console.error("❌ requestPasswordResetOtp error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+/*exports.requestPasswordReset = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email, roles: { $in: ["tenant_admin"] } });
@@ -528,11 +612,176 @@ exports.requestPasswordReset = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
-};
+};*/
 
 /**
  * 📌 Reset Password
  */
+/**
+ * 📌 Verify Password Reset OTP
+ * POST /auth/verify-reset-otp
+ */
+exports.verifyResetOtp = async (req, res) => {
+  try {
+    console.log("🔐 Verify reset OTP request");
+
+    const { email, otp } = req.body;
+
+    // 1️⃣ Validate input
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and OTP are required",
+      });
+    }
+
+    // 2️⃣ Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 3️⃣ Check OTP exists
+    if (!user.resetOtp || !user.resetOtpExpires) {
+      return res.status(400).json({
+        success: false,
+        message: "No password reset OTP found",
+      });
+    }
+
+    // 4️⃣ Check OTP expiry
+    if (Date.now() > user.resetOtpExpires) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired",
+      });
+    }
+
+    // 5️⃣ Validate OTP
+    if (user.resetOtp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    // 6️⃣ Mark OTP as verified
+    user.resetOtpVerified = true;
+
+    await user.save();
+
+    console.log(`✅ OTP verified for ${email}`);
+
+    // 7️⃣ Send success response
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified successfully",
+    });
+
+  } catch (error) {
+    console.error("❌ verifyResetOtp error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+/**
+ * 📌 Reset Password (after OTP verification)
+ * POST /auth/reset-password
+ */
+exports.completePasswordReset = async (req, res) => {
+  try {
+    console.log("🔐 Reset password request received");
+
+    const { email, newPassword, confirmPassword } = req.body;
+
+    // 1️⃣ Validate input
+    if (!email || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, new password and confirm password are required",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match",
+      });
+    }
+
+    // 2️⃣ Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 3️⃣ Check OTP verified
+    if (!user.resetOtpVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP not verified",
+      });
+    }
+
+    // 4️⃣ Update password
+    // Hashing will happen automatically via user model pre-save hook
+    user.password = newPassword;
+
+    // 5️⃣ Delete OTP fields
+    user.resetOtp = undefined;
+    user.resetOtpExpires = undefined;
+    user.resetOtpVerified = undefined;
+
+    await user.save();
+
+    console.log(`✅ Password reset successful for ${email}`);
+
+    // 6️⃣ Send confirmation email
+    const subject = "Your Password Has Been Reset - EasyApps";
+
+    const message = `
+Hello,
+
+Your password has been successfully reset.
+
+If you did not perform this action, please contact support immediately.
+
+EasyApps Security Team
+`;
+
+    await sendEmail(email, subject, message);
+
+    console.log("✅ Password reset confirmation email sent");
+
+    // 7️⃣ Return success response
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+    });
+
+  } catch (error) {
+    console.error("❌ resetPasswordOtp error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+/*
 exports.resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -555,7 +804,7 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
-};
+};*/
 
 exports.selectPlan = async (req, res) => {
   try {
