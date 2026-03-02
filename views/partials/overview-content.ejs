@@ -64,34 +64,53 @@
   <p class="muted">Grow your user base by inviting others</p>
 
   <div class="invite-actions" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+    
     <button class="btn outline">Copy Link</button>
     <button class="btn outline">Send Invites</button>
 
-  <% if (tenant.plan === 'free') { %>
-  <a
-    href="/multitenant/new-compare-plans"
-    class="btn primary"
-    style="background-color: #262728;text-decoration: none; color: white;"
-  >
-    Upgrade Plan
-  </a>
+    <!-- Show Upgrade for everyone except bumpa -->
+    <% if (tenant.plan !== 'bumpa') { %>
+      <a
+        href="/multitenant/new-compare-plans"
+        class="btn primary"
+        style="background-color: #262728; text-decoration: none; color: white;"
+      >
+        Upgrade Plan
+      </a>
+    <% } %>
 
-<% } else if (tenant.plan !== 'free') { %>
-  <button
-    class="btn primary"
-    style="background-color: #2e2e2f; color: white;"
-    onclick="openModal('getDomainModal')"
-  >
-    Get Your Free .com.ng Domain
-  </button>
-<% } %>
-  <button
-    class="btn primary"
-    style="background-color: #2e2e2f; color: white;"
-    onclick="openModal('getDomainModal')"
-  >
-    Get Your Free .com.ng Domain
-  </button>
+    <!-- Domain Section (only for non-free plans) -->
+    <% if (tenant.plan !== 'free') { %>
+
+        <% if (!tenant.customDomain) { %>
+
+          <!-- No domain yet -->
+          <button
+            class="btn primary"
+            style="background-color: #2e2e2f; color: white;"
+            onclick="openModal('getDomainModal')"
+          >
+            Get Your Free .com.ng Domain
+          </button>
+
+        <% } else { %>
+
+          <!-- Domain exists -->
+          <div style="display:flex; align-items:center;">
+            <strong>Your Store Domain:&nbsp;</strong>
+            <a 
+              href="https://<%= tenant.customDomain %>" 
+              target="_blank"
+              style="text-decoration: none; color: #2e2e2f;"
+            >
+              <%= tenant.customDomain %>
+            </a>
+          </div>
+
+        <% } %>
+
+    <% } %>
+
   </div>
 </div>
 

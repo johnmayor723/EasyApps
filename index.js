@@ -30,6 +30,7 @@ const reservationRoutes = require("./api/routes/ReservationRoutes");
 const paystackRoutes = require("./api/paystack/routes/paystack");
 const domainRoutes = require("./api/routes/domain");
 const passwordRoutes = require("./routes/password");
+const domainReservationRoutes = require("./routes/domain");
 
 const clientMultitenantRouter = require("./routes/multitenant");
 const clientRestaurantRouter = require("./routes/restaurant-management");
@@ -207,9 +208,11 @@ app.get("/partials/:name", async (req, res) => {
 });
 
 
-/* =======================
+/* 
+=======================
    Client Routes
-======================= */
+=======================
+ */
 app.use("/", clientMultitenantRouter);
 app.use("/multitenant", clientMultitenantRouter);
 app.use("/restaurant-management", clientRestaurantRouter);
@@ -217,17 +220,23 @@ app.use("/restaurants", clientRestaurantRouter);
 app.use("/paystack", paystackRoutes);
 app.use("/store", storeRouter);
 app.use("/password", passwordRoutes);
+app.use("/domain", domainReservationRoutes);
 
-/* =======================
+/* 
+========================
    Health Check
-======================= */
+========================
+*/
 app.get("/health", (req, res) => {
   res.send("🚀 Multitenant Server running successfully!");
 });
 
-/* =======================
+/* 
+=======================
    API Routes
-======================= */
+=======================
+*/
+
 app.use("/api/auth", authRoutes);
 app.use("/api/tenant-auth", tenantAuthRoutes);
 app.use("/api/products",  productRoutes);
@@ -241,9 +250,12 @@ app.use("/api/reservations",  reservationRoutes);
 app.use("/api/domain", domainRoutes);
 
 
-/* =======================
+/* 
+=======================
    Favicon Safety
-======================= */
+=======================
+
+ */
 app.get("/favicon.ico", (_, res) => res.sendStatus(204));
 
 /* =======================

@@ -219,7 +219,7 @@
   }
 }
  
-async function reserveDomain(domain) {
+async function reserveMyDomain(domain) {
   const resultsBox = document.getElementById('domainResults');
 
   // Block FREE plan users
@@ -266,7 +266,55 @@ async function reserveDomain(domain) {
 
 
 </script>
+<script>
+async function reserveDomain(domain) {
 
+  // Block FREE plan users
+ /* if ("<%= tenant.plan %>" === "free") {
+    alert("Upgrade your plan to reserve a custom domain.");
+    return;
+  }*/
+
+  try {
+
+    const payload = {
+      tenantId: "<%= tenant.tenantId %>",
+      domain: domain,
+      email: "<%= user?.email %>"
+    };
+
+    const response = await fetch("/domain/claim-domain", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+
+      alert(
+        "🎉 Domain has been reserved successfully!\n\n" +
+        "Your domain will propagate within 48 hours.\n\n" +
+        "Your site will be available at:\n" +
+        "https://" + domain
+      );
+
+      // Optional: refresh page
+      window.location.reload();
+
+    } else {
+      alert(data.message || "Failed to reserve domain.");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Network error. Please try again.");
+  }
+}
+</script>
 
   <script>
 async function manualReserveDomain(domain) {
