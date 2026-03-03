@@ -93,7 +93,7 @@ router.post("/reset-password", async (req, res) => {
     req.flash("error_msg", "Email and new password are required");
     return res.redirect("/multitenant/reset-password-otp");
   }
-
+ console.log("Resetting password for email:", email);
   try {
     const response = await axios.post(
       "http://localhost:3000/api/tenant-auth/update-password",
