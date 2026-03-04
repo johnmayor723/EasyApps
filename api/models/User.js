@@ -32,6 +32,9 @@ const userSchema = new Schema({
   resetOtp: {
     type: String,
   },
+  otp: {
+    type: String,
+  },
 
   resetOtpExpires: {
     type: Date,

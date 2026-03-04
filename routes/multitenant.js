@@ -99,7 +99,7 @@ router.post("/verify-otp", async (req, res) => {
     const { email, otp } = req.body;
 
     const response = await axios.post(
-      "http://easyhostnet.localhost:3000/api/tenant-auth/verify-otp",
+      "https://easyhostnet.com/api/tenant-auth/verify-otp",
       { email, otp }
     );
 
@@ -590,7 +590,7 @@ router.post("/request-otp", async (req, res) => {
     }
 
     const response = await axios.post(
-      "http://easyhostnet.localhost:3000/api/tenant-auth/request-otp",
+      "https://easyhostnet.com/api/tenant-auth/request-otp",
       { email }
     );
 
