@@ -213,7 +213,13 @@ app.get("/partials/:name", async (req, res) => {
    Client Routes
 =======================
  */
-app.use("/", clientMultitenantRouter);
+app.get("/", (req, res) => {
+  res.render("multitenant/index", { layout: false });
+});
+
+
+
+//app.use("/", clientMultitenantRouter);
 app.use("/multitenant", clientMultitenantRouter);
 app.use("/restaurant-management", clientRestaurantRouter);
 app.use("/restaurants", clientRestaurantRouter);
