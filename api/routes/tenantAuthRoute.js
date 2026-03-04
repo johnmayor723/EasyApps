@@ -32,6 +32,7 @@ router.get("/get-all-tenants", TenantAuthController.getAllTenants);
 // 📌 Get tenant info
 router.post("/get-one-tenant", TenantAuthController.getTenant);
 
-
+// remove tenant
+router.post("/remove-all-tenants", TenantAuthController.deleteAllTenantsAndUsers);
 
 module.exports = router;

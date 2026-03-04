@@ -58,6 +58,30 @@ const sendEmail = async (to, subject, text) => {
   });
 };
 
+exports.deleteAllTenantsAndUsers = async (req, res) => {
+  try {
+    // Safeguard: require a secret to run this destructive action
+    const secret = process.env.WIPE_SECRET;
+    const provided = req.body.secret || req.headers['x-wipe-secret'] || req.query.secret;
+    if ( provided !== secret) {
+      return res.status(403).json({ error: "Wipe not authorized. Provide correct secret via x-wipe-secret header or ?secret=" });
+    }
+
+    // Delete all tenants and users
+    const tenantResult = await Tenant.deleteMany({});
+    const userResult = await User.deleteMany({});
+
+    return res.status(200).json({
+      message: "All tenants and users removed",
+      tenantsDeleted: tenantResult.deletedCount ?? 0,
+      usersDeleted: userResult.deletedCount ?? 0,
+    });
+  } catch (err) {
+    console.error("Error wiping tenants/users:", err);
+    return res.status(500).json({ error: "Server error during wipe" });
+  }
+};
+
 /**
  * 📌 Tenant Sign Up (creates tenant + owner user)
  */
