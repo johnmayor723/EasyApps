@@ -594,7 +594,7 @@ router.post("/request-otp", async (req, res) => {
       { email }
     );
 
-    console.log(response.data);
+    console.log(response.data.otp);
 
     // ✅ Save email to session
     req.session.otpEmail = email;

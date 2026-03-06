@@ -300,11 +300,62 @@
         padding: 20px 24px;
       }
     }
+    /* HAMBURGER */
+.hamburger{
+  font-size:28px;
+  cursor:pointer;
+  display:none;
+}
+
+/* MOBILE DRAWER */
+.mobile-menu{
+  position:fixed;
+  top:0;
+  right:-260px;
+  width:260px;
+  height:100%;
+  background:#fff;
+  box-shadow:-3px 0 10px rgba(0,0,0,0.15);
+  padding:40px 20px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  transition:0.3s;
+  z-index:999;
+}
+
+.mobile-menu a{
+  text-decoration:none;
+  font-size:16px;
+  color:#333;
+  border-bottom:1px solid #eee;
+  padding-bottom:10px;
+}
+
+.mobile-menu.active{
+  right:0;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .hamburger{
+    display:block;
+  }
+
+}
   </style>
 </head>
 <body>
 
-  
+    <!-- HAMBURGER -->
+    <div class="hamburger" onclick="toggleMenu()">
+      ☰
+    </div>
 
   <!-- NAV -->
   <div class="navbar">
@@ -324,7 +375,19 @@
           </a>
     </div>
   </div>
+ <div id="mobileMenu" class="mobile-menu">
 
+  <a href="/">HOME</a>
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/">MENU</a>
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/track-order">TRACK ORDER</a>
+
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/cart">
+    🛒 Cart
+  </a>
+
+</div>
   <!-- CONTENT -->
   <div class="container">
 
