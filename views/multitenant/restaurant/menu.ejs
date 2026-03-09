@@ -214,7 +214,7 @@
     </div>
 
      <nav class="nav-links">
-        <a href="/multitenant/shop/<%= tenant.tenantId %>/slug" >HOME</a>
+        <a href="/multitenant/<%= tenant.tenantId %>/slug" >HOME</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
@@ -233,7 +233,7 @@
    
   <div id="mobileMenu" class="mobile-menu">
   <div class="close-btn" onclick="toggleMenu()">✕</div>
-  <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>" >HOME</a>
+  <a href="/multitenant/<%= tenant.tenantId %>/<%= slug %>" >HOME</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
