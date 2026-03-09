@@ -267,12 +267,12 @@ body {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--text-dark);
-  background: transparent;
+   background: var(--text-dark);
   cursor: pointer;
 }
 
 .menu-info button:hover {
-  background: var(--text-dark);
+  background: var(--text-muted);
   color: var(--text-light);
 }
 
