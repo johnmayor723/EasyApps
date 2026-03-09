@@ -11,13 +11,14 @@ const Menu = require('../api/models/Menu');
 
 // 🔧 Mail transport (Zoho or replace with another SMTP)
 
-/*
+/*.    
 var transporter = nodemailer.createTransport({
     host: "smtp.zeptomail.com",
     port: 587,
     auth: {
     user: "emailapikey",
-    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/kUgIhzJdhtguzAxTXSiF9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
+    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/
+    kUgIhzJdhtguzAxTXSiF9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
     }
 });
 
@@ -171,7 +172,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      "http://localhost:3000/api/menus/menus-by-tenant",
       { tenantId }
     );
 
@@ -188,6 +189,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
     tenant,
     menu: menu ?? null, // 👈 GUARANTEED
     contact: contactInfo,
+    slug,
   });
 }
 
@@ -200,7 +202,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
 
       try {
         const productRes = await axios.post(
-          "http://easyhostnet.localhost:3000/api/products/by-tenant",
+          "http://localhost:3000/api/products/by-tenant",
           { tenantId }
         );
         console.log("Fetched all product for tenant:", productRes.data.products);
@@ -211,6 +213,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
         products: products || [],
         name,
         contact: contactInfo,
+        slug,
         
       });
         
