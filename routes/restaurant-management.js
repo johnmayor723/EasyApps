@@ -67,13 +67,36 @@ router.post('/create-menu', upload.single('image'), async (req, res) => {
       successMessage: 'Menu created successfully',
       errorMessage: null
     });*/
-    res.redirect('/multitenant/dashboard');
+    req.flash('success_msg', 'Menu item created successfully');
+    res.redirect('/restaurant-mamnagement/dashboard');
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
+router.get("/dashboard", async (req, res) => {
+  try {
+    const user = req.session.user;
+    const tenant = req.session.tenant;
 
+    // Await the API call
+    const menuresponse = await axios.post(
+      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      { tenantId: tenant.tenantId }
+    );
+
+    const menu = menuresponse.data.menus || []; // <-- note 'menus' to match EJS
+    // When fetching menus (dashboard or menu API)
+    //req.session.menu = menu || [];
+
+    console.log("Menu in dashboard route:", menu);
+     res.locals.menu = menu;
+    res.render("multitenant/tenant-dashboard", { layout: false, user, tenant, menu, plan: tenant.plan });
+  } catch (err) {
+    console.error("Error fetching menus:", err);
+    res.render("multitenant/tenant-dashboard1", { layout: false, user, tenant, menu: [], plan: 'null' });
+  }
+});
 router.get('/dashboard-menu', async (req, res) => {
   try {
     const tenantId = req.session.user.tenantId;

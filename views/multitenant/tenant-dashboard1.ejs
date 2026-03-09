@@ -5,214 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/multitenant/img/easyicon.png">
   <title>Dashboard</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  <link rel="stylesheet" href="/multitenant/css/dashboard.css">
+   <link rel="stylesheet" href="/multitenant/css/overview-content.css">
+   <style>
 
-    body {
-      background: #f8f9fb;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
 
-    /* Top Navbar */
-    .navbar {
-      background: #fff;
-      border-bottom: 1px solid #ddd;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1100;
-    }
-
-    .hamburger {
-      font-size: 24px;
-      cursor: pointer;
-      display: none;
-    }
-
-    /* Layout */
-    .content {
-      display: flex;
-      flex: 1;
-      padding: 40px 100px;
-      gap: 20px;
-    }
-
-    .left-col {
-      flex: 7;
-    }
-
-    .right-col {
-      flex: 3;
-    }
-
-    /* Card / Jumbotron */
-    .card {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .jumbotron {
-      background: #e9f0ff;
-      border: 1px solid #c5d8ff;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-
-    .stats {
-      display: flex;
-      gap: 20px;
-    }
-
-    .stat {
-      flex: 1;
-      text-align: center;
-      padding: 10px;
-      border-radius: 8px;
-      background: #f9f9f9;
-    }
-
-    .orders {
-      margin-top: 20px;
-    }
-
-    .order-item {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background: #fff;
-      border-right: 1px solid #ddd;
-      padding: 20px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      transform: translateX(0); /* visible by default */
-      z-index: 1200;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
-    .menu {
-      list-style: none;
-    }
-
-    .menu li {
-      margin: 12px 0;
-    }
-
-    .menu a {
-      text-decoration: none;
-      color: #333;
-      font-size: 15px;
-      display: block;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .menu a:hover {
-      background: #f0f0f0;
-    }
-
-    /* Overlay */
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.4);
-      z-index: 1100;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-    .products-container {
-  padding: 20px;
+/* Remove default list styling */
+.sidebar .menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.products-container h2 {
-  margin-bottom: 20px;
-  color: #262626;
+/* Remove default li spacing */
+.sidebar .menu li {
+  margin: 0;
+  padding: 0;
 }
 
-.jumbotrons {
-  display: grid;
-  gap: 20px;
+/* Alternating backgrounds */
+.sidebar .menu li:nth-child(odd) {
+  background-color: #ffffff;
 }
 
-.jumbotron {
+.sidebar .menu li:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+/* Menu links styling */
+.sidebar .menu li a {
   display: block;
-  background: #f9f9f9;
-  padding: 30px;
-  border-radius: 12px;
+  padding: 14px 20px;
   text-decoration: none;
   color: #333;
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  transition: background 0.2s ease;
 }
 
-.jumbotron:hover {
-  background: #454444;
-  color: #fff;
-  transform: translateY(-4px);
+/* Hover effect */
+.sidebar .menu li a:hover {
+  background-color: #e9e9e9;
 }
 
+/* Add separator line */
+.sidebar .menu li {
+  border-bottom: 1px solid #e0e0e0;
+}
 
-    /* Responsive */
-    @media(max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%); /* hidden on mobile until toggled */
-      }
-
-      .sidebar.active {
-        transform: translateX(0);
-      }
-
-      .content {
-        padding: 20px;
-        flex-direction: column;
-        margin-left: 0;
-      }
-
-      .right-col {
-        display: none;
-      }
-
-      .hamburger {
-        display: block;
-      }
-    }
-
-    /* Push content right when sidebar is visible on desktop */
-    @media(min-width: 769px) {
-      .content {
-        margin-left: 250px;
-      }
-    }
-  </style>
+/* Remove border from last item */
+.sidebar .menu li:last-child {
+  border-bottom: none;
+}
+   </style>
 </head>
 <body>
+<% if (typeof user === 'undefined') { var user = locals.user; } %>
 
   <!-- Navbar -->
   <div class="navbar">
@@ -224,15 +71,30 @@
   <aside class="sidebar" id="sidebar">
     <a href="#"><img height="40px" src="/multitenant/img/easylogo.png" alt="TakeApp"></a>
     <ul class="menu">
-      <li><a data-page="dashboard">Dashboard</a></li>
-      <li><a data-page="orders">Orders</a></li>
-      <li><a data-page="products">Products</a></li>
-      <li><a data-page="customers">Customers</a></li>
-      <li><a data-page="chats">Chats</a></li>
-      <li><a data-page="design">Design</a></li>
-      <li><a data-page="settings">Settings</a></li>
-      <li><a data-page="marketing">Marketing</a></li>
-    </ul>
+ <% const appType = session?.type; %>
+  <!-- Common items (both ecommerce & restaurant) -->
+    <li><a data-page="overview">Overview</a></li>
+  <% if (appType === 'ecommerce') { %>
+    <li><a data-page="products">Products</a></li>
+    <li><a data-page="orders">Orders</a></li>     
+    <li><a data-page="inventory">Inventory</a></li>
+  <% } %>
+  
+
+  <!-- Restaurant-only items -->
+  <% if (appType === 'restaurant') { %>
+    <li><a data-page="menu">Menu</a></li>
+    <li><a data-page="tables">Tables</a></li>
+    <li><a data-page="reservations">Reservations</a></li>
+    <li><a data-page="kitchen">Kitchen</a></li>
+  <% } %>
+  <!--<li><a data-page="customers">Customers</a></li>
+   <li><a data-page="chats">Chats</a></li>
+  <li><a data-page="design">Design</a></li>
+  <li><a data-page="settings">Settings</a></li>
+  <li><a data-page="marketing">Marketing</a></li>-->
+
+</ul>
   </aside>
 
   <!-- Overlay -->
@@ -242,55 +104,480 @@
   <div class="content">
     <!-- Left Column -->
     <div class="left-col" id="dynamic-content">
-      <!-- Dashboard (default) -->
-      <div style="margin-bottom: 30px;">
-        <h3 style="color: #000;">
-          <a href="https://mayowaandrews723.takeapp.com" target="_blank" style="color:#000; text-decoration:none;">
-            Welcome back, KhaySpicy 👋
-          </a>
-        </h3>
-      </div>
+   
+  <% if (typeof success_msg === 'undefined') { var success_msg = locals.success_msg; } %>
+  <% if (typeof error_msg === 'undefined') { var error_msg = locals.error_msg; } %>
 
-      <div class="jumbotron">
-        <p><strong>Last 30 days</strong> <span style="float:right; cursor:pointer;">📅</span></p>
-        <p>September 1, 2025 – September 16, 2025</p>
-      </div>
+  <style>
+  .alert { padding:12px 16px; border-radius:6px; margin-bottom:16px; font-weight:500; }
+  .alert.success { background:#e6ffed; color:#0b6b2e; border:1px solid #b7f0c9; }
+  .alert.error { background:#ffecec; color:#8a1f1f; border:1px solid #f5c6c6; }
+  </style>
 
-      <div class="card">
-        <div class="stats">
-          <div class="stat">
-            <h4>Views</h4>
-            <p>6</p>
-          </div>
-          <div class="stat">
-            <h4>Orders</h4>
-            <p>1</p>
-          </div>
-          <div class="stat">
-            <h4>Sales</h4>
-            <p>₦0.00</p>
-          </div>
-        </div>
-      </div>
+  <div id="flash-messages">
+    <% if (success_msg) { %>
+      <% if (Array.isArray(success_msg)) { success_msg.forEach(function(msg){ %>
+        <div class="alert success"><%= msg %></div>
+      <% }) } else { %>
+        <div class="alert success"><%= success_msg %></div>
+      <% } %>
+    <% } %>
 
-      <div class="card orders">
-        <h4>Orders (Last 30 days)</h4>
-        <div class="order-item">1 pending order</div>
-        <div class="order-item">1 unpaid order</div>
-      </div>
-    </div>
-
-    <!-- Right Column (hidden on mobile) -->
-    <div class="right-col">
-      <div class="card"><h3>Jumbotron 1</h3><p>Placeholder for dynamic content.</p></div>
-      <div class="card"><h3>Jumbotron 2</h3><p>Placeholder for insights or ads.</p></div>
-      <div class="card"><h3>Jumbotron 3</h3><p>Another placeholder for later use.</p></div>
-    </div>
+    <% if (error_msg) { %>
+      <% if (Array.isArray(error_msg)) { error_msg.forEach(function(msg){ %>
+        <div class="alert error"><%= msg %></div>
+      <% }) } else { %>
+        <div class="alert error"><%= error_msg %></div>
+      <% } %>
+    <% } %>
   </div>
 
-  <script src="/multitenant/js/dashboard.js"></script>
+    </div>
+
     
-  </script>
+  </div>
+    <a
+  href="https://wa.me/2349123907060"
+  target="_blank"
+  class="whatsapp-float"
+  aria-label="Chat with us on WhatsApp"
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+<style>
+ .whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+  </style>
+
+  <script src="/multitenant/js/dashboard-menu-default.js"></script>
+  <script>
+    function sanitizeDomainInput(input) {
+      // Remove spaces
+      input.value = input.value.replace(/\s+/g, '');
+
+      // Block dots (.)
+      if (input.value.includes('.')) {
+        input.value = input.value.split('.')[0];
+      }
+
+      // Allow only letters, numbers, hyphen
+      input.value = input.value.replace(/[^a-zA-Z0-9-]/g, '');
+    }
+    async function searchDomain() {
+  const input = document.getElementById('domainInput');
+  const resultsBox = document.getElementById('domainResults');
+
+  const name = input.value.trim().toLowerCase();
+  if (!name) return;
+
+  const domain = `${name}.com.ng`;
+
+  resultsBox.innerHTML = `
+    <div class="muted">Checking availability for <strong>${domain}</strong>…</div>
+  `;
+
+  try {
+   const res = await fetch('http://easyhostnet.localhost:3000/api/domain/check-domain', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ domain }) // send domain in request body
+    });
+    const data = await res.json();
+
+    if (data.available === true) {
+      resultsBox.innerHTML = `
+        <div class="domain-row available">
+          <strong>${domain}</strong>
+          <span style='padding:0 10px' class="badge success">Available</span>
+          <button class="btn primary" style="margin-left:auto; font-size:15px;padding:8px 10px" 
+          onclick="reserveDomain('${domain}')">
+            Claim Domain
+          </button>
+        </div>
+      `;
+    } else if (data.available === false) {
+      resultsBox.innerHTML = `
+        <div class="domain-row unavailable">
+          <strong>${domain}</strong>
+          <span class="badge danger">Not Available</span>
+        </div>
+      `;
+    } else {
+      resultsBox.innerHTML = `
+        <div class="domain-row error">
+          Unable to check domain right now.
+        </div>
+      `;
+    }
+
+  } catch (err) {
+    console.error(err);
+    resultsBox.innerHTML = `
+      <div class="domain-row error">
+        Network error. Please try again.
+      </div>
+    `;
+  }
+}
+ 
+async function reserveMyDomain(domain) {
+  const resultsBox = document.getElementById('domainResults');
+
+  // Block FREE plan users
+    if (!tenant || "<%= tenant.plan %>" === 'free') {
+      alert('Upgrade your plan to reserve a custom domain.');
+      return;
+    }
+
+  resultsBox.innerHTML = `
+    <div class="muted">Reserving <strong>${domain}</strong>…</div>
+  `;
+
+  try {
+    const res = await fetch(`http://easyhostnet.localhost:3000/api/domain/get-domain`, {
+      method: 'POST', // assuming POST for reservation
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain })
+    });
+
+    if (res.ok) {
+      // Redirect to dashboard if status is 200
+      window.location.href = 'http://easyhostnet.localhost:3000/multitenant/dashboard';
+      return; // stop further execution
+    }
+
+    // If response is not 200, show error
+    const data = await res.json();
+    resultsBox.innerHTML = `
+      <div class="domain-row error">
+        Failed to reserve domain: ${data.message || 'Unknown error'}
+      </div>
+    `;
+
+  } catch (err) {
+    console.error(err);
+    resultsBox.innerHTML = `
+      <div class="domain-row error">
+        Network error. Please try again.
+      </div>
+    `;
+  }
+}
+
+
+
+</script>
+<script>
+async function reserveDomain(domain) {
+
+  // Block FREE plan users
+ /* if ("<%= tenant.plan %>" === "free") {
+    alert("Upgrade your plan to reserve a custom domain.");
+    return;
+  }*/
+
+  try {
+
+    const payload = {
+      tenantId: "<%= tenant.tenantId %>",
+      domain: domain,
+      email: "<%= user?.email %>"
+    };
+
+    const response = await fetch("/domain/claim-domain", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+
+      alert(
+        "🎉 Domain has been reserved successfully!\n\n" +
+        "Your domain will propagate within 48 hours.\n\n" +
+        "Your site will be available at:\n" +
+        "https://" + domain
+      );
+
+      // Optional: refresh page
+      window.location.reload();
+
+    } else {
+      alert(data.message || "Failed to reserve domain.");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Network error. Please try again.");
+  }
+}
+</script>
+
+  <script>
+async function manualReserveDomain(domain) {
+  const resultsBox = document.getElementById('domainResults');
+
+  // Simulate processing
+  resultsBox.innerHTML = `
+    <div class="muted">
+      Reserving <strong>${domain}</strong>…
+    </div>
+  `;
+
+  // Fake delay for realism
+  setTimeout(() => {
+    alert(
+      `🎉 Domain Reserved Successfully!\n\n` +
+      `Domain: ${domain}\n\n` +
+      `DNS setup is in progress and will be completed within 24 hours.\n\n` +
+      `You can access your domain here:\nhttps://${domain}`
+    );
+
+    resultsBox.innerHTML = `
+      <div class="domain-row available">
+        <strong>${domain}</strong>
+        <span class="badge success">Reserved</span>
+        <a 
+          href="https://${domain}" 
+          target="_blank"
+          style="margin-left:auto; text-decoration:none; font-size:14px"
+        >
+          Visit Domain ↗
+        </a>
+      </div>
+    `;
+  }, 1200);
+}
+</script>
+<script>
+document.getElementById('menuForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+
+  const imageFile = form.image.files[0];
+
+  let imageUrl = '';
+
+  try {
+
+    // STEP 1: upload image
+    if (imageFile) {
+
+      const uploadData = new FormData();
+      uploadData.append('image', imageFile);
+
+      const uploadRes = await fetch('/upload', {
+        method: 'POST',
+        body: uploadData
+      });
+
+      const uploadResult = await uploadRes.json();
+
+      imageUrl = uploadResult.imageUrl;
+    }
+
+    // STEP 2: send menu to API
+    const payload = {
+      name: form.name.value,
+      description: form.description.value,
+      category: form.category.value,
+      price: parseFloat(form.price.value),
+      available: form.available.value === 'true',
+      tenantId: form.tenantId.value,
+      image: imageUrl
+    };
+
+    await fetch('http://easyhostnet.localhost:3000/api/menus/create-menu', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    // STEP 3: reload dashboard
+    window.location.reload();
+
+  } catch(err) {
+    console.error(err);
+    alert('Failed to create menu');
+  }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+  const tenantId = "<%= tenant.tenantId %>";
+
+  try {
+    const response = await fetch('http://easyhostnet.localhost:3000/api/menus/menus-by-tenant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tenantId })
+    });
+
+    const data = await response.json();
+
+    // If no menus
+    if (!data.menus || data.menus.length === 0) return;
+
+    // Replace empty state with table dynamically
+    console.log(data.menus);
+
+    // Optional: build table rows dynamically here
+  } catch (err) {
+    console.error(err);
+  }
+});
+</script>
+<script>
+
+/* Toggle form */
+function toggleForm() {
+  const container = document.getElementById('menuFormContainer');
+  container.style.display =
+    container.style.display === 'block' ? 'none' : 'block';
+}
+
+/* Load menus dynamically */
+document.addEventListener('DOMContentLoaded', async function () {
+
+  const tenantId = "<%= tenant.tenantId %>";
+
+  const tableBody = document.getElementById('menuTableBody');
+  const emptyState = document.getElementById('menuEmptyState');
+  const tableWrapper = document.getElementById('menuTableWrapper');
+
+  try {
+
+    const response = await fetch('http://easyhostnet.localhost:3000/api/menus/menus-by-tenant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tenantId })
+    });
+
+    const data = await response.json();
+    const menus = data.menus || [];
+
+    if (menus.length === 0) {
+      emptyState.style.display = 'block';
+      tableWrapper.style.display = 'none';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    tableWrapper.style.display = 'block';
+
+    menus.forEach(item => {
+
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.description}</td>
+        <td>${item.price}</td>
+        <td>${item.category}</td>
+        <td>${item.image ? `<img src="${item.image}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">` : '—'}</td>
+        <td>${item.available ? 'true' : 'false'}</td>
+        <td>
+          <a href="/restaurant-management/menu/${item._id}/edit" class="btn-edit">Edit</a>
+          <a href="/restaurant-management/menu/${item._id}/delete" class="btn-delete">Delete</a>
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+
+});
+
+</script>
+<script>
+function toggleForm() {
+  const modal = document.getElementById('menuModal');
+  modal.classList.toggle('active');
+}
+
+/* Close when clicking outside modal */
+document.getElementById('menuModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+  }
+});
+</script>
+
+<script>
+
+function openEditModal(menu)
+{
+  const modal = document.getElementById("editMenuModal");
+
+  // Set form action dynamically
+  document.getElementById("editMenuForm").action =
+    "/restaurant-management/menu/" + menu._id + "/edit";
+
+  // Fill fields
+  document.getElementById("edit_name").value = menu.name;
+  document.getElementById("edit_description").value = menu.description;
+  document.getElementById("edit_category").value = menu.category;
+  document.getElementById("edit_price").value = menu.price;
+  document.getElementById("edit_available").value = menu.available;
+
+  // Image preview
+  const img = document.getElementById("edit_image_preview");
+
+  if(menu.image)
+  {
+    img.src = menu.image;
+    img.style.display = "block";
+  }
+  else
+  {
+    img.style.display = "none";
+  }
+
+  modal.classList.add("active");
+}
+
+function closeEditModal()
+{
+  document.getElementById("editMenuModal")
+    .classList.remove("active");
+}
+
+</script>
+
 </body>
 </html>
-
