@@ -49,6 +49,14 @@
 .mobile-menu.active{
   right:0;
 }
+.close-btn{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-size:24px;
+  cursor:pointer;
+  color:#333;
+}
 
 /* MOBILE */
 @media (max-width:768px){
@@ -95,7 +103,7 @@
     </div>
   </header>
   <div id="mobileMenu" class="mobile-menu">
-
+   <div class="close-btn" onclick="toggleMenu()">✕</div>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>">HOME</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/">MENU</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>

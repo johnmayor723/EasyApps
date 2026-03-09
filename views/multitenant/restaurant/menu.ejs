@@ -142,7 +142,7 @@
   text-align: center;
 }
 
-/* HAMBURGER */
+ /* HAMBURGER */
 .hamburger{
   font-size:28px;
   cursor:pointer;
@@ -176,6 +176,14 @@
 
 .mobile-menu.active{
   right:0;
+}
+.close-btn{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-size:24px;
+  cursor:pointer;
+  color:#333;
 }
 
 /* MOBILE */
@@ -222,10 +230,10 @@
       </nav>
     </div>
   </header>
-
+   
   <div id="mobileMenu" class="mobile-menu">
-
-    <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>" >HOME</a>
+  <div class="close-btn" onclick="toggleMenu()">✕</div>
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>" >HOME</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
@@ -497,6 +505,11 @@ function sendWhatsAppOrder() {
     }
   }
 </script>
-
+<script>
+function toggleMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.classList.toggle("active");
+}
+</script>
 </body>
 </html>
