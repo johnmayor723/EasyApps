@@ -130,7 +130,7 @@ router.post("/verify-otp", async (req, res) => {
 
 router.get("/multitenant/:tenantId/:slug", async (req, res) => {
   const { tenantId, slug } = req.params;
-
+  req.session.slug = slug; // Store slug in session for later use
   try {
     /* -------------------------
        1. Resolve tenant
@@ -238,7 +238,7 @@ router.get('/multitenant/:tenantId/store/catalog', (req, res) => {
   res.send("Catalog page for tenant: " + req.params.tenantId);
 });
 router.get("/shop/:tenantId/menu", async (req, res) => {
-  console
+  const slug = req.session.slug || "home"; // Fallback to "home" if slug is not set   
   console.log("Accessing menu for tenant:", req.params.tenantId);
   const { tenantId } = req.params;
   const tenantResponse = await axios.post(
@@ -262,7 +262,8 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
       tenant: req.session.tenant,
       menus,
       contact: contactInfo,
-      name
+      name,
+      slug,
     });
   } catch (err) {
     console.error("Error fetching menu:", err.message);
@@ -271,16 +272,16 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
 });
 router.get("/shop/:tenantId/reservations", async (req, res) => {
   console.log("Accessing reservations for tenant:", req.params.tenantId);
-
+  const slug = req.session.slug || "home"; // Fallback to "home" if slug is not set
   const { tenantId } = req.params;
-   const tenantResponse = await axios.post(
+  const tenantResponse = await axios.post(
       "http://localhost:3000/api/tenant-auth/get-one-tenant",
       { tenantId }
-    );
-    const contact = tenantResponse.data.tenant.contact
-    const tenant1 = tenantResponse.data?.tenant;
-    const name =  tenant1.owner.name;
-    console.log("Resolved tenant for reservations:", tenantResponse.data?.tenant);
+  );
+  const contact = tenantResponse.data.tenant.contact
+  const tenant1 = tenantResponse.data?.tenant;
+  const name =  tenant1.owner.name;
+  console.log("Resolved tenant for reservations:", tenantResponse.data?.tenant);
 
   try {
    
@@ -295,7 +296,8 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
       tenant: req.session.tenant,
       reservations,
       contact,
-      name
+      name,
+      slug,
     });
   } catch (err) {
     console.error("Error fetching reservations:", err.message);
@@ -305,6 +307,7 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
 
 router.get("/shop/:tenantId/reservations", async (req, res) => {
   const { tenantId } = req.params;
+  cons
   const tenantResponse = await axios.post(
       "http://localhost:3000/api/tenant-auth/get-one-tenant",
       { tenantId }
