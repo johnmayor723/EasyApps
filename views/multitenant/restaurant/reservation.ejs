@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reservations – <%= name %></title>
+  <title>Reservations – <%=name%></title>
 
   <style>
     :root {
@@ -361,7 +361,7 @@
   <div class="navbar">
     <div class="brand"><%=name%></div>
     <div class="nav-links">
-     <a href="/" >HOME</a>
+      <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>" >HOME</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/" class="active">MENU</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
@@ -377,7 +377,7 @@
   </div>
  <div id="mobileMenu" class="mobile-menu">
 
-  <a href="/">HOME</a>
+   <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>" >HOME</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/">MENU</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>

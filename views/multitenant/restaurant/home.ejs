@@ -78,7 +78,7 @@
     </div>
 
       <nav class="nav-links">
-        <a href="/" class="active">HOME</a>
+        <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>" class="active">HOME</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/">MENU</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
         <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
@@ -96,7 +96,7 @@
   </header>
   <div id="mobileMenu" class="mobile-menu">
 
-  <a href="/">HOME</a>
+  <a href="/multitenant/shop/<%= tenant.tenantId %>/<%= slug %>">HOME</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/menu/">MENU</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/reservations">RESERVATIONS</a>
   <a href="/multitenant/shop/<%= tenant.tenantId %>/rewards">REWARDS</a>
