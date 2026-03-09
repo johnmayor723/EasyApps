@@ -210,31 +210,28 @@ body {
   background: var(--primary-color);
 }
 
-/* ================= MENU GRID ================= */
-
 .menu-grid {
   padding: 40px 20px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* mobile default */
+  grid-template-columns: 1fr; /* Mobile: 1 item per row */
   gap: 24px;
 }
 
-/* TABLET */
+/* Tablet */
 @media (min-width: 768px) {
   .menu-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     padding: 60px;
   }
 }
 
-/* DESKTOP */
+/* Desktop */
 @media (min-width: 1200px) {
   .menu-grid {
     grid-template-columns: repeat(4, 1fr);
     padding: 80px;
   }
 }
-
 .menu-card {
   background: var(--secondary-color);
   border: 1px solid var(--border-light);
