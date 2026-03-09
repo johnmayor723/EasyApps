@@ -213,10 +213,26 @@ body {
 /* ================= MENU GRID ================= */
 
 .menu-grid {
-  padding: 80px;
+  padding: 40px 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 50px;
+  grid-template-columns: repeat(2, 1fr); /* mobile default */
+  gap: 24px;
+}
+
+/* TABLET */
+@media (min-width: 768px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 60px;
+  }
+}
+
+/* DESKTOP */
+@media (min-width: 1200px) {
+  .menu-grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 80px;
+  }
 }
 
 .menu-card {
