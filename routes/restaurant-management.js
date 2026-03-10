@@ -180,11 +180,11 @@ router.post('/menu/:id/edit', upload.single('image'), async (req, res) => {
     console.log('Updated Menu:', updatedMenu);
     req.session.menu = response.data.menu;
     req.flash('success_msg', 'Menu updated successfully');
-    res.redirect('/multitenant/dashboard');
+    res.redirect('/restaurant-management/dashboard');
   } catch (err) {
     console.error(err.message);
     req.flash('error_msg', 'Failed to update menu');
-    res.redirect('/multitenant/dashboard');
+    res.redirect('/restaurant-management/dashboard');
   }
 });
 
@@ -206,10 +206,10 @@ router.get('/menu/:id/delete/', async (req, res) => {
     req.session.menu = null;
     req.session.menus = menusRes.data.menu
     req.flash('success_msg', 'Menu deleted successfully');
-    res.redirect('/multitenant/dashboard');
+    res.redirect('/restaurant-management/dashboard');
   } catch (err) {
    req.flash('error_msg', 'Failed to delete menu');
-    res.redirect('/multitenant/dashboard');
+    res.redirect('/restaurant-management/dashboard');
   }
 });
 
