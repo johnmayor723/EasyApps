@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="SoftPOS web app" />
+    <meta name="author" content="Your Name" />
+    <title>SoftPOS</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+     body{
+    background:#05070b;
+    font-family:system-ui, -apple-system, sans-serif;
+}
+
+.pos-container{
+    width:700px;
+    margin:60px auto;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+.pos-card{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    background:#0c0f14;
+    border:1px solid #1e232b;
+    border-radius:14px;
+    padding:22px;
+    text-decoration:none;
+    color:white;
+    transition:all .2s ease;
+}
+
+.pos-card:hover{
+    border-color:#3b3f46;
+    background:#10141a;
+}
+
+.pos-icon{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#5b3df5,#7c4dff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+}
+
+.pos-text h3{
+    margin:0;
+    font-size:20px;
+    font-weight:600;
+}
+
+.pos-text p{
+    margin-top:6px;
+    color:#a3a8b2;
+    font-size:15px;
+}
+  
+    </style>
+</head>
+<body>
+    
+<div class="pos-container">
+
+<a href="#" class="pos-card">
+    <div class="pos-icon">
+        📱
+    </div>
+
+    <div class="pos-text">
+        <h3>Soft POS</h3>
+        <p>Accept card payments directly on a smartphone using contactless technology.</p>
+    </div>
+</a>
+
+
+<a href="#" class="pos-card">
+    <div class="pos-icon">
+        💳
+    </div>
+
+    <div class="pos-text">
+        <h3>Physical POS Terminal</h3>
+        <p>Use a dedicated payment terminal for secure in-store card and contactless payments.</p>
+    </div>
+</a>
+
+</div>
+
+    <script>
+        // Small utility to keep footer year current
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

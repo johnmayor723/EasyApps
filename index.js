@@ -151,7 +151,7 @@ app.get("/partials/:name", async (req, res) => {
     "customers",
     //"chats",
     //"design",
-    //"settings",
+    "settings",
     //"marketing",
     "create-product",
     "menu",
@@ -184,7 +184,15 @@ app.get("/partials/:name", async (req, res) => {
 
       menu = menuresponse.data.menus || [];
     }
-
+    if (name === "settings") {
+      return res.render("partials/overview-content", {
+        layout: false,
+        user,
+        tenant,
+        menu,
+        plan: tenant ? tenant.plan : "null"
+      });
+    }
     res.render(`partials/${name}-content`, {
       layout: false,
       user,
