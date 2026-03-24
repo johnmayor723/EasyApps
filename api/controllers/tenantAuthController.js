@@ -16,8 +16,7 @@ var transporter = nodemailer.createTransport({
     port: 587,
     auth: {
     user: "emailapikey",
-    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/kUgIhzJdhtguzAxTXSi
-    F9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
+    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/kUgIhzJdhtguzAxTXSiF9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
     }
 });
 
@@ -38,8 +37,8 @@ const transport = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: 'modigitman@gmail.com',
-    pass: 'muwroruzgboqdfcd',
+    user: 'marketpicks723@gmail.com',
+    pass: 'ofdktfseiahxjsyl',
   }
 });
 

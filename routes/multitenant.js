@@ -11,14 +11,13 @@ const Menu = require('../api/models/Menu');
 
 // 🔧 Mail transport (Zoho or replace with another SMTP)
 
-/*.    
+/*    
 var transporter = nodemailer.createTransport({
     host: "smtp.zeptomail.com",
     port: 587,
     auth: {
     user: "emailapikey",
-    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/
-    kUgIhzJdhtguzAxTXSiF9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
+    pass: "wSsVR610qxD5WKkpn2f/Lro7mFhTDlqiHE5/3FD3un6uTPHCpcdqwhbOVlKuHvAaGTVrEzUToLl/kUgIhzJdhtguzAxTXSiF9mqRe1U4J3x17qnvhDzKW2tdlRKAJYgBwgxsmWBkE8wm+g=="
     }
 });
 
@@ -29,8 +28,8 @@ transporter.verify((error, success) => {
   } else {
     console.log("✅ SMTP READY");
   }
-});*/
-
+});
+*/
 const API_BASE_URL = 'http://easyhostnet.localhost:3000/api/'
 
 
@@ -39,8 +38,8 @@ const transport = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: 'modigitman@gmail.com',
-    pass: 'muwroruzgboqdfcd',
+    user: 'marketpicks723@gmail.com',
+    pass: 'ofdktfseiahxjsyl',
   }
 });
 
@@ -49,16 +48,18 @@ transport.verify((err, success) => {
   else console.log("✅ SMTP Verified: Ready to send emails");
 });
 
+
+// ✉️ Utility: Send email
 // ✉️ Utility: Send email
 const sendEmail = async (to, subject, text) => {
-  await transport.sendMail({
+  // use the created transporter instance (not undefined `transport`)
+  await transporter.sendMail({
     from: `"EasyApps" <modigitman@gmail.com>`,
     to,
     subject,
     text,
   });
 };
-
 
 
 
