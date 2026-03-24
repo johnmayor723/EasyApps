@@ -34,13 +34,13 @@ const API_BASE_URL = 'http://easyhostnet.localhost:3000/api/'
 
 
 const transport = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: "smtp.mail.yahoo.com",
   port: 465,
-  secure: true,
+  secure: true, // use SSL
   auth: {
-    user: 'marketpicks723@gmail.com',
-    pass: 'ofdktfseiahxjsyl',
-  }
+    user: "johnmayor723@yahoo.com",
+    pass: process.env.SMTP_PASS, // your app password
+  },
 });
 
 transport.verify((err, success) => {
@@ -54,7 +54,7 @@ transport.verify((err, success) => {
 const sendEmail = async (to, subject, text) => {
   // use the created transporter instance (not undefined `transport`)
   await transporter.sendMail({
-    from: `"EasyApps" <modigitman@gmail.com>`,
+    from: `"EasyApps" <johnmayor723@yahoo.com>`,
     to,
     subject,
     text,
