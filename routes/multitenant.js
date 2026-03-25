@@ -621,7 +621,7 @@ router.post("/request-otp", async (req, res) => {
     }
 
     const response = await axios.post(
-      "https://easyhostnet.com/api/tenant-auth/request-otp",
+      "http://localhost:3000/api/tenant-auth/request-otp",
       { email }
     );
 

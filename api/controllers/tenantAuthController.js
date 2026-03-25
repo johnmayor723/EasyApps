@@ -44,7 +44,7 @@ const transport = nodemailer.createTransport({
 
 transport.verify((err, success) => {
   if (err) console.log("❌ SMTP VERIFY FAILED:", err);
-  else console.log("✅ SMTP Verified: Ready to send emails");
+  else console.log("✅ SMTP Verified: Ready to send emails from api tenantAuthController");
 });
 
 // ✉️ Utility: Send email
