@@ -99,7 +99,7 @@ router.post("/verify-otp", async (req, res) => {
     const { email, otp } = req.body;
 
     const response = await axios.post(
-      "https://easyhostnet.com/api/tenant-auth/verify-otp",
+      `${process.env.API_BASE || "http://127.0.0.1:3900/api"}/tenant-auth/verify-otp`,
       { email, otp }
     );
 
@@ -123,7 +123,7 @@ router.post("/verify-otp", async (req, res) => {
       err.response?.data?.error || "Error verifying OTP"
     );
 
-    res.redirect("/multitenant/sign-up");
+    res.redirect("/multitenant/signup");
   }
 });
 
@@ -600,7 +600,7 @@ router.get("/create-store", (req, res) => {
   if (!email) {
 
     req.flash("error_msg", "Please verify your email first.");
-    return res.redirect("/multitenant/sign-up");
+    return res.redirect("/multitenant/signup");
   }
    console.log("Email from session:", email);
   res.render("multitenant/createstore", {
