@@ -29,6 +29,7 @@ const menuRoutes = require("./api/routes/MenuRoute");
 const reservationRoutes = require("./api/routes/ReservationRoutes");
 const paystackRoutes = require("./api/paystack/routes/paystack");
 const domainRoutes = require("./api/routes/domain");
+const customerRoutes = require("./api/routes/customerRoutes");
 const passwordRoutes = require("./routes/password");
 const domainReservationRoutes = require("./routes/domain");
 
@@ -262,6 +263,7 @@ app.use("/api/comments", tenantResolver, commentRoutes);
 app.use("/api/menus",  menuRoutes);
 app.use("/api/reservations",  reservationRoutes);
 app.use("/api/domain", domainRoutes);
+app.use("/api/customers", customerRoutes);
 
 
 /* 

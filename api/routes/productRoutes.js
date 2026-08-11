@@ -13,6 +13,7 @@ const {
   deleteProductPreview,
   getProductsByTenantId
 } = require('../controllers/productController');
+const dashboardAuth = require('../middleware/dashboardAuth');
 
 const router = express.Router();
 
@@ -25,11 +26,11 @@ router.delete('/preview/:id', deleteProductPreview);
 router.post('/publish', publishPreviewProducts);
 
 // Final Product Routes
-router.post('/', createProduct);
+router.post('/', dashboardAuth, createProduct);
 router.get('/', getAllProducts);
 router.post('/by-tenant', getProductsByTenantId);
 router.get('/:id', getProductById);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
+router.put('/:id', dashboardAuth, updateProduct);
+router.delete('/:id', dashboardAuth, deleteProduct);
 
 module.exports = router;

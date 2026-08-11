@@ -172,6 +172,7 @@ exports.createProduct = async (req, res) => {
     const parsedColors = typeof colors === 'string' ? JSON.parse(colors) : colors;
 
     const newProduct = new Product({
+      tenantId: req.tenantId,
       name,
       description,
       price,
@@ -226,14 +227,14 @@ exports.getProductsByTenantId = async (req, res) => {
 // Update product
 exports.updateProduct = async (req, res) => {
   try {
-    const { name, description, price, size, images, colors, category } = req.body;
+    const { name, description, price, size, images, colors, category, subcategory } = req.body;
 
     // Parse images and colors if they are JSON strings
     const parsedImages = typeof images === 'string' ? JSON.parse(images) : images;
     const parsedColors = typeof colors === 'string' ? JSON.parse(colors) : colors;
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: req.params.id, tenantId: req.tenantId },
       {
         name,
         description,
@@ -259,7 +260,7 @@ exports.updateProduct = async (req, res) => {
 // Delete product
 exports.deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id, tenantId: req.tenantId });
     if (!deletedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }

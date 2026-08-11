@@ -1,0 +1,75 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-mark {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.login-mark-accent {
+  color: var(--accent);
+}
+
+.login-card h1 {
+  font-size: 20px;
+  margin: 4px 0 0;
+  color: var(--ink);
+}
+
+.login-sub {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font-weight: 400;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.login-error {
+  background: var(--danger-soft);
+  color: var(--danger);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.login-submit {
+  justify-content: center;
+  margin-top: 6px;
+}

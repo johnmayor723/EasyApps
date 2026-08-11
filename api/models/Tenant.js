@@ -53,7 +53,7 @@ const TenantSchema = new Schema({
   // 🌍 Custom domain
   domain: {
     name: { type: String, trim: true },
-    status: { type: String, enum: ['available', 'pending', 'confirmed'], default: '' },
+    status: { type: String, enum: ['', 'available', 'pending', 'confirmed'], default: '' },
   },
 
   // 👤 Registrant / domain contact (optional)
