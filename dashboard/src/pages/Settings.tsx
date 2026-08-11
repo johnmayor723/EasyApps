@@ -5,6 +5,7 @@ import "./Settings.css";
 
 interface TenantDetail {
   ourStory: string;
+  domain?: { name?: string; status?: string };
   branding: {
     logoUrl: string;
     primaryColor: string;
@@ -13,12 +14,23 @@ interface TenantDetail {
   };
 }
 
+// Tier order, lowest to highest. "bumpa" is the top plan.
+const PLAN_TIERS = ["free", "growth", "pro", "bumpa"];
+const EJS_APP_BASE = (import.meta.env.VITE_API_BASE || "").replace(/\/api\/?$/, "");
+const UPGRADE_URL = `${EJS_APP_BASE}/multitenant/new-compare-plans`;
+
+function planRank(plan?: string) {
+  const i = PLAN_TIERS.indexOf(plan || "free");
+  return i === -1 ? 0 : i;
+}
+
 export default function Settings() {
   const { tenant } = useAuth();
   const [logoUrl, setLogoUrl] = useState("");
   const [primaryColor, setPrimaryColor] = useState("#0d9488");
   const [secondaryColor, setSecondaryColor] = useState("#111827");
   const [ourStory, setOurStory] = useState("");
+  const [domainName, setDomainName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -34,6 +46,7 @@ export default function Settings() {
         setPrimaryColor(t.branding?.primaryColor || "#0d9488");
         setSecondaryColor(t.branding?.secondaryColor || "#111827");
         setOurStory(t.ourStory || "");
+        setDomainName(t.domain?.name || null);
       })
       .catch(() => setError("Couldn't load settings."))
       .finally(() => setLoading(false));
@@ -94,6 +107,52 @@ export default function Settings() {
               <dd>{tenant?.plan}</dd>
             </div>
           </dl>
+        </div>
+
+        <div className="settings-section">
+          <h3>Domain</h3>
+          {(() => {
+            const rank = planRank(tenant?.plan);
+            const isTopTier = rank === PLAN_TIERS.length - 1;
+
+            if (rank === 0) {
+              // Free plan: no domain access at all, straight upsell.
+              return (
+                <div className="domain-card domain-card-upsell">
+                  <p>Custom domains are available from the Growth plan and up.</p>
+                  <a className="btn btn-primary" href={UPGRADE_URL} target="_blank" rel="noreferrer">
+                    Upgrade plan
+                  </a>
+                </div>
+              );
+            }
+
+            if (!domainName) {
+              // Paid plan (any tier), no domain configured yet.
+              return (
+                <div className="domain-card">
+                  <p>No custom domain connected yet.</p>
+                  <a className="btn btn-primary" href={`${EJS_APP_BASE}/multitenant/select-domain`} target="_blank" rel="noreferrer">
+                    Set up custom domain
+                  </a>
+                </div>
+              );
+            }
+
+            // Has a domain already.
+            return (
+              <div className="domain-card">
+                <p>
+                  Connected domain: <strong>{domainName}</strong>
+                </p>
+                {!isTopTier && (
+                  <a className="btn btn-secondary" href={UPGRADE_URL} target="_blank" rel="noreferrer">
+                    Upgrade for more
+                  </a>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         <div className="settings-section">

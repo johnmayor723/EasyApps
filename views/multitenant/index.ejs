@@ -21,9 +21,43 @@
       <a href="#">Pricing</a>
       <a href="#">Enterprise</a>
     </nav>
+    <a href="#" id="open-login" class="login-nav-link">Log in</a>
     <a style="text-decoration: none;" href="/multitenant/signup" class="start-btn">Start Now</a>
     <button class="menu-btn" id="menu-btn">☰</button>
   </header>
+
+  <!-- Log in modal -->
+  <div class="login-modal-overlay" id="login-modal-overlay">
+    <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+      <button type="button" class="login-modal-close" id="login-modal-close" aria-label="Close">&times;</button>
+
+      <div class="login-modal-brand"><span>&lt;</span>easyhostnet<span>/&gt;</span></div>
+      <h2 id="login-modal-title">Log in to your store</h2>
+      <p class="login-modal-sub">Manage your products, orders, and customers &mdash; from anywhere.</p>
+
+      <form class="login-modal-form" action="/multitenant/login" method="POST">
+        <div class="field">
+          <label for="modal-email">Email</label>
+          <input id="modal-email" type="email" name="email" placeholder="you@yourstore.com" required>
+        </div>
+
+        <div class="field">
+          <label for="modal-password">Password</label>
+          <input id="modal-password" type="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Log in</button>
+
+        <div class="form-links">
+          <a href="/multitenant/forgot-password">Forgot password?</a>
+        </div>
+      </form>
+
+      <div class="signup-cta">
+        Don&rsquo;t have a store yet? <a href="/multitenant/signup">Sign up for free</a>
+      </div>
+    </div>
+  </div>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -198,6 +232,174 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 
+/* ===== Log in link + modal ===== */
+.login-nav-link {
+  text-decoration: none;
+  color: #1b2026;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-right: 18px;
+  white-space: nowrap;
+}
+
+.login-nav-link:hover {
+  color: #0d9488;
+}
+
+.login-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 10, 16, 0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.login-modal-overlay.open {
+  display: flex;
+}
+
+.login-modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: #0a0e14;
+  background-image: radial-gradient(420px 260px at 50% -10%, #0d3d38, transparent 70%);
+  color: #f5f7fa;
+  border-radius: 16px;
+  padding: 40px 32px 32px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #8890a0;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.login-modal-close:hover {
+  color: #f5f7fa;
+}
+
+.login-modal-brand {
+  font-family: ui-monospace, "JetBrains Mono", "Fira Code", "IBM Plex Mono", Menlo, Consolas, monospace;
+  font-weight: 600;
+  font-size: 14px;
+  color: #f5f7fa;
+  margin-bottom: 18px;
+}
+
+.login-modal-brand span {
+  color: #2dd4bf;
+}
+
+.login-modal h2 {
+  font-family: ui-monospace, "JetBrains Mono", "Fira Code", "IBM Plex Mono", Menlo, Consolas, monospace;
+  font-weight: 600;
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+
+.login-modal-sub {
+  color: #8890a0;
+  font-size: 13.5px;
+  margin: 0 0 26px;
+  line-height: 1.5;
+}
+
+.login-modal-form {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-modal .field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #8890a0;
+  margin-bottom: 6px;
+}
+
+.login-modal .field input {
+  width: 100%;
+  background: #11161f;
+  border: 1px solid #232a35;
+  color: #f5f7fa;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14.5px;
+}
+
+.login-modal .field input:focus {
+  outline: none;
+  border-color: #2dd4bf;
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+}
+
+.login-modal .btn-submit {
+  margin-top: 6px;
+  background: #0d9488;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-modal .btn-submit:hover {
+  background: #0f766e;
+}
+
+.login-modal .form-links {
+  text-align: right;
+  font-size: 13px;
+}
+
+.login-modal .form-links a {
+  color: #2dd4bf;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-modal .signup-cta {
+  margin-top: 22px;
+  font-size: 13.5px;
+  color: #8890a0;
+}
+
+.login-modal .signup-cta a {
+  color: #2dd4bf;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .login-nav-link {
+    margin-right: 10px;
+    font-size: 0.85rem;
+  }
+
+  .login-modal {
+    padding: 32px 22px 26px;
+  }
+}
+
   </style>
   </footer>
   <!-- Mobile Bottom Navigation -->
@@ -230,6 +432,34 @@
     const navLinks = document.getElementById("nav-links");
     menuBtn.addEventListener("click", () => {
       navLinks.classList.toggle("active");
+    });
+
+    const openLoginLink = document.getElementById("open-login");
+    const loginOverlay = document.getElementById("login-modal-overlay");
+    const closeLoginBtn = document.getElementById("login-modal-close");
+
+    function openLoginModal(e) {
+      if (e) e.preventDefault();
+      loginOverlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+      const emailInput = document.getElementById("modal-email");
+      if (emailInput) emailInput.focus();
+    }
+
+    function closeLoginModal() {
+      loginOverlay.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    openLoginLink.addEventListener("click", openLoginModal);
+    closeLoginBtn.addEventListener("click", closeLoginModal);
+    loginOverlay.addEventListener("click", (e) => {
+      if (e.target === loginOverlay) closeLoginModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && loginOverlay.classList.contains("open")) {
+        closeLoginModal();
+      }
     });
   </script>
 </body>
