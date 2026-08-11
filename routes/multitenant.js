@@ -306,33 +306,6 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
   }
 });
 
-router.get("/shop/:tenantId/reservations", async (req, res) => {
-  const { tenantId } = req.params;
-  cons
-  const tenantResponse = await axios.post(
-      "http://localhost:3000/api/tenant-auth/get-one-tenant",
-      { tenantId }
-    );
-    const tenant = tenantResponse.data?.tenant;
-    const name =  tenant.owner.name;
-    console.log("Resolved name tenant for menu:", name);
-    const contactInfo = tenant.contact || {};
-  // Fetch reservations for the tenant
-  axios.post("http://easyhostnet.localhost:3000/api/reservations/by-tenant", { tenantId })
-    .then(response => {
-      const reservations = response.data?.reservations || [];
-      res.render("multitenant/restaurant/reservations", {
-        tenant,
-        reservations,
-        contact: contactInfo,
-      });
-    })
-    .catch(err => {
-      console.error("Error fetching reservations:", err.message);
-      res.status(500).render("errors/500");
-    });
-}); 
-
 const MY_API_BASE = "http://easyhostnet.localhost:3000/api";
 
 // sendEmail is ALREADY configured in this router
@@ -552,61 +525,13 @@ router.get('/verify-otp', (req, res) => {
   const email = req.session.email;
   res.render("multitenant/verify-otp", { email, message: null });
 });
-router.post('/verify-otp', async (req, res) => {
-  try {
-    const { otp } = req.body;
-    const email = req.session.email;
-
-    if (!otp || !email) {
-      req.flash("error_msg", "OTP and email are required");
-      return res.redirect("/multitenant/verify-otp");
-    }
-
-    const response = await axios.post(
-      "http://easyhostnet.localhost:3000/tenant-auth/verify-otp",
-      { email, otp }
-    );
-
-    if (response.status === 200) {
-      req.flash("success_msg", "OTP verified successfully");
-      return res.redirect("/multitenant/reset-password");
-    }
-
-  } catch (error) {
-    console.error("Verify OTP error:", error?.response?.data || error.message);
-    req.flash("error_msg", "Failed to verify OTP");
-    return res.redirect("/multitenant/verify-otp");
-  }
-}); 
+// POST /verify-otp and /reset-password for the password-reset flow live in
+// routes/password.js -- every reset-flow view posts to /password/*, and the
+// versions that used to be here were unreachable duplicates calling stale URLs.
 router.get("/reset-password", (req, res) => {
   const email = req.session.email;
   res.render("multitenant/reset-password", { email, message: null });
 });
-router.post("/reset-password", async (req, res) => {
-  console.log("Reset password request body:", req.body);
-  const { email, newPassword } = req.body;
-
-  if (!email || !newPassword) {
-    req.flash("error_msg", "Email and new password are required");
-    return res.redirect("/multitenant/reset-password");
-  }
-
-  try {
-    const response = await axios.post(
-      "https://easyhostnet.com/api/tenant-auth/update-password",
-      { email, newPassword }
-    );
-
-    if (response.status === 200) {
-      req.flash("success_msg", "Password reset successfully");
-      return res.redirect("/multitenant/login");
-    }
-  } catch (error) {
-    console.error("Reset password error:", error?.response?.data || error.message);
-    req.flash("error_msg", "Failed to reset password");
-    return res.redirect("/multitenant/reset-password");
-  }
-}); 
 
 // POST request to send OTP
 // POST request to send OTP
@@ -681,24 +606,9 @@ router.get("/multitent/verify-otp", (req, res) => {
   res.render("multitenant/verify-otp", { message: null });
 });
 
-// Handle verify OTP form
-router.post("/verify-otp", async (req, res) => {
-  try {
-    const {  otp } = req.body;
-    const email = req.session.otpEmail;
-    const response = await axios.post("http://easyhostnet.localhost:3000/api/tenant-auth/verify-otp", { email, otp });
-    console.log(response.data);
-   req.flash("success_msg", response.data.message);
-    res.redirect("/multitenant/create-store");
-
-  } catch (err) {
-    req.flash(
-      "error_msg",
-      err.response?.data?.error || "Invalid OTP"
-    );
-    res.redirect(`/multitenant/verify-otp?email=${encodeURIComponent(email)}`);
-  }
-});
+// NOTE: a duplicate POST /verify-otp handler used to be here. It was
+// unreachable (shadowed by the signup-flow handler at the top of this file)
+// and called a nonexistent API endpoint. Removed.
 
 // create-store
 // create-store
@@ -1328,37 +1238,6 @@ router.post("/cart/update/:id", (req, res) => {
 });
 
 
-/* ===== Update item quantity =====
-router.post('/cart/update/:id', (req, res) => {
-  try {
-    initializeCart(req);
-
-    const productId = req.params.id;
-    const action = req.body.action; // "increase" or "decrease"
-    const cart = req.session.cart;
-
-    const item = cart.items.find(i => i._id.toString() === productId);
-    if (!item) return res.status(404).send('Item not found in cart');
-
-    if (action === 'increase') item.qty++;
-    else if (action === 'decrease') item.qty--;
-
-    if (item.qty <= 0) {
-      cart.items = cart.items.filter(i => i._id.toString() !== productId);
-    } else {
-      item.total = item.qty * item.price;
-    }
-
-    // Recalculate totals
-    cart.totalQty = cart.items.reduce((acc, i) => acc + i.qty, 0);
-    cart.totalPrice = cart.items.reduce((acc, i) => acc + i.total, 0);
-
-    res.redirect('/');
-  } catch (err) {
-    console.error('❌ Error updating cart:', err);
-    res.status(500).send('Failed to update cart.');
-  }
-});*/
 
 // ===== View cart =====
 router.get('/cart', (req, res) => {
@@ -1462,7 +1341,7 @@ router.get("/tenant/:tenantId", async (req, res) => {
 });
 
 // Get single reservation
-router.get("/:id", async (req, res) => {
+router.get("/reservations/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -1480,7 +1359,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update reservation
-router.put("/:id", async (req, res) => {
+router.put("/reservations/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -1499,7 +1378,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete reservation
-router.delete("/:id", async (req, res) => {
+router.delete("/reservations/:id", async (req, res) => {
   try {
     const { id } = req.params;
 

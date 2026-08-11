@@ -32,8 +32,8 @@ function buildContacts(registrant) {
 
 const config = {
   endpoint: process.env.GO54_API_ENDPOINT,
-  username: 'info@easyhostnet.com',
-  apiSecret: 'Uwp5IwrzwxyMaoqGVRQATsjWXr20H9k3',
+  username: process.env.GO54_API_USERNAME,
+  apiSecret: process.env.GO54_API_SECRET,
 };
 
 /**

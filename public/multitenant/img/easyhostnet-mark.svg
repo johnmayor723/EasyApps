@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="24" fill="#0a0e14"/>
+  <text x="60" y="76" text-anchor="middle" font-family="ui-monospace, 'JetBrains Mono', 'Fira Code', 'IBM Plex Mono', Menlo, Consolas, monospace" font-size="44" font-weight="700">
+    <tspan fill="#f5f7fa">&lt;</tspan><tspan fill="#2dd4bf">e</tspan><tspan fill="#f5f7fa">/&gt;</tspan>
+  </text>
+</svg>

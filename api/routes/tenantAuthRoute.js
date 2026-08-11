@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const TenantAuthController = require("../controllers/tenantAuthController");
+const requireAdminSecret = require("../middleware/requireAdminSecret");
 
 // 📌 Tenant signup (creates tenant + owner user)
 router.post("/request-otp", TenantAuthController.requestOtp);
@@ -28,11 +29,11 @@ router.post('/update-branding', TenantAuthController.updateTenantBranding);
 router.post('/update-domain', TenantAuthController.updateTenantDomain);
 
 // get all tenants
-router.get("/get-all-tenants", TenantAuthController.getAllTenants);
+router.get("/get-all-tenants", requireAdminSecret, TenantAuthController.getAllTenants);
 // 📌 Get tenant info
 router.post("/get-one-tenant", TenantAuthController.getTenant);
 
-// remove tenant
+// remove tenant (gated by WIPE_SECRET inside the controller)
 router.post("/remove-all-tenants", TenantAuthController.deleteAllTenantsAndUsers);
 
 module.exports = router;

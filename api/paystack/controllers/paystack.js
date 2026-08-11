@@ -2,19 +2,19 @@ const Paystack = require('paystack-node');
 const Tenant = require('../../models/Tenant');
 const nodemailer = require('nodemailer');
 
-const sk = 'sk_test_caf30f565f30779a789cfed46899dad43224e36b';
-const environment = 'test';
+const sk = process.env.PAYSTACK_SECRET_KEY;
+const environment = process.env.NODE_ENV === 'production' ? 'live' : 'test';
 
-const paystack = new Paystack(sk.trim(), environment);
+const paystack = new Paystack((sk || '').trim(), environment);
 
-// Configure transporter (Use real SMTP credentials in production)
+// Configure transporter
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: 587,
     secure: false,
     auth: {
-        user: 'modigitman@gmail.com',
-        pass: 'muwroruzgboqdfcd',
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     }
 });
 

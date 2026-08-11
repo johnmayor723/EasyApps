@@ -62,7 +62,7 @@ exports.deleteAllTenantsAndUsers = async (req, res) => {
     // Safeguard: require a secret to run this destructive action
     const secret = process.env.WIPE_SECRET;
     const provided = req.body.secret || req.headers['x-wipe-secret'] || req.query.secret;
-    if ( provided !== secret) {
+    if (!secret || !provided || provided !== secret) {
       return res.status(403).json({ error: "Wipe not authorized. Provide correct secret via x-wipe-secret header or ?secret=" });
     }
 

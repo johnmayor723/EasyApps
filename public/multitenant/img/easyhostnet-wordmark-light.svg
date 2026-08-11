@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" width="640" height="180">
+  <rect width="640" height="180" rx="16" fill="#ffffff"/>
+  <text x="320" y="96" text-anchor="middle" font-family="ui-monospace, 'JetBrains Mono', 'Fira Code', 'IBM Plex Mono', Menlo, Consolas, monospace" font-size="46" font-weight="600">
+    <tspan fill="#0f1720">&lt;easy</tspan><tspan fill="#0d9488">host</tspan><tspan fill="#0f1720">net/&gt;</tspan>
+  </text>
+  <text x="320" y="130" text-anchor="middle" font-family="ui-monospace, 'JetBrains Mono', 'Fira Code', 'IBM Plex Mono', Menlo, Consolas, monospace" font-size="13" letter-spacing="4" fill="#6b7684">SOFTWARE DEVELOPMENT</text>
+</svg>
