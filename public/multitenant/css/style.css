@@ -179,7 +179,7 @@ body {
       display: inline-block;
       margin-top: 30px;
       padding: 12px 28px;
-      background: #000;
+      background: #0d9488;
       color: #fff;
       text-decoration: none;
       font-size: 1rem;
@@ -189,7 +189,7 @@ body {
     }
 
     .btn-hero:hover {
-      background: #333;
+      background: #0f766e;
       transform: translateY(-2px);
     }
 

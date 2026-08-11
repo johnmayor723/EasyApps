@@ -652,8 +652,8 @@ footer {
 }
 
 button {
-  
-  background-color: #201f1f;
+
+  background-color: #0d9488;
   color: white;
   border: none;
   border-radius: 8px;
@@ -665,7 +665,7 @@ button {
 }
 
 button:hover {
-  background-color: #3e3d3d;
+  background-color: #0f766e;
 }
 
 .highlights {
