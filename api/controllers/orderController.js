@@ -43,15 +43,17 @@ exports.createOrder = async (req, res) => {
 
     // Send confirmation email with order details
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: process.env.SMTP_HOST || 'smtp.zeptomail.com',
+      port: 587,
+      secure: false,
       auth: {
-        user: 'fooddeck3@gmail.com',
-        pass: 'xyca sbvx hifi amzs',
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     const mailOptions = {
-      from: 'support@marketspick.com',
+      from: process.env.SMTP_FROM,
       to: email,
       subject: 'Order Confirmation',
       html: `

@@ -5,7 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const API_BASE = 'http://easyhostnet.localhost:3000/api';
+const API_BASE = 'http://easyhostnet.localhost:3900/api';
 
 // ------------------- MULTER SETUP -------------------
 
@@ -42,7 +42,7 @@ router.get("/dashboard", async (req, res) => {
 
     // Await the API call
     const menuresponse = await axios.post(
-      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      "http://easyhostnet.localhost:3900/api/menus/menus-by-tenant",
       { tenantId: tenant.tenantId }
     );
 

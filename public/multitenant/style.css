@@ -562,11 +562,13 @@ footer {
     display: flex;
   }
 
-  main {
+  body {
     padding-bottom: 70px;
   }
 
-  
+  .pricing-section {
+    padding: 40px 20px 24px !important;
+  }
 
   .pricing-container {
     flex-direction: column;
@@ -708,8 +710,5 @@ button:hover {
   .plan-card {
     max-width: 95%;
     margin: 0 auto;
-  }
-  .pricing-section {
-    display:none;
   }
 }

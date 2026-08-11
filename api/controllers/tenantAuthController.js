@@ -33,12 +33,12 @@ transporter.verify((error, success) => {
 
 
 const transport = nodemailer.createTransport({
-  host: "smtp.mail.yahoo.com",
-  port: 465,
-  secure: true, // use SSL
+  host: process.env.SMTP_HOST || "smtp.zeptomail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: "johnmayor723@yahoo.com",
-    pass: process.env.SMTP_PASS, // your app password
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -50,7 +50,7 @@ transport.verify((err, success) => {
 // ✉️ Utility: Send email
 const sendEmail = async (to, subject, text) => {
   await transport.sendMail({
-    from: `"EasyApps" <johnmayor723@yahoo.com>`,
+    from: `"EasyApps" <${process.env.SMTP_FROM}>`,
     to,
     subject,
     text,
@@ -228,7 +228,7 @@ exports.completeSignup = async (req, res) => {
     const baseUrl =
       process.env.NODE_ENV === "production"
         ? "https://easyhostnet.com"
-        : "http://localhost:3000";
+        : "http://localhost:3900";
 
     const appUrl = `${baseUrl}/multitenant/${tenantId}/${slug}`;
 

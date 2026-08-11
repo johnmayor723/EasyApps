@@ -20,7 +20,7 @@ router.post("/request-password-reset", async (req, res) => {
 
     // Call backend API
     const response = await axios.post(
-      "http://easyhostnet.localhost:3000/api/tenant-auth/request-password-reset",
+      "http://easyhostnet.localhost:3900/api/tenant-auth/request-password-reset",
       { email }
     );
 
@@ -66,7 +66,7 @@ router.post('/verify-otp', async (req, res) => {
     }
     console.log("Verifying OTP for email:", email, "OTP:", otp);
     const response = await axios.post(
-      "http://localhost:3000/api/tenant-auth/verify-reset-otp",
+      "http://localhost:3900/api/tenant-auth/verify-reset-otp",
       { email, otp }
     );
 
@@ -96,7 +96,7 @@ router.post("/reset-password", async (req, res) => {
  console.log("Resetting password for email:", email);
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/tenant-auth/update-password",
+      "http://localhost:3900/api/tenant-auth/update-password",
       { email, newPassword, confirmPassword }
     );
 

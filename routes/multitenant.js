@@ -30,16 +30,16 @@ transporter.verify((error, success) => {
   }
 });
 */
-const API_BASE_URL = 'http://easyhostnet.localhost:3000/api/'
+const API_BASE_URL = 'http://easyhostnet.localhost:3900/api/'
 
 
 const transport = nodemailer.createTransport({
-  host: "smtp.mail.yahoo.com",
-  port: 465,
-  secure: true, // use SSL
+  host: process.env.SMTP_HOST || "smtp.zeptomail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: "johnmayor723@yahoo.com",
-    pass: process.env.SMTP_PASS, // your app password
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -50,11 +50,9 @@ transport.verify((err, success) => {
 
 
 // ✉️ Utility: Send email
-// ✉️ Utility: Send email
 const sendEmail = async (to, subject, text) => {
-  // use the created transporter instance (not undefined `transport`)
-  await transporter.sendMail({
-    from: `"EasyApps" <johnmayor723@yahoo.com>`,
+  await transport.sendMail({
+    from: `"EasyApps" <${process.env.SMTP_FROM}>`,
     to,
     subject,
     text,
@@ -138,7 +136,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
     -------------------------- */
    
     const tenantResponse = await axios.post(
-      "http://localhost:3000/api/tenant-auth/get-one-tenant",
+      "http://localhost:3900/api/tenant-auth/get-one-tenant",
       { tenantId }
     );
     const tenant = tenantResponse.data?.tenant;
@@ -173,7 +171,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/menus/menus-by-tenant",
+      "http://localhost:3900/api/menus/menus-by-tenant",
       { tenantId }
     );
 
@@ -203,7 +201,7 @@ router.get("/multitenant/:tenantId/:slug", async (req, res) => {
 
       try {
         const productRes = await axios.post(
-          "http://localhost:3000/api/products/by-tenant",
+          "http://localhost:3900/api/products/by-tenant",
           { tenantId }
         );
         console.log("Fetched all product for tenant:", productRes.data.products);
@@ -243,7 +241,7 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
   console.log("Accessing menu for tenant:", req.params.tenantId);
   const { tenantId } = req.params;
   const tenantResponse = await axios.post(
-      "http://localhost:3000/api/tenant-auth/get-one-tenant",
+      "http://localhost:3900/api/tenant-auth/get-one-tenant",
       { tenantId }
     );
     const tenant = tenantResponse.data?.tenant;
@@ -254,7 +252,7 @@ router.get("/shop/:tenantId/menu", async (req, res) => {
     console.log("Resolved tenant contact info :", contactInfo);
   try {
     const response = await axios.post(
-      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      "http://easyhostnet.localhost:3900/api/menus/menus-by-tenant",
       { tenantId }
     );
 
@@ -276,7 +274,7 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
   const slug = req.session.slug || "home"; // Fallback to "home" if slug is not set
   const { tenantId } = req.params;
   const tenantResponse = await axios.post(
-      "http://localhost:3000/api/tenant-auth/get-one-tenant",
+      "http://localhost:3900/api/tenant-auth/get-one-tenant",
       { tenantId }
   );
   const contact = tenantResponse.data.tenant.contact
@@ -287,7 +285,7 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
   try {
    
     const response = await axios.get(
-      `http://easyhostnet.localhost:3000/api/reservations/tenant/${tenantId}`
+      `http://easyhostnet.localhost:3900/api/reservations/tenant/${tenantId}`
     );
 
     const reservations = response.data?.reservations || [];
@@ -306,7 +304,7 @@ router.get("/shop/:tenantId/reservations", async (req, res) => {
   }
 });
 
-const MY_API_BASE = "http://easyhostnet.localhost:3000/api";
+const MY_API_BASE = "http://easyhostnet.localhost:3900/api";
 
 // sendEmail is ALREADY configured in this router
 // const sendEmail = async (to, subject, text) => { ... }
@@ -404,23 +402,6 @@ router.get("/subscription-success", (req, res) => {
 
 
 
-router.get("/adbeaconhope", (req, res) => {
-  res.render("multitenant/adbeaconhope-signin", { layout: false });
-});
-
-router.post("/adbeaconhope", (req, res) => {
-  console.log(req.body);
-  const { email, password } = req.body;
-
-  // Simple hardcoded authentication (replace with real logic)
-  if (email === "adedoyinbeaconofhopefoundation@gmail.com" && password === "Hope2025") {
-    // Redirect to admin page
-    return res.redirect("https://www.adedoyinbeaconofhopefoundation.com.ng/management");
-  } else {
-    // If login fails
-    res.send("Invalid credentials. Please try again with valid credentials.");
-  }
-});
 router.get("/dashboard", async (req, res) => {
   try {
     const user = req.session.user;
@@ -428,7 +409,7 @@ router.get("/dashboard", async (req, res) => {
 
     // Await the API call
     const menuresponse = await axios.post(
-      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      "http://easyhostnet.localhost:3900/api/menus/menus-by-tenant",
       { tenantId: tenant.tenantId }
     );
 
@@ -452,7 +433,7 @@ router.get("/dashboard-menu-default", async (req, res) => {
 
     // Await the API call
     const menuresponse = await axios.post(
-      "http://easyhostnet.localhost:3000/api/menus/menus-by-tenant",
+      "http://easyhostnet.localhost:3900/api/menus/menus-by-tenant",
       { tenantId: tenant.tenantId }
     );
 
@@ -546,7 +527,7 @@ router.post("/request-otp", async (req, res) => {
     }
 
     const response = await axios.post(
-      "http://localhost:3000/api/tenant-auth/request-otp",
+      "http://localhost:3900/api/tenant-auth/request-otp",
       { email }
     );
 
@@ -656,7 +637,7 @@ router.post("/complete-signup", async (req, res) => {
     };
     console.log("Constructed contact object:", contact);
     const response = await axios.post(
-      "http://easyhostnet.localhost:3000/api/tenant-auth/complete-signup",
+      "http://easyhostnet.localhost:3900/api/tenant-auth/complete-signup",
       {
         name: name || slug,
         email: req.session.otpEmail,
@@ -742,7 +723,7 @@ router.post("/select-plan", async (req, res) => {
 
     // ✅ Free plan flow
     if (plan.toLowerCase() === "free") {
-      const response = await axios.post("http:///easyhostnet.localhost:3000/api/tenant-auth/select-plan", {
+      const response = await axios.post("http:///easyhostnet.localhost:3900/api/tenant-auth/select-plan", {
         plan,
         price: 0, // force free price
         email
@@ -751,7 +732,7 @@ router.post("/select-plan", async (req, res) => {
       if (response.status === 200 || response.status === 201) {
         const tenantId = req.session.user.tenantId;
         console.log("Tenant ID for menu fetch:", tenantId);
-        const menuresponse = await axios.post("http://easyhostnet.localhost:3000/api/menus/menus-by-tenant" , {
+        const menuresponse = await axios.post("http://easyhostnet.localhost:3900/api/menus/menus-by-tenant" , {
           tenantId
         });
         const menu = menuresponse.data.menus || [];
@@ -822,7 +803,7 @@ router.post("/update-branding", upload.single("logo"), async (req, res) => {
       if (ourStory) form.append("ourStory", ourStory);
 
       response = await axios.post(
-        "http://easyhostnet.localhost:3000/api/tenant-auth/update-branding",
+        "http://easyhostnet.localhost:3900/api/tenant-auth/update-branding",
         form,
         { headers: { ...form.getHeaders() } }
       );
@@ -834,7 +815,7 @@ router.post("/update-branding", upload.single("logo"), async (req, res) => {
     } else {
       // No file uploaded, send JSON payload
       response = await axios.post(
-        "http://easyhostnet.localhost:3000/api/tenant-auth/update-branding",
+        "http://easyhostnet.localhost:3900/api/tenant-auth/update-branding",
         { logoUrl, themeColor, primaryColor, secondaryColor, email, ourStory }
       );
     }
@@ -871,7 +852,7 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     console.log(req.body);
     // Send to backend API
-    const response = await axios.post("http://easyhostnet.localhost:3000/api/tenant-auth/email-login", {
+    const response = await axios.post("http://easyhostnet.localhost:3900/api/tenant-auth/email-login", {
       email,
       password,
     });
@@ -1247,7 +1228,7 @@ router.get('/cart', (req, res) => {
 
 //restauarant routes
 // Base API URL
-const API_BASE = "http://easyhostnet.localhost:3000/api";
+const API_BASE = "http://easyhostnet.localhost:3900/api";
 
 // Create menu
 router.post("/create-menu", async (req, res) => {

@@ -11,17 +11,17 @@ const jwtSecret = "%^^__64sffyyyuuyrrrewe32e";
 // 🔹 Send Email Function
 const sendEmail = async (to, subject, text) => {
   let transporter = nodemailer.createTransport({
-    host: "smtp.zoho.com",
-    port: 465,
-    secure: true,
+    host: process.env.SMTP_HOST || "smtp.zeptomail.com",
+    port: 587,
+    secure: false,
     auth: {
-      user: "info@mfbyforesythebrand.com",
-      pass: "#@T1onal",
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
     },
   });
 
   await transporter.sendMail({
-    from: `"mfbyforesythebrand" <info@mfbyforesythebrand.com>`,
+    from: `"EasyApps" <${process.env.SMTP_FROM}>`,
     to,
     subject,
     text,
