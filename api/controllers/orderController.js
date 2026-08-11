@@ -1,11 +1,11 @@
 const Order = require('../models/Order');
+const Tenant = require('../models/Tenant');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
-const { v4: uuidv4 } = require('uuid');
 
 // Function to create a new Paystack session
 exports.createPaystackSession = async (req, res) => {
-  const key = "sk_test_d754fb2a648e8d822b09aa425d13fc62059ca08e";
+  const key = process.env.PAYSTACK_SECRET_KEY;
   const { email, amount } = req.body;
 
   try {
@@ -25,17 +25,21 @@ exports.createPaystackSession = async (req, res) => {
 };
 
 // Function to create a new order after payment is completed
+// Public/customer-facing: tenant comes from tenantResolver (Host header), not a login.
 exports.createOrder = async (req, res) => {
-  const { name, email, shippingAddress, totalAmount } = req.body;
+  const { name, email, phone, shippingAddress, totalAmount, items } = req.body;
+
+  if (!req.tenant) {
+    return res.status(400).json({ error: 'Unable to resolve store for this order.' });
+  }
 
   const newOrder = new Order({
-    name,
-    email,
+    tenantId: req.tenant._id,
+    customer: { name, email, phone },
     shippingAddress,
+    items: items || [],
     totalAmount,
-   
     status: 'processing',
-    uniqueId: uuidv4(),
   });
 
   try {
@@ -58,16 +62,13 @@ exports.createOrder = async (req, res) => {
       subject: 'Order Confirmation',
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-          <div style="text-align: center; padding: 10px 0;">
-            <img src="https://firebasestorage.googleapis.com/v0/b/fooddeck-fc840.appspot.com/o/mfico.jpg?alt=media&token=eefddae4-e98f-46cf-a375-515d8688eb55" alt="Company Logo" style="width: 150px;">
-          </div>
-          <h2 style="text-align: center; color: #4CAF50;">Thank you for your order, ${name}!</h2>
+          <h2 style="text-align: center; color: #0d9488;">Thank you for your order, ${name}!</h2>
           <p style="text-align: center;">Your order has been successfully created and is currently being processed. Here are your order details:</p>
-          
+
           <table style="width: 100%; margin: 20px 0; border-collapse: collapse;">
             <tr>
               <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Order ID</th>
-              <td style="padding: 8px; border-bottom: 1px solid #ddd;">${savedOrder.uniqueId}</td>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">${savedOrder.orderId}</td>
             </tr>
             <tr>
               <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Shipping Address</th>
@@ -82,14 +83,8 @@ exports.createOrder = async (req, res) => {
               <td style="padding: 8px; border-bottom: 1px solid #ddd;">${savedOrder.status}</td>
             </tr>
           </table>
-          
-          <p style="text-align: center; font-weight: bold; margin-top: 20px;">We appreciate your business!</p>
 
-          <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 10px; text-align: center; font-size: 12px; color: #666;">
-            <p>Contact us: <a href="mailto:support@company.com">support@company.com</a></p>
-            <p>Visit our website: <a href="https://companywebsite.com">www.companywebsite.com</a></p>
-            <p>&copy; ${new Date().getFullYear()} Company Name. All rights reserved.</p>
-          </div>
+          <p style="text-align: center; font-weight: bold; margin-top: 20px;">We appreciate your business!</p>
         </div>
       `,
     };
@@ -104,14 +99,26 @@ exports.createOrder = async (req, res) => {
 
     res.status(201).json(savedOrder);
   } catch (error) {
+    console.error('Create order error:', error);
     res.status(500).json({ error: 'Failed to create order.' });
   }
 };
 
-// Function to get all orders
+// Everything below is dashboard-facing (dashboardAuth), scoped to the
+// authenticated user's tenant. dashboardAuth gives us the tenant's string
+// tenantId; Order.tenantId is an ObjectId ref, so resolve it once per request.
+async function resolveTenantObjectId(req) {
+  const tenant = await Tenant.findOne({ tenantId: req.tenantId }).select('_id');
+  return tenant?._id || null;
+}
+
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const tenantObjectId = await resolveTenantObjectId(req);
+    if (!tenantObjectId) {
+      return res.status(404).json({ error: 'Tenant not found' });
+    }
+    const orders = await Order.find({ tenantId: tenantObjectId }).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve orders.' });
@@ -120,49 +127,43 @@ exports.getAllOrders = async (req, res) => {
 
 exports.getOrderById = async (req, res) => {
   try {
-      console.log("reached this route")
-      console.log(req.params.orderId)
-    const order = await Order.findById(req.params.orderId);
+    const tenantObjectId = await resolveTenantObjectId(req);
+    const order = await Order.findOne({ _id: req.params.orderId, tenantId: tenantObjectId });
     if (!order) {
       return res.status(404).json({ error: 'Order not found.' });
     }
     res.json(order);
   } catch (error) {
-      console.log("error:", error)
     res.status(500).json({ error: 'Failed to retrieve the order.' });
   }
 };
 
-// delete ordeer
-
 exports.deleteOrder = async (req, res) => {
   try {
-    console.log("Deleting order with ID:", req.params.orderId);
-
-    const order = await Order.findByIdAndDelete(req.params.orderId);
+    const tenantObjectId = await resolveTenantObjectId(req);
+    const order = await Order.findOneAndDelete({ _id: req.params.orderId, tenantId: tenantObjectId });
     if (!order) {
       return res.status(404).json({ error: 'Order not found.' });
     }
-
     res.json({ message: 'Order deleted successfully.' });
   } catch (error) {
-    console.error("Error deleting order:", error);
+    console.error('Error deleting order:', error);
     res.status(500).json({ error: 'Failed to delete the order.' });
   }
 };
 
-// Function to get and update order status by ID
 exports.updateOrderStatus = async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
-  const validStatuses = ['shipped', 'delivered', 'processing'];
+  const validStatuses = ['processing', 'shipped', 'delivered', 'cancelled'];
   if (!validStatuses.includes(status)) {
-    return res.status(400).json({ error: 'Invalid status. Allowed values are shipped, delivered, or processing.' });
+    return res.status(400).json({ error: 'Invalid status. Allowed values are processing, shipped, delivered, or cancelled.' });
   }
 
   try {
-    const order = await Order.findById(orderId);
+    const tenantObjectId = await resolveTenantObjectId(req);
+    const order = await Order.findOne({ _id: orderId, tenantId: tenantObjectId });
     if (!order) {
       return res.status(404).json({ error: 'Order not found.' });
     }
@@ -172,21 +173,5 @@ exports.updateOrderStatus = async (req, res) => {
     res.json(updatedOrder);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update order status.' });
-  }
-};
-
-// Function to track an order by unique ID
-exports.trackOrder = async (req, res) => {
-  const { uniqueId } = req.params;
-
-  try {
-    const order = await Order.findOne({ uniqueId });
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found.' });
-    }
-
-    res.json({ status: order.status, order });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to track order.' });
   }
 };

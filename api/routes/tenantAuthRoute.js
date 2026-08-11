@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const TenantAuthController = require("../controllers/tenantAuthController");
 const requireAdminSecret = require("../middleware/requireAdminSecret");
+const dashboardAuth = require("../middleware/dashboardAuth");
 
 // 📌 Tenant signup (creates tenant + owner user)
 router.post("/request-otp", TenantAuthController.requestOtp);
@@ -25,7 +26,7 @@ router.post("/update-password", TenantAuthController.completePasswordReset);
 // 📌 Update tenant info (tenant admin only)
 router.post('/complete-signup', TenantAuthController.completeSignup);
 router.post('/select-plan', TenantAuthController.selectPlan);
-router.post('/update-branding', TenantAuthController.updateTenantBranding);
+router.post('/update-branding', dashboardAuth, TenantAuthController.updateTenantBranding);
 router.post('/update-domain', TenantAuthController.updateTenantDomain);
 
 // get all tenants

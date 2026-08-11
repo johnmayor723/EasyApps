@@ -2,27 +2,18 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
+const dashboardAuth = require('../middleware/dashboardAuth');
 
 // Route to create a Paystack session
 router.post('/initialize', orderController.createPaystackSession);
 
-// Route to create an order after successful payment
+// Route to create an order after successful payment (customer-facing, tenantResolver-scoped)
 router.post('/', orderController.createOrder);
 
-// Route to get all orders
-router.get('/', orderController.getAllOrders)
-//Route to get one order
-router.get('/:orderId', orderController.getOrderById);
-
-
-// Route to update order status
-router.put('/:orderId', orderController.updateOrderStatus);
-// Route to delete order status
-router.delete('/:orderId', orderController.deleteOrder);
-
-
-
-// Route to track an order by unique ID
-router.get('/:uniqueId', orderController.trackOrder);
+// Dashboard-facing routes (JWT-scoped to the authenticated tenant)
+router.get('/', dashboardAuth, orderController.getAllOrders);
+router.get('/:orderId', dashboardAuth, orderController.getOrderById);
+router.put('/:orderId', dashboardAuth, orderController.updateOrderStatus);
+router.delete('/:orderId', dashboardAuth, orderController.deleteOrder);
 
 module.exports = router;

@@ -305,7 +305,7 @@ exports.updateTenantBranding = async (req, res) => {
   try {
     const { logoUrl, primaryColor, secondaryColor, theme, ourStory } = req.body;
 
-    const tenantId = req.session.tenantId || req.user?.tenantId;
+    const tenantId = req.tenantId || req.session.tenantId || req.user?.tenantId;
 
     console.log("➡️ Branding update request:", {
       tenantId,
@@ -332,7 +332,7 @@ exports.updateTenantBranding = async (req, res) => {
     if (primaryColor) tenant.branding.primaryColor = primaryColor;
     if (secondaryColor) tenant.branding.secondaryColor = secondaryColor;
     if (theme) tenant.branding.theme = theme;
-    if (ourStory) tenant.branding.ourStory = ourStory;
+    if (ourStory) tenant.ourStory = ourStory;
 
     await tenant.save();
     console.log("✅ Tenant branding updated:", tenant._id);
@@ -515,11 +515,12 @@ exports.getTenant = async (req, res) => {
         type: tenant.type,
         owner: tenant.owner,
         status: tenant.status,
+        ourStory: tenant.ourStory || "",
         branding: {
-          logo: tenant.logo || null,
-          primaryColor: tenant.primaryColor || "#2563eb",
-          secondaryColor: tenant.secondaryColor || "#111827",
-          contactColor: tenant.contactColor || "#10b981",
+          logoUrl: tenant.branding?.logoUrl || "",
+          primaryColor: tenant.branding?.primaryColor || "#000000",
+          secondaryColor: tenant.branding?.secondaryColor || "#FFFFFF",
+          theme: tenant.branding?.theme || "default",
         },
         contact: contactInfo,
       },

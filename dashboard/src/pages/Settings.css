@@ -1,0 +1,63 @@
+.settings-card {
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.settings-section h3 {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.settings-section .field {
+  margin-bottom: 14px;
+}
+
+.settings-section .field:last-child {
+  margin-bottom: 0;
+}
+
+.settings-section input,
+.settings-section textarea {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font-weight: 400;
+  width: 100%;
+}
+
+.settings-section input:focus,
+.settings-section textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.color-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.color-field input[type="color"] {
+  width: 40px;
+  height: 36px;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.settings-saved {
+  background: var(--ok-soft);
+  color: var(--ok);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.settings-footer {
+  border-top: none;
+  padding: 0;
+  justify-content: flex-start;
+}

@@ -6,7 +6,8 @@ import Login from "./pages/Login";
 import Overview from "./pages/Overview";
 import Products from "./pages/Products";
 import Customers from "./pages/Customers";
-import ComingSoon from "./pages/ComingSoon";
+import Orders from "./pages/Orders";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -25,19 +26,8 @@ export default function App() {
             <Route index element={<Overview />} />
             <Route path="products" element={<Products />} />
             <Route path="customers" element={<Customers />} />
-            <Route
-              path="orders"
-              element={
-                <ComingSoon
-                  title="Orders"
-                  note="The orders API needs a couple of backend fixes (tenant scoping) before this page can show real data safely -- next up."
-                />
-              }
-            />
-            <Route
-              path="settings"
-              element={<ComingSoon title="Settings" note="Store branding, domain, and plan settings -- coming next." />}
-            />
+            <Route path="orders" element={<Orders />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
